@@ -1,7 +1,7 @@
 # OSX
 #
 .DS_Store
-ios/bdkFFI.xcframework
+ios/ldk_nodeFFI.xcframework
 
 # Xcode
 #
@@ -65,5 +65,3 @@ buck-out/
 
 # CocoaPods
 /ios/Pods/
-
-ios/ldk_nodeFFI.xcframework
