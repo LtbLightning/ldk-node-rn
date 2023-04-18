@@ -36,7 +36,75 @@ RCT_EXTERN_METHOD(
 )
 
 RCT_EXTERN_METHOD(
+    stop: (nonnull NSString*)nodeId
+    resolve: (RCTPromiseResolveBlock)resolve
+    reject:(RCTPromiseRejectBlock)reject
+)
+
+RCT_EXTERN_METHOD(
+    syncWallets: (nonnull NSString*)nodeId
+    resolve: (RCTPromiseResolveBlock)resolve
+    reject:(RCTPromiseRejectBlock)reject
+)
+
+RCT_EXTERN_METHOD(
     nodeId: (nonnull NSString*)nodeId
+    resolve: (RCTPromiseResolveBlock)resolve
+    reject:(RCTPromiseRejectBlock)reject
+)
+
+RCT_EXTERN_METHOD(
+    newFundingAddress: (nonnull NSString*)nodeId
+    resolve: (RCTPromiseResolveBlock)resolve
+    reject:(RCTPromiseRejectBlock)reject
+)
+
+
+RCT_EXTERN_METHOD(
+    spendableOnchainBalanceSats: (nonnull NSString*)nodeId
+    resolve: (RCTPromiseResolveBlock)resolve
+    reject:(RCTPromiseRejectBlock)reject
+)
+
+RCT_EXTERN_METHOD(
+    totalOnchainBalanceSats: (nonnull NSString*)nodeId
+    resolve: (RCTPromiseResolveBlock)resolve
+    reject:(RCTPromiseRejectBlock)reject
+)
+
+RCT_EXTERN_METHOD(
+    connect: (nonnull NSString*)nodeId
+    pubKey: (nonnull NSString*)pubKey
+    address: (nonnull NSString*)address
+    permanently: (nonnull BOOL*)permanently
+    resolve: (RCTPromiseResolveBlock)resolve
+    reject:(RCTPromiseRejectBlock)reject
+)
+
+RCT_EXTERN_METHOD(
+    disconnect: (nonnull NSString*)nodeId
+    pubKey: (nonnull NSString*)pubKey
+    resolve: (RCTPromiseResolveBlock)resolve
+    reject:(RCTPromiseRejectBlock)reject
+)
+
+RCT_EXTERN_METHOD(
+    connectOpenChannel: (nonnull NSString*)nodeId
+    pubKey: (nonnull NSString*)pubKey
+    address: (nonnull NSString*)address
+    channelAmountSats: (nonnull NSNumber*)channelAmountSats
+    pushToCounterpartyMsat: (nonnull NSNumber*)pushToCounterpartyMsat
+    announceChannel: (nonnull BOOL*)announceChannel
+    resolve: (RCTPromiseResolveBlock)resolve
+    reject:(RCTPromiseRejectBlock)reject
+)
+
+
+RCT_EXTERN_METHOD(
+    receivePayment: (nonnull NSString*)nodeId
+    amountMsat: (nonnull NSNumber*)amountMsat
+    description: (nonnull NSString*)description
+    expirySecs: (nonnull NSNumber*)expirySecs
     resolve: (RCTPromiseResolveBlock)resolve
     reject:(RCTPromiseRejectBlock)reject
 )

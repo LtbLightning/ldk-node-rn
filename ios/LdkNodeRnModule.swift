@@ -68,7 +68,37 @@ class LdkNodeRnModule: NSObject {
             reject("Node start error", "\(error)", error)
         }
     }
-    
+
+    @objc
+    func stop(_
+        nodeId: String,
+        resolve: @escaping RCTPromiseResolveBlock,
+        reject: @escaping RCTPromiseRejectBlock
+    ) {
+        do {
+            try _nodes[nodeId]!.stop()
+            resolve(true)
+        } catch let error {
+            reject("Node stop error", "\(error)", error)
+        }
+    }
+
+
+    @objc
+    func syncWallets(_
+        nodeId: String,
+        resolve: @escaping RCTPromiseResolveBlock,
+        reject: @escaping RCTPromiseRejectBlock
+    ) {
+        do {
+            try _nodes[nodeId]!.syncWallets()
+            resolve(true)
+        } catch let error {
+            reject("Node syncWallets error", "\(error)", error)
+        }
+    }
+
+
     @objc
     func nodeId(_
         nodeId: String,
@@ -77,6 +107,128 @@ class LdkNodeRnModule: NSObject {
     ) {
         resolve(_nodes[nodeId]!.nodeId())
     }
+
+    @objc
+    func newFundingAddress(_
+        nodeId: String,
+        resolve: @escaping RCTPromiseResolveBlock,
+        reject: @escaping RCTPromiseRejectBlock
+    ) {
+        do {
+            resolve(try _nodes[nodeId]!.newFundingAddress())
+        } catch let error {
+            reject("Node newFundingAddress error", "\(error)", error)
+        }
+    }
+
+    @objc
+    func spendableOnchainBalanceSats(_
+        nodeId: String,
+        resolve: @escaping RCTPromiseResolveBlock,
+        reject: @escaping RCTPromiseRejectBlock
+    ) {
+        do {
+            resolve(try _nodes[nodeId]!.spendableOnchainBalanceSats())
+        } catch let error {
+            reject("Node spendableOnchainBalanceSats error", "\(error)", error)
+        }
+    }
+
+    @objc
+    func totalOnchainBalanceSats(_
+        nodeId: String,
+        resolve: @escaping RCTPromiseResolveBlock,
+        reject: @escaping RCTPromiseRejectBlock
+    ) {
+        do {
+            resolve(try _nodes[nodeId]!.totalOnchainBalanceSats())
+        } catch let error {
+            reject("Node totalOnchainBalanceSats error", "\(error)", error)
+        }
+    }
+
+
+    @objc
+    func connect(_
+        nodeId: String,
+        pubKey: String,
+        address: String,
+        permanently: Bool,
+        resolve: @escaping RCTPromiseResolveBlock,
+        reject: @escaping RCTPromiseRejectBlock
+    ) {
+        do {
+            try _nodes[nodeId]!.connect(nodeId: pubKey, address: address, permanently: permanently)
+            resolve(true)
+        } catch let error {
+            reject("Node connect error", "\(error)", error)
+        }
+    }
+
+    @objc
+    func disconnect(_
+        nodeId: String,
+        pubKey: String,
+        resolve: @escaping RCTPromiseResolveBlock,
+        reject: @escaping RCTPromiseRejectBlock
+    ) {
+        do {
+            try _nodes[nodeId]!.disconnect(nodeId: pubKey)
+            resolve(true)
+        } catch let error {
+            reject("Node disconnect error", "\(error)", error)
+        }
+    }
+
+    @objc
+    func connectOpenChannel(_
+        nodeId: String,
+        pubKey: String,
+        address: String,
+        channelAmountSats: NSNumber,
+        pushToCounterpartyMsat: NSNumber,
+        announceChannel: Bool,
+        resolve: @escaping RCTPromiseResolveBlock,
+        reject: @escaping RCTPromiseRejectBlock
+    ) {
+        do {
+            try _nodes[nodeId]!.connectOpenChannel(
+                nodeId: pubKey,
+                address: address,
+                channelAmountSats: UInt64(truncating: channelAmountSats),
+                pushToCounterpartyMsat: UInt64(truncating: pushToCounterpartyMsat),
+                announceChannel: announceChannel
+            )
+            resolve(true)
+        } catch let error {
+            reject("Node open channel error", "\(error)", error)
+        }
+    }
+
+    @objc
+    func receivePayment(_
+        nodeId: String,
+        amountMsat: NSNumber,
+        description: String,
+        expirySecs: NSNumber,
+        resolve: @escaping RCTPromiseResolveBlock,
+        reject: @escaping RCTPromiseRejectBlock
+    ) {
+        do {
+            let invoice = try _nodes[nodeId]!.receivePayment(
+                amountMsat: UInt64(truncating: amountMsat),
+                description: description,
+                expirySecs: UInt32(truncating: expirySecs)
+            )
+            print("====>Invoice<=====", invoice)
+            resolve(invoice)
+        } catch let error {
+            reject("Receive payment invoice error", "\(error)", error)
+        }
+    }
+
+
+
     /** Node methods ends */
 
 
