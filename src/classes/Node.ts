@@ -114,6 +114,15 @@ export class Node extends NativeLoader {
   }
 
   /**
+   * Send payment to invoice
+   * @requires [invoice]
+   * @returns {Promise<boolean>}
+   */
+  async sendPayment(invoice: string): Promise<string> {
+    return this._ldk.sendPayment(this.id, invoice);
+  }
+
+  /**
    * Invoice to receive payment
    * @requires [amountMsat] amount in sats
    * @requires [description]

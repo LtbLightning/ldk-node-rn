@@ -30,6 +30,7 @@ export interface NativeLdkNodeRn {
     announceChannel: boolean
   ): boolean;
   receivePayment(nodeId: string, amountMsat: number, description: string, expirySecs: number): string;
+  sendPayment(nodeId: string, invoice: string): string;
 }
 
 export class NativeLoader {

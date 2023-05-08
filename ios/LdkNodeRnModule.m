@@ -99,6 +99,12 @@ RCT_EXTERN_METHOD(
     reject:(RCTPromiseRejectBlock)reject
 )
 
+RCT_EXTERN_METHOD(
+    sendPayment: (nonnull NSString*)nodeId
+    invoice: (nonnull NSString*)invoice
+    resolve: (RCTPromiseResolveBlock)resolve
+    reject:(RCTPromiseRejectBlock)reject
+)
 
 RCT_EXTERN_METHOD(
     receivePayment: (nonnull NSString*)nodeId

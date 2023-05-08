@@ -19,13 +19,13 @@ fileprivate extension RustBuffer {
     }
 
     static func from(_ ptr: UnsafeBufferPointer<UInt8>) -> RustBuffer {
-        try! rustCall { ffi_ldk_node_e835_rustbuffer_from_bytes(ForeignBytes(bufferPointer: ptr), $0) }
+        try! rustCall { ffi_ldk_node_948d_rustbuffer_from_bytes(ForeignBytes(bufferPointer: ptr), $0) }
     }
 
     // Frees the buffer in place.
     // The buffer must not be used after this is called.
     func deallocate() {
-        try! rustCall { ffi_ldk_node_e835_rustbuffer_free(self, $0) }
+        try! rustCall { ffi_ldk_node_948d_rustbuffer_free(self, $0) }
     }
 }
 
@@ -385,12 +385,12 @@ public class Builder: BuilderProtocol {
     
     rustCall() {
     
-    ldk_node_e835_Builder_new($0)
+    ldk_node_948d_Builder_new($0)
 })
     }
 
     deinit {
-        try! rustCall { ffi_ldk_node_e835_Builder_object_free(pointer, $0) }
+        try! rustCall { ffi_ldk_node_948d_Builder_object_free(pointer, $0) }
     }
 
     
@@ -399,7 +399,7 @@ public class Builder: BuilderProtocol {
     
     rustCall() {
     
-    ldk_node_e835_Builder_from_config(
+    ldk_node_948d_Builder_from_config(
         FfiConverterTypeConfig.lower(`config`), $0)
 })
     }
@@ -411,7 +411,7 @@ public class Builder: BuilderProtocol {
             try!
     rustCall() {
     
-    ldk_node_e835_Builder_build(self.pointer, $0
+    ldk_node_948d_Builder_build(self.pointer, $0
     )
 }
         )
@@ -454,23 +454,27 @@ public struct FfiConverterTypeBuilder: FfiConverter {
 public protocol NodeProtocol {
     func `start`() throws
     func `stop`() throws
-    func `syncWallets`() throws
     func `nextEvent`()  -> Event
     func `eventHandled`() 
     func `nodeId`()  -> PublicKey
+    func `listeningAddress`()  -> SocketAddr?
     func `newFundingAddress`() throws -> Address
+    func `sendToOnchainAddress`(`address`: Address, `amountMsat`: UInt64) throws -> Txid
+    func `sendAllToOnchainAddress`(`address`: Address) throws -> Txid
     func `spendableOnchainBalanceSats`() throws -> UInt64
     func `totalOnchainBalanceSats`() throws -> UInt64
     func `connect`(`nodeId`: PublicKey, `address`: SocketAddr, `permanently`: Bool) throws
     func `disconnect`(`nodeId`: PublicKey) throws
     func `connectOpenChannel`(`nodeId`: PublicKey, `address`: SocketAddr, `channelAmountSats`: UInt64, `pushToCounterpartyMsat`: UInt64?, `announceChannel`: Bool) throws
     func `closeChannel`(`channelId`: ChannelId, `counterpartyNodeId`: PublicKey) throws
+    func `syncWallets`() throws
     func `sendPayment`(`invoice`: Invoice) throws -> PaymentHash
     func `sendPaymentUsingAmount`(`invoice`: Invoice, `amountMsat`: UInt64) throws -> PaymentHash
     func `sendSpontaneousPayment`(`amountMsat`: UInt64, `nodeId`: PublicKey) throws -> PaymentHash
     func `receivePayment`(`amountMsat`: UInt64, `description`: String, `expirySecs`: UInt32) throws -> Invoice
     func `receiveVariableAmountPayment`(`description`: String, `expirySecs`: UInt32) throws -> Invoice
     func `payment`(`paymentHash`: PaymentHash)  -> PaymentDetails?
+    func `removePayment`(`paymentHash`: PaymentHash) throws -> Bool
     
 }
 
@@ -485,7 +489,7 @@ public class Node: NodeProtocol {
     }
 
     deinit {
-        try! rustCall { ffi_ldk_node_e835_Node_object_free(pointer, $0) }
+        try! rustCall { ffi_ldk_node_948d_Node_object_free(pointer, $0) }
     }
 
     
@@ -494,21 +498,14 @@ public class Node: NodeProtocol {
     public func `start`() throws {
         try
     rustCallWithError(FfiConverterTypeNodeError.self) {
-    ldk_node_e835_Node_start(self.pointer, $0
+    ldk_node_948d_Node_start(self.pointer, $0
     )
 }
     }
     public func `stop`() throws {
         try
     rustCallWithError(FfiConverterTypeNodeError.self) {
-    ldk_node_e835_Node_stop(self.pointer, $0
-    )
-}
-    }
-    public func `syncWallets`() throws {
-        try
-    rustCallWithError(FfiConverterTypeNodeError.self) {
-    ldk_node_e835_Node_sync_wallets(self.pointer, $0
+    ldk_node_948d_Node_stop(self.pointer, $0
     )
 }
     }
@@ -517,7 +514,7 @@ public class Node: NodeProtocol {
             try!
     rustCall() {
     
-    ldk_node_e835_Node_next_event(self.pointer, $0
+    ldk_node_948d_Node_next_event(self.pointer, $0
     )
 }
         )
@@ -526,7 +523,7 @@ public class Node: NodeProtocol {
         try!
     rustCall() {
     
-    ldk_node_e835_Node_event_handled(self.pointer, $0
+    ldk_node_948d_Node_event_handled(self.pointer, $0
     )
 }
     }
@@ -535,7 +532,17 @@ public class Node: NodeProtocol {
             try!
     rustCall() {
     
-    ldk_node_e835_Node_node_id(self.pointer, $0
+    ldk_node_948d_Node_node_id(self.pointer, $0
+    )
+}
+        )
+    }
+    public func `listeningAddress`()  -> SocketAddr? {
+        return try! FfiConverterOptionTypeSocketAddr.lift(
+            try!
+    rustCall() {
+    
+    ldk_node_948d_Node_listening_address(self.pointer, $0
     )
 }
         )
@@ -544,7 +551,28 @@ public class Node: NodeProtocol {
         return try FfiConverterTypeAddress.lift(
             try
     rustCallWithError(FfiConverterTypeNodeError.self) {
-    ldk_node_e835_Node_new_funding_address(self.pointer, $0
+    ldk_node_948d_Node_new_funding_address(self.pointer, $0
+    )
+}
+        )
+    }
+    public func `sendToOnchainAddress`(`address`: Address, `amountMsat`: UInt64) throws -> Txid {
+        return try FfiConverterTypeTxid.lift(
+            try
+    rustCallWithError(FfiConverterTypeNodeError.self) {
+    ldk_node_948d_Node_send_to_onchain_address(self.pointer, 
+        FfiConverterTypeAddress.lower(`address`), 
+        FfiConverterUInt64.lower(`amountMsat`), $0
+    )
+}
+        )
+    }
+    public func `sendAllToOnchainAddress`(`address`: Address) throws -> Txid {
+        return try FfiConverterTypeTxid.lift(
+            try
+    rustCallWithError(FfiConverterTypeNodeError.self) {
+    ldk_node_948d_Node_send_all_to_onchain_address(self.pointer, 
+        FfiConverterTypeAddress.lower(`address`), $0
     )
 }
         )
@@ -553,7 +581,7 @@ public class Node: NodeProtocol {
         return try FfiConverterUInt64.lift(
             try
     rustCallWithError(FfiConverterTypeNodeError.self) {
-    ldk_node_e835_Node_spendable_onchain_balance_sats(self.pointer, $0
+    ldk_node_948d_Node_spendable_onchain_balance_sats(self.pointer, $0
     )
 }
         )
@@ -562,7 +590,7 @@ public class Node: NodeProtocol {
         return try FfiConverterUInt64.lift(
             try
     rustCallWithError(FfiConverterTypeNodeError.self) {
-    ldk_node_e835_Node_total_onchain_balance_sats(self.pointer, $0
+    ldk_node_948d_Node_total_onchain_balance_sats(self.pointer, $0
     )
 }
         )
@@ -570,7 +598,7 @@ public class Node: NodeProtocol {
     public func `connect`(`nodeId`: PublicKey, `address`: SocketAddr, `permanently`: Bool) throws {
         try
     rustCallWithError(FfiConverterTypeNodeError.self) {
-    ldk_node_e835_Node_connect(self.pointer, 
+    ldk_node_948d_Node_connect(self.pointer, 
         FfiConverterTypePublicKey.lower(`nodeId`), 
         FfiConverterTypeSocketAddr.lower(`address`), 
         FfiConverterBool.lower(`permanently`), $0
@@ -580,7 +608,7 @@ public class Node: NodeProtocol {
     public func `disconnect`(`nodeId`: PublicKey) throws {
         try
     rustCallWithError(FfiConverterTypeNodeError.self) {
-    ldk_node_e835_Node_disconnect(self.pointer, 
+    ldk_node_948d_Node_disconnect(self.pointer, 
         FfiConverterTypePublicKey.lower(`nodeId`), $0
     )
 }
@@ -588,7 +616,7 @@ public class Node: NodeProtocol {
     public func `connectOpenChannel`(`nodeId`: PublicKey, `address`: SocketAddr, `channelAmountSats`: UInt64, `pushToCounterpartyMsat`: UInt64?, `announceChannel`: Bool) throws {
         try
     rustCallWithError(FfiConverterTypeNodeError.self) {
-    ldk_node_e835_Node_connect_open_channel(self.pointer, 
+    ldk_node_948d_Node_connect_open_channel(self.pointer, 
         FfiConverterTypePublicKey.lower(`nodeId`), 
         FfiConverterTypeSocketAddr.lower(`address`), 
         FfiConverterUInt64.lower(`channelAmountSats`), 
@@ -600,9 +628,16 @@ public class Node: NodeProtocol {
     public func `closeChannel`(`channelId`: ChannelId, `counterpartyNodeId`: PublicKey) throws {
         try
     rustCallWithError(FfiConverterTypeNodeError.self) {
-    ldk_node_e835_Node_close_channel(self.pointer, 
+    ldk_node_948d_Node_close_channel(self.pointer, 
         FfiConverterTypeChannelId.lower(`channelId`), 
         FfiConverterTypePublicKey.lower(`counterpartyNodeId`), $0
+    )
+}
+    }
+    public func `syncWallets`() throws {
+        try
+    rustCallWithError(FfiConverterTypeNodeError.self) {
+    ldk_node_948d_Node_sync_wallets(self.pointer, $0
     )
 }
     }
@@ -610,7 +645,7 @@ public class Node: NodeProtocol {
         return try FfiConverterTypePaymentHash.lift(
             try
     rustCallWithError(FfiConverterTypeNodeError.self) {
-    ldk_node_e835_Node_send_payment(self.pointer, 
+    ldk_node_948d_Node_send_payment(self.pointer, 
         FfiConverterTypeInvoice.lower(`invoice`), $0
     )
 }
@@ -620,7 +655,7 @@ public class Node: NodeProtocol {
         return try FfiConverterTypePaymentHash.lift(
             try
     rustCallWithError(FfiConverterTypeNodeError.self) {
-    ldk_node_e835_Node_send_payment_using_amount(self.pointer, 
+    ldk_node_948d_Node_send_payment_using_amount(self.pointer, 
         FfiConverterTypeInvoice.lower(`invoice`), 
         FfiConverterUInt64.lower(`amountMsat`), $0
     )
@@ -631,7 +666,7 @@ public class Node: NodeProtocol {
         return try FfiConverterTypePaymentHash.lift(
             try
     rustCallWithError(FfiConverterTypeNodeError.self) {
-    ldk_node_e835_Node_send_spontaneous_payment(self.pointer, 
+    ldk_node_948d_Node_send_spontaneous_payment(self.pointer, 
         FfiConverterUInt64.lower(`amountMsat`), 
         FfiConverterTypePublicKey.lower(`nodeId`), $0
     )
@@ -642,7 +677,7 @@ public class Node: NodeProtocol {
         return try FfiConverterTypeInvoice.lift(
             try
     rustCallWithError(FfiConverterTypeNodeError.self) {
-    ldk_node_e835_Node_receive_payment(self.pointer, 
+    ldk_node_948d_Node_receive_payment(self.pointer, 
         FfiConverterUInt64.lower(`amountMsat`), 
         FfiConverterString.lower(`description`), 
         FfiConverterUInt32.lower(`expirySecs`), $0
@@ -654,7 +689,7 @@ public class Node: NodeProtocol {
         return try FfiConverterTypeInvoice.lift(
             try
     rustCallWithError(FfiConverterTypeNodeError.self) {
-    ldk_node_e835_Node_receive_variable_amount_payment(self.pointer, 
+    ldk_node_948d_Node_receive_variable_amount_payment(self.pointer, 
         FfiConverterString.lower(`description`), 
         FfiConverterUInt32.lower(`expirySecs`), $0
     )
@@ -666,7 +701,17 @@ public class Node: NodeProtocol {
             try!
     rustCall() {
     
-    ldk_node_e835_Node_payment(self.pointer, 
+    ldk_node_948d_Node_payment(self.pointer, 
+        FfiConverterTypePaymentHash.lower(`paymentHash`), $0
+    )
+}
+        )
+    }
+    public func `removePayment`(`paymentHash`: PaymentHash) throws -> Bool {
+        return try FfiConverterBool.lift(
+            try
+    rustCallWithError(FfiConverterTypeNodeError.self) {
+    ldk_node_948d_Node_remove_payment(self.pointer, 
         FfiConverterTypePaymentHash.lower(`paymentHash`), $0
     )
 }
@@ -1159,7 +1204,7 @@ public enum NodeError {
     case NotRunning(message: String)
     
     // Simple error enums only carry a message
-    case FundingTxCreationFailed(message: String)
+    case OnchainTxCreationFailed(message: String)
     
     // Simple error enums only carry a message
     case ConnectionFailed(message: String)
@@ -1244,7 +1289,7 @@ public struct FfiConverterTypeNodeError: FfiConverterRustBuffer {
             message: try FfiConverterString.read(from: &buf)
         )
         
-        case 3: return .FundingTxCreationFailed(
+        case 3: return .OnchainTxCreationFailed(
             message: try FfiConverterString.read(from: &buf)
         )
         
@@ -1349,7 +1394,7 @@ public struct FfiConverterTypeNodeError: FfiConverterRustBuffer {
         case let .NotRunning(message):
             writeInt(&buf, Int32(2))
             FfiConverterString.write(message, into: &buf)
-        case let .FundingTxCreationFailed(message):
+        case let .OnchainTxCreationFailed(message):
             writeInt(&buf, Int32(3))
             FfiConverterString.write(message, into: &buf)
         case let .ConnectionFailed(message):

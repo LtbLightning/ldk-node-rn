@@ -13,6 +13,7 @@ export interface NativeLdkNodeRn {
     disconnect(nodeId: string, pubKey: string): boolean;
     connectOpenChannel(nodeId: string, pubKey: string, address: string, channelAmountSats: number, pushToCounterpartyMsat: number, announceChannel: boolean): boolean;
     receivePayment(nodeId: string, amountMsat: number, description: string, expirySecs: number): string;
+    sendPayment(nodeId: string, invoice: string): string;
 }
 export declare class NativeLoader {
     protected _ldk: NativeLdkNodeRn;

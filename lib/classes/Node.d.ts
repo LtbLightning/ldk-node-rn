@@ -65,6 +65,12 @@ export declare class Node extends NativeLoader {
      */
     connectOpenChannel(nodeId: string, address: string, channelAmountSats: number, pushToCounterpartyMsat: number, announceChannel: boolean): Promise<boolean>;
     /**
+     * Send payment to invoice
+     * @requires [invoice]
+     * @returns {Promise<boolean>}
+     */
+    sendPayment(invoice: string): Promise<string>;
+    /**
      * Invoice to receive payment
      * @requires [amountMsat] amount in sats
      * @requires [description]

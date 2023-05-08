@@ -205,6 +205,22 @@ class LdkNodeRnModule: NSObject {
         }
     }
 
+
+    @objc
+    func sendPayment(_
+        nodeId: String,
+        invoice: String,
+        resolve: @escaping RCTPromiseResolveBlock,
+        reject: @escaping RCTPromiseRejectBlock
+    ) {
+        do {
+            let invoice = try _nodes[nodeId]!.sendPayment(invoice: invoice)
+            resolve(invoice)
+        } catch let error {
+            reject("Send payment invoice error", "\(error)", error)
+        }
+    }
+
     @objc
     func receivePayment(_
         nodeId: String,
@@ -220,7 +236,6 @@ class LdkNodeRnModule: NSObject {
                 description: description,
                 expirySecs: UInt32(truncating: expirySecs)
             )
-            print("====>Invoice<=====", invoice)
             resolve(invoice)
         } catch let error {
             reject("Receive payment invoice error", "\(error)", error)
