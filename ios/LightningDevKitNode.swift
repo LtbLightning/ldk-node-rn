@@ -19,13 +19,13 @@ fileprivate extension RustBuffer {
     }
 
     static func from(_ ptr: UnsafeBufferPointer<UInt8>) -> RustBuffer {
-        try! rustCall { ffi_ldk_node_948d_rustbuffer_from_bytes(ForeignBytes(bufferPointer: ptr), $0) }
+        try! rustCall { ffi_ldk_node_2e4a_rustbuffer_from_bytes(ForeignBytes(bufferPointer: ptr), $0) }
     }
 
     // Frees the buffer in place.
     // The buffer must not be used after this is called.
     func deallocate() {
-        try! rustCall { ffi_ldk_node_948d_rustbuffer_free(self, $0) }
+        try! rustCall { ffi_ldk_node_2e4a_rustbuffer_free(self, $0) }
     }
 }
 
@@ -385,12 +385,12 @@ public class Builder: BuilderProtocol {
     
     rustCall() {
     
-    ldk_node_948d_Builder_new($0)
+    ldk_node_2e4a_Builder_new($0)
 })
     }
 
     deinit {
-        try! rustCall { ffi_ldk_node_948d_Builder_object_free(pointer, $0) }
+        try! rustCall { ffi_ldk_node_2e4a_Builder_object_free(pointer, $0) }
     }
 
     
@@ -399,7 +399,7 @@ public class Builder: BuilderProtocol {
     
     rustCall() {
     
-    ldk_node_948d_Builder_from_config(
+    ldk_node_2e4a_Builder_from_config(
         FfiConverterTypeConfig.lower(`config`), $0)
 })
     }
@@ -411,7 +411,7 @@ public class Builder: BuilderProtocol {
             try!
     rustCall() {
     
-    ldk_node_948d_Builder_build(self.pointer, $0
+    ldk_node_2e4a_Builder_build(self.pointer, $0
     )
 }
         )
@@ -489,7 +489,7 @@ public class Node: NodeProtocol {
     }
 
     deinit {
-        try! rustCall { ffi_ldk_node_948d_Node_object_free(pointer, $0) }
+        try! rustCall { ffi_ldk_node_2e4a_Node_object_free(pointer, $0) }
     }
 
     
@@ -498,14 +498,14 @@ public class Node: NodeProtocol {
     public func `start`() throws {
         try
     rustCallWithError(FfiConverterTypeNodeError.self) {
-    ldk_node_948d_Node_start(self.pointer, $0
+    ldk_node_2e4a_Node_start(self.pointer, $0
     )
 }
     }
     public func `stop`() throws {
         try
     rustCallWithError(FfiConverterTypeNodeError.self) {
-    ldk_node_948d_Node_stop(self.pointer, $0
+    ldk_node_2e4a_Node_stop(self.pointer, $0
     )
 }
     }
@@ -514,7 +514,7 @@ public class Node: NodeProtocol {
             try!
     rustCall() {
     
-    ldk_node_948d_Node_next_event(self.pointer, $0
+    ldk_node_2e4a_Node_next_event(self.pointer, $0
     )
 }
         )
@@ -523,7 +523,7 @@ public class Node: NodeProtocol {
         try!
     rustCall() {
     
-    ldk_node_948d_Node_event_handled(self.pointer, $0
+    ldk_node_2e4a_Node_event_handled(self.pointer, $0
     )
 }
     }
@@ -532,7 +532,7 @@ public class Node: NodeProtocol {
             try!
     rustCall() {
     
-    ldk_node_948d_Node_node_id(self.pointer, $0
+    ldk_node_2e4a_Node_node_id(self.pointer, $0
     )
 }
         )
@@ -542,7 +542,7 @@ public class Node: NodeProtocol {
             try!
     rustCall() {
     
-    ldk_node_948d_Node_listening_address(self.pointer, $0
+    ldk_node_2e4a_Node_listening_address(self.pointer, $0
     )
 }
         )
@@ -551,7 +551,7 @@ public class Node: NodeProtocol {
         return try FfiConverterTypeAddress.lift(
             try
     rustCallWithError(FfiConverterTypeNodeError.self) {
-    ldk_node_948d_Node_new_funding_address(self.pointer, $0
+    ldk_node_2e4a_Node_new_funding_address(self.pointer, $0
     )
 }
         )
@@ -560,7 +560,7 @@ public class Node: NodeProtocol {
         return try FfiConverterTypeTxid.lift(
             try
     rustCallWithError(FfiConverterTypeNodeError.self) {
-    ldk_node_948d_Node_send_to_onchain_address(self.pointer, 
+    ldk_node_2e4a_Node_send_to_onchain_address(self.pointer, 
         FfiConverterTypeAddress.lower(`address`), 
         FfiConverterUInt64.lower(`amountMsat`), $0
     )
@@ -571,7 +571,7 @@ public class Node: NodeProtocol {
         return try FfiConverterTypeTxid.lift(
             try
     rustCallWithError(FfiConverterTypeNodeError.self) {
-    ldk_node_948d_Node_send_all_to_onchain_address(self.pointer, 
+    ldk_node_2e4a_Node_send_all_to_onchain_address(self.pointer, 
         FfiConverterTypeAddress.lower(`address`), $0
     )
 }
@@ -581,7 +581,7 @@ public class Node: NodeProtocol {
         return try FfiConverterUInt64.lift(
             try
     rustCallWithError(FfiConverterTypeNodeError.self) {
-    ldk_node_948d_Node_spendable_onchain_balance_sats(self.pointer, $0
+    ldk_node_2e4a_Node_spendable_onchain_balance_sats(self.pointer, $0
     )
 }
         )
@@ -590,7 +590,7 @@ public class Node: NodeProtocol {
         return try FfiConverterUInt64.lift(
             try
     rustCallWithError(FfiConverterTypeNodeError.self) {
-    ldk_node_948d_Node_total_onchain_balance_sats(self.pointer, $0
+    ldk_node_2e4a_Node_total_onchain_balance_sats(self.pointer, $0
     )
 }
         )
@@ -598,7 +598,7 @@ public class Node: NodeProtocol {
     public func `connect`(`nodeId`: PublicKey, `address`: SocketAddr, `permanently`: Bool) throws {
         try
     rustCallWithError(FfiConverterTypeNodeError.self) {
-    ldk_node_948d_Node_connect(self.pointer, 
+    ldk_node_2e4a_Node_connect(self.pointer, 
         FfiConverterTypePublicKey.lower(`nodeId`), 
         FfiConverterTypeSocketAddr.lower(`address`), 
         FfiConverterBool.lower(`permanently`), $0
@@ -608,7 +608,7 @@ public class Node: NodeProtocol {
     public func `disconnect`(`nodeId`: PublicKey) throws {
         try
     rustCallWithError(FfiConverterTypeNodeError.self) {
-    ldk_node_948d_Node_disconnect(self.pointer, 
+    ldk_node_2e4a_Node_disconnect(self.pointer, 
         FfiConverterTypePublicKey.lower(`nodeId`), $0
     )
 }
@@ -616,7 +616,7 @@ public class Node: NodeProtocol {
     public func `connectOpenChannel`(`nodeId`: PublicKey, `address`: SocketAddr, `channelAmountSats`: UInt64, `pushToCounterpartyMsat`: UInt64?, `announceChannel`: Bool) throws {
         try
     rustCallWithError(FfiConverterTypeNodeError.self) {
-    ldk_node_948d_Node_connect_open_channel(self.pointer, 
+    ldk_node_2e4a_Node_connect_open_channel(self.pointer, 
         FfiConverterTypePublicKey.lower(`nodeId`), 
         FfiConverterTypeSocketAddr.lower(`address`), 
         FfiConverterUInt64.lower(`channelAmountSats`), 
@@ -628,7 +628,7 @@ public class Node: NodeProtocol {
     public func `closeChannel`(`channelId`: ChannelId, `counterpartyNodeId`: PublicKey) throws {
         try
     rustCallWithError(FfiConverterTypeNodeError.self) {
-    ldk_node_948d_Node_close_channel(self.pointer, 
+    ldk_node_2e4a_Node_close_channel(self.pointer, 
         FfiConverterTypeChannelId.lower(`channelId`), 
         FfiConverterTypePublicKey.lower(`counterpartyNodeId`), $0
     )
@@ -637,7 +637,7 @@ public class Node: NodeProtocol {
     public func `syncWallets`() throws {
         try
     rustCallWithError(FfiConverterTypeNodeError.self) {
-    ldk_node_948d_Node_sync_wallets(self.pointer, $0
+    ldk_node_2e4a_Node_sync_wallets(self.pointer, $0
     )
 }
     }
@@ -645,7 +645,7 @@ public class Node: NodeProtocol {
         return try FfiConverterTypePaymentHash.lift(
             try
     rustCallWithError(FfiConverterTypeNodeError.self) {
-    ldk_node_948d_Node_send_payment(self.pointer, 
+    ldk_node_2e4a_Node_send_payment(self.pointer, 
         FfiConverterTypeInvoice.lower(`invoice`), $0
     )
 }
@@ -655,7 +655,7 @@ public class Node: NodeProtocol {
         return try FfiConverterTypePaymentHash.lift(
             try
     rustCallWithError(FfiConverterTypeNodeError.self) {
-    ldk_node_948d_Node_send_payment_using_amount(self.pointer, 
+    ldk_node_2e4a_Node_send_payment_using_amount(self.pointer, 
         FfiConverterTypeInvoice.lower(`invoice`), 
         FfiConverterUInt64.lower(`amountMsat`), $0
     )
@@ -666,7 +666,7 @@ public class Node: NodeProtocol {
         return try FfiConverterTypePaymentHash.lift(
             try
     rustCallWithError(FfiConverterTypeNodeError.self) {
-    ldk_node_948d_Node_send_spontaneous_payment(self.pointer, 
+    ldk_node_2e4a_Node_send_spontaneous_payment(self.pointer, 
         FfiConverterUInt64.lower(`amountMsat`), 
         FfiConverterTypePublicKey.lower(`nodeId`), $0
     )
@@ -677,7 +677,7 @@ public class Node: NodeProtocol {
         return try FfiConverterTypeInvoice.lift(
             try
     rustCallWithError(FfiConverterTypeNodeError.self) {
-    ldk_node_948d_Node_receive_payment(self.pointer, 
+    ldk_node_2e4a_Node_receive_payment(self.pointer, 
         FfiConverterUInt64.lower(`amountMsat`), 
         FfiConverterString.lower(`description`), 
         FfiConverterUInt32.lower(`expirySecs`), $0
@@ -689,7 +689,7 @@ public class Node: NodeProtocol {
         return try FfiConverterTypeInvoice.lift(
             try
     rustCallWithError(FfiConverterTypeNodeError.self) {
-    ldk_node_948d_Node_receive_variable_amount_payment(self.pointer, 
+    ldk_node_2e4a_Node_receive_variable_amount_payment(self.pointer, 
         FfiConverterString.lower(`description`), 
         FfiConverterUInt32.lower(`expirySecs`), $0
     )
@@ -701,7 +701,7 @@ public class Node: NodeProtocol {
             try!
     rustCall() {
     
-    ldk_node_948d_Node_payment(self.pointer, 
+    ldk_node_2e4a_Node_payment(self.pointer, 
         FfiConverterTypePaymentHash.lower(`paymentHash`), $0
     )
 }
@@ -711,7 +711,7 @@ public class Node: NodeProtocol {
         return try FfiConverterBool.lift(
             try
     rustCallWithError(FfiConverterTypeNodeError.self) {
-    ldk_node_948d_Node_remove_payment(self.pointer, 
+    ldk_node_2e4a_Node_remove_payment(self.pointer, 
         FfiConverterTypePaymentHash.lower(`paymentHash`), $0
     )
 }
@@ -1210,43 +1210,10 @@ public enum NodeError {
     case ConnectionFailed(message: String)
     
     // Simple error enums only carry a message
-    case AddressInvalid(message: String)
-    
-    // Simple error enums only carry a message
-    case PublicKeyInvalid(message: String)
-    
-    // Simple error enums only carry a message
-    case PaymentHashInvalid(message: String)
-    
-    // Simple error enums only carry a message
-    case PaymentPreimageInvalid(message: String)
-    
-    // Simple error enums only carry a message
-    case PaymentSecretInvalid(message: String)
-    
-    // Simple error enums only carry a message
-    case NonUniquePaymentHash(message: String)
-    
-    // Simple error enums only carry a message
-    case InvalidAmount(message: String)
-    
-    // Simple error enums only carry a message
-    case InvalidInvoice(message: String)
-    
-    // Simple error enums only carry a message
     case InvoiceCreationFailed(message: String)
     
     // Simple error enums only carry a message
-    case InsufficientFunds(message: String)
-    
-    // Simple error enums only carry a message
     case PaymentFailed(message: String)
-    
-    // Simple error enums only carry a message
-    case ChannelIdInvalid(message: String)
-    
-    // Simple error enums only carry a message
-    case NetworkInvalid(message: String)
     
     // Simple error enums only carry a message
     case PeerInfoParseFailed(message: String)
@@ -1268,6 +1235,39 @@ public enum NodeError {
     
     // Simple error enums only carry a message
     case TxSyncFailed(message: String)
+    
+    // Simple error enums only carry a message
+    case InvalidAddress(message: String)
+    
+    // Simple error enums only carry a message
+    case InvalidPublicKey(message: String)
+    
+    // Simple error enums only carry a message
+    case InvalidPaymentHash(message: String)
+    
+    // Simple error enums only carry a message
+    case InvalidPaymentPreimage(message: String)
+    
+    // Simple error enums only carry a message
+    case InvalidPaymentSecret(message: String)
+    
+    // Simple error enums only carry a message
+    case InvalidAmount(message: String)
+    
+    // Simple error enums only carry a message
+    case InvalidInvoice(message: String)
+    
+    // Simple error enums only carry a message
+    case InvalidChannelId(message: String)
+    
+    // Simple error enums only carry a message
+    case InvalidNetwork(message: String)
+    
+    // Simple error enums only carry a message
+    case NonUniquePaymentHash(message: String)
+    
+    // Simple error enums only carry a message
+    case InsufficientFunds(message: String)
     
 }
 
@@ -1297,83 +1297,83 @@ public struct FfiConverterTypeNodeError: FfiConverterRustBuffer {
             message: try FfiConverterString.read(from: &buf)
         )
         
-        case 5: return .AddressInvalid(
+        case 5: return .InvoiceCreationFailed(
             message: try FfiConverterString.read(from: &buf)
         )
         
-        case 6: return .PublicKeyInvalid(
+        case 6: return .PaymentFailed(
             message: try FfiConverterString.read(from: &buf)
         )
         
-        case 7: return .PaymentHashInvalid(
+        case 7: return .PeerInfoParseFailed(
             message: try FfiConverterString.read(from: &buf)
         )
         
-        case 8: return .PaymentPreimageInvalid(
+        case 8: return .ChannelCreationFailed(
             message: try FfiConverterString.read(from: &buf)
         )
         
-        case 9: return .PaymentSecretInvalid(
+        case 9: return .ChannelClosingFailed(
             message: try FfiConverterString.read(from: &buf)
         )
         
-        case 10: return .NonUniquePaymentHash(
+        case 10: return .PersistenceFailed(
             message: try FfiConverterString.read(from: &buf)
         )
         
-        case 11: return .InvalidAmount(
+        case 11: return .WalletOperationFailed(
             message: try FfiConverterString.read(from: &buf)
         )
         
-        case 12: return .InvalidInvoice(
+        case 12: return .WalletSigningFailed(
             message: try FfiConverterString.read(from: &buf)
         )
         
-        case 13: return .InvoiceCreationFailed(
+        case 13: return .TxSyncFailed(
             message: try FfiConverterString.read(from: &buf)
         )
         
-        case 14: return .InsufficientFunds(
+        case 14: return .InvalidAddress(
             message: try FfiConverterString.read(from: &buf)
         )
         
-        case 15: return .PaymentFailed(
+        case 15: return .InvalidPublicKey(
             message: try FfiConverterString.read(from: &buf)
         )
         
-        case 16: return .ChannelIdInvalid(
+        case 16: return .InvalidPaymentHash(
             message: try FfiConverterString.read(from: &buf)
         )
         
-        case 17: return .NetworkInvalid(
+        case 17: return .InvalidPaymentPreimage(
             message: try FfiConverterString.read(from: &buf)
         )
         
-        case 18: return .PeerInfoParseFailed(
+        case 18: return .InvalidPaymentSecret(
             message: try FfiConverterString.read(from: &buf)
         )
         
-        case 19: return .ChannelCreationFailed(
+        case 19: return .InvalidAmount(
             message: try FfiConverterString.read(from: &buf)
         )
         
-        case 20: return .ChannelClosingFailed(
+        case 20: return .InvalidInvoice(
             message: try FfiConverterString.read(from: &buf)
         )
         
-        case 21: return .PersistenceFailed(
+        case 21: return .InvalidChannelId(
             message: try FfiConverterString.read(from: &buf)
         )
         
-        case 22: return .WalletOperationFailed(
+        case 22: return .InvalidNetwork(
             message: try FfiConverterString.read(from: &buf)
         )
         
-        case 23: return .WalletSigningFailed(
+        case 23: return .NonUniquePaymentHash(
             message: try FfiConverterString.read(from: &buf)
         )
         
-        case 24: return .TxSyncFailed(
+        case 24: return .InsufficientFunds(
             message: try FfiConverterString.read(from: &buf)
         )
         
@@ -1400,64 +1400,64 @@ public struct FfiConverterTypeNodeError: FfiConverterRustBuffer {
         case let .ConnectionFailed(message):
             writeInt(&buf, Int32(4))
             FfiConverterString.write(message, into: &buf)
-        case let .AddressInvalid(message):
+        case let .InvoiceCreationFailed(message):
             writeInt(&buf, Int32(5))
             FfiConverterString.write(message, into: &buf)
-        case let .PublicKeyInvalid(message):
+        case let .PaymentFailed(message):
             writeInt(&buf, Int32(6))
             FfiConverterString.write(message, into: &buf)
-        case let .PaymentHashInvalid(message):
+        case let .PeerInfoParseFailed(message):
             writeInt(&buf, Int32(7))
             FfiConverterString.write(message, into: &buf)
-        case let .PaymentPreimageInvalid(message):
+        case let .ChannelCreationFailed(message):
             writeInt(&buf, Int32(8))
             FfiConverterString.write(message, into: &buf)
-        case let .PaymentSecretInvalid(message):
+        case let .ChannelClosingFailed(message):
             writeInt(&buf, Int32(9))
             FfiConverterString.write(message, into: &buf)
-        case let .NonUniquePaymentHash(message):
+        case let .PersistenceFailed(message):
             writeInt(&buf, Int32(10))
             FfiConverterString.write(message, into: &buf)
-        case let .InvalidAmount(message):
+        case let .WalletOperationFailed(message):
             writeInt(&buf, Int32(11))
             FfiConverterString.write(message, into: &buf)
-        case let .InvalidInvoice(message):
+        case let .WalletSigningFailed(message):
             writeInt(&buf, Int32(12))
             FfiConverterString.write(message, into: &buf)
-        case let .InvoiceCreationFailed(message):
+        case let .TxSyncFailed(message):
             writeInt(&buf, Int32(13))
             FfiConverterString.write(message, into: &buf)
-        case let .InsufficientFunds(message):
+        case let .InvalidAddress(message):
             writeInt(&buf, Int32(14))
             FfiConverterString.write(message, into: &buf)
-        case let .PaymentFailed(message):
+        case let .InvalidPublicKey(message):
             writeInt(&buf, Int32(15))
             FfiConverterString.write(message, into: &buf)
-        case let .ChannelIdInvalid(message):
+        case let .InvalidPaymentHash(message):
             writeInt(&buf, Int32(16))
             FfiConverterString.write(message, into: &buf)
-        case let .NetworkInvalid(message):
+        case let .InvalidPaymentPreimage(message):
             writeInt(&buf, Int32(17))
             FfiConverterString.write(message, into: &buf)
-        case let .PeerInfoParseFailed(message):
+        case let .InvalidPaymentSecret(message):
             writeInt(&buf, Int32(18))
             FfiConverterString.write(message, into: &buf)
-        case let .ChannelCreationFailed(message):
+        case let .InvalidAmount(message):
             writeInt(&buf, Int32(19))
             FfiConverterString.write(message, into: &buf)
-        case let .ChannelClosingFailed(message):
+        case let .InvalidInvoice(message):
             writeInt(&buf, Int32(20))
             FfiConverterString.write(message, into: &buf)
-        case let .PersistenceFailed(message):
+        case let .InvalidChannelId(message):
             writeInt(&buf, Int32(21))
             FfiConverterString.write(message, into: &buf)
-        case let .WalletOperationFailed(message):
+        case let .InvalidNetwork(message):
             writeInt(&buf, Int32(22))
             FfiConverterString.write(message, into: &buf)
-        case let .WalletSigningFailed(message):
+        case let .NonUniquePaymentHash(message):
             writeInt(&buf, Int32(23))
             FfiConverterString.write(message, into: &buf)
-        case let .TxSyncFailed(message):
+        case let .InsufficientFunds(message):
             writeInt(&buf, Int32(24))
             FfiConverterString.write(message, into: &buf)
 
