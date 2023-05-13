@@ -241,9 +241,6 @@ class LdkNodeRnModule: NSObject {
             reject("Receive payment invoice error", "\(error)", error)
         }
     }
-
-
-
     /** Node methods ends */
 
 
