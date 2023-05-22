@@ -13,7 +13,7 @@ class LdkNodeRnModule: NSObject {
         storageDirPath: String,
         esploraServerUrl: String,
         network: String,
-        listeningAddress: String,
+        listeningAddress: String? = nil,
         defaultCltvExpiryDelta: NSNumber,
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
@@ -23,7 +23,7 @@ class LdkNodeRnModule: NSObject {
             storageDirPath: storageDirPath,
             esploraServerUrl: esploraServerUrl,
             network: network,
-            listeningAddress: nil,
+            listeningAddress: listeningAddress,
             defaultCltvExpiryDelta: UInt32(truncating: defaultCltvExpiryDelta)
         )
         resolve(id)

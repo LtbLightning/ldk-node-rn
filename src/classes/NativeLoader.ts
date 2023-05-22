@@ -5,7 +5,7 @@ export interface NativeLdkNodeRn {
     storageDirPath: string,
     esploraServerUrl: string,
     network: string,
-    listeningAddress: string,
+    listeningAddress: string | null,
     defaultCltvExpiryDelta: number
   ): string;
 

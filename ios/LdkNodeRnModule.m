@@ -9,7 +9,7 @@ RCT_EXTERN_METHOD(
     createConfig: (nonnull NSString*)storageDirPath
     esploraServerUrl: (nonnull NSString*)esploraServerUrl
     network: (nonnull NSString*)network
-    listeningAddress: (nonnull NSString*)listeningAddress
+    listeningAddress: (nullable NSString*)listeningAddress
     defaultCltvExpiryDelta: (nonnull NSNumber*)defaultCltvExpiryDelta
     resolve: (RCTPromiseResolveBlock)resolve
     reject:(RCTPromiseRejectBlock)reject

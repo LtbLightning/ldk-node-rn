@@ -1,3 +1,4 @@
+import { Address, PublicKey } from './Bindings';
 import { NativeLoader } from './NativeLoader';
 
 export class Node extends NativeLoader {
@@ -16,7 +17,7 @@ export class Node extends NativeLoader {
    * @returns {Promise<boolean>}
    */
   async start(): Promise<boolean> {
-    return this._ldk.start(this.id);
+    return await this._ldk.start(this.id);
   }
 
   /**
@@ -24,7 +25,7 @@ export class Node extends NativeLoader {
    * @returns {Promise<boolean>}
    */
   async stop(): Promise<boolean> {
-    return this._ldk.stop(this.id);
+    return await this._ldk.stop(this.id);
   }
 
   /**
@@ -32,23 +33,25 @@ export class Node extends NativeLoader {
    * @returns {Promise<boolean>}
    */
   async syncWallets(): Promise<boolean> {
-    return this._ldk.syncWallets(this.id);
+    return await this._ldk.syncWallets(this.id);
   }
 
   /**
    * Get nodeId
-   * @returns {Promise<string>}
+   * @returns {Promise<PublicKey>}
    */
-  async nodeId(): Promise<string> {
-    return this._ldk.nodeId(this.id);
+  async nodeId(): Promise<PublicKey> {
+    let keyHex = await this._ldk.nodeId(this.id);
+    return new PublicKey(keyHex);
   }
 
   /**
    * Get new funding address
-   * @returns {Promise<string>}
+   * @returns {Promise<Address>}
    */
-  async newFundingAddress(): Promise<string> {
-    return this._ldk.newFundingAddress(this.id);
+  async newFundingAddress(): Promise<Address> {
+    let hex = await this._ldk.newFundingAddress(this.id);
+    return new Address(hex);
   }
 
   /**
@@ -75,7 +78,7 @@ export class Node extends NativeLoader {
    * @returns {Promise<boolean>}
    */
   async connect(nodeId: string, address: string, permanently: boolean): Promise<boolean> {
-    return this._ldk.connect(this.id, nodeId, address, permanently);
+    return await this._ldk.connect(this.id, nodeId, address, permanently);
   }
 
   /**
@@ -84,7 +87,7 @@ export class Node extends NativeLoader {
    * @returns {Promise<boolean>}
    */
   async disconnect(nodeId: string): Promise<boolean> {
-    return this._ldk.disconnect(this.id, nodeId);
+    return await this._ldk.disconnect(this.id, nodeId);
   }
 
   /**
@@ -103,7 +106,7 @@ export class Node extends NativeLoader {
     pushToCounterpartyMsat: number,
     announceChannel: boolean
   ): Promise<boolean> {
-    return this._ldk.connectOpenChannel(
+    return await this._ldk.connectOpenChannel(
       this.id,
       nodeId,
       address,
@@ -119,7 +122,7 @@ export class Node extends NativeLoader {
    * @returns {Promise<boolean>}
    */
   async sendPayment(invoice: string): Promise<string> {
-    return this._ldk.sendPayment(this.id, invoice);
+    return await this._ldk.sendPayment(this.id, invoice);
   }
 
   /**
@@ -130,6 +133,6 @@ export class Node extends NativeLoader {
    * @returns {Promise<boolean>}
    */
   async receivePayment(amountMsat: number, description: string, expirySecs: number): Promise<string> {
-    return this._ldk.receivePayment(this.id, amountMsat, description, expirySecs);
+    return await this._ldk.receivePayment(this.id, amountMsat, description, expirySecs);
   }
 }

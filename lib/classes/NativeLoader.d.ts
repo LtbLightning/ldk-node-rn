@@ -1,5 +1,5 @@
 export interface NativeLdkNodeRn {
-    createConfig(storageDirPath: string, esploraServerUrl: string, network: string, listeningAddress: string, defaultCltvExpiryDelta: number): string;
+    createConfig(storageDirPath: string, esploraServerUrl: string, network: string, listeningAddress: string | null, defaultCltvExpiryDelta: number): string;
     fromConfig(configId: string): string;
     build(buildId: string): string;
     start(nodeId: string): boolean;

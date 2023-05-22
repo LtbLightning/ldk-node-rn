@@ -1,3 +1,4 @@
+import { SocketAddr } from './Bindings';
 import { NativeLoader } from './NativeLoader';
 
 export class Config extends NativeLoader {
@@ -16,14 +17,14 @@ export class Config extends NativeLoader {
     storageDirPath: string,
     esploraServerUrl: string,
     network: string,
-    listeningAddress: string,
+    listeningAddress: SocketAddr | null,
     defaultCltvExpiryDelta: number
   ): Promise<Config> {
     this.id = await this._ldk.createConfig(
       storageDirPath,
       esploraServerUrl,
       network,
-      listeningAddress,
+      listeningAddress == null ? null : `${listeningAddress.ip}:${listeningAddress.port}`,
       defaultCltvExpiryDelta
     );
     return this;

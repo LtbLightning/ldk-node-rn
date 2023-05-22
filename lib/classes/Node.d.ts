@@ -1,3 +1,4 @@
+import { Address, PublicKey } from './Bindings';
 import { NativeLoader } from './NativeLoader';
 export declare class Node extends NativeLoader {
     id: string;
@@ -22,14 +23,14 @@ export declare class Node extends NativeLoader {
     syncWallets(): Promise<boolean>;
     /**
      * Get nodeId
-     * @returns {Promise<string>}
+     * @returns {Promise<PublicKey>}
      */
-    nodeId(): Promise<string>;
+    nodeId(): Promise<PublicKey>;
     /**
      * Get new funding address
-     * @returns {Promise<string>}
+     * @returns {Promise<Address>}
      */
-    newFundingAddress(): Promise<string>;
+    newFundingAddress(): Promise<Address>;
     /**
      * Get spendableOnchainBalanceSats
      * @returns {Promise<number>}
