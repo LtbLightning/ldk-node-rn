@@ -107,10 +107,40 @@ RCT_EXTERN_METHOD(
 )
 
 RCT_EXTERN_METHOD(
+    sendPaymentUsingAmount: (nonnull NSString*)nodeId
+    invoice: (nonnull NSString*)invoice
+    amountMsat: (nonnull NSNumber*)amountMsat
+    resolve: (RCTPromiseResolveBlock)resolve
+    reject:(RCTPromiseRejectBlock)reject
+)
+
+RCT_EXTERN_METHOD(
+    sendSpontaneousPayment: (nonnull NSString*)nodeId
+    amountMsat: (nonnull NSNumber*)amountMsat
+    pubKey: (nonnull NSString*)pubKey
+    resolve: (RCTPromiseResolveBlock)resolve
+    reject:(RCTPromiseRejectBlock)reject
+)
+
+
+RCT_EXTERN_METHOD(
     receivePayment: (nonnull NSString*)nodeId
     amountMsat: (nonnull NSNumber*)amountMsat
     description: (nonnull NSString*)description
     expirySecs: (nonnull NSNumber*)expirySecs
+    resolve: (RCTPromiseResolveBlock)resolve
+    reject:(RCTPromiseRejectBlock)reject
+)
+
+RCT_EXTERN_METHOD(
+    listPeers: (nonnull NSString*)nodeId
+    resolve: (RCTPromiseResolveBlock)resolve
+    reject:(RCTPromiseRejectBlock)reject
+)
+
+
+RCT_EXTERN_METHOD(
+    listChannels: (nonnull NSString*)nodeId
     resolve: (RCTPromiseResolveBlock)resolve
     reject:(RCTPromiseRejectBlock)reject
 )

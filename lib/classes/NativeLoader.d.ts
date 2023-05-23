@@ -1,3 +1,4 @@
+import { ChannelDetails, PeerDetails } from './Bindings';
 export interface NativeLdkNodeRn {
     createConfig(storageDirPath: string, esploraServerUrl: string, network: string, listeningAddress: string | null, defaultCltvExpiryDelta: number): string;
     fromConfig(configId: string): string;
@@ -14,6 +15,10 @@ export interface NativeLdkNodeRn {
     connectOpenChannel(nodeId: string, pubKey: string, address: string, channelAmountSats: number, pushToCounterpartyMsat: number, announceChannel: boolean): boolean;
     receivePayment(nodeId: string, amountMsat: number, description: string, expirySecs: number): string;
     sendPayment(nodeId: string, invoice: string): string;
+    sendPaymentUsingAmount(nodeId: string, invoice: string, amountMsat: number): string;
+    sendSpontaneousPayment(nodeId: string, amountMsat: number, pubKey: string): string;
+    listPeers(nodeId: string): Array<PeerDetails>;
+    listChannels(nodeId: string): Array<ChannelDetails>;
 }
 export declare class NativeLoader {
     protected _ldk: NativeLdkNodeRn;

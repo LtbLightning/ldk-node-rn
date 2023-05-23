@@ -1,4 +1,4 @@
-import { Address, PublicKey } from './Bindings';
+import { Address, ChannelDetails, PeerDetails, PublicKey } from './Bindings';
 import { NativeLoader } from './NativeLoader';
 export declare class Node extends NativeLoader {
     id: string;
@@ -72,6 +72,20 @@ export declare class Node extends NativeLoader {
      */
     sendPayment(invoice: string): Promise<string>;
     /**
+     * Send payment to invoice using amount
+     * @requires [invoice]
+     * @requires [amountMsat]
+     * @returns {Promise<boolean>}
+     */
+    sendPaymentUsingAmount(invoice: string, amountMsat: number): Promise<string>;
+    /**
+     * Send Spontaneous payment
+     * @requires [invoice]
+     * @requires [amountMsat]
+     * @returns {Promise<boolean>}
+     */
+    sendSpontaneousPayment(amountMsat: number, nodeId: PublicKey): Promise<string>;
+    /**
      * Invoice to receive payment
      * @requires [amountMsat] amount in sats
      * @requires [description]
@@ -79,4 +93,14 @@ export declare class Node extends NativeLoader {
      * @returns {Promise<boolean>}
      */
     receivePayment(amountMsat: number, description: string, expirySecs: number): Promise<string>;
+    /**
+     * Get list of connect peers
+     * @returns {Promise<Array<PeerDetails>>}
+     */
+    listPeers(): Promise<Array<PeerDetails>>;
+    /**
+     * Get list of opened channels
+     * @returns {Promise<Array<ChannelDetails>>}
+     */
+    listChannels(): Promise<Array<ChannelDetails>>;
 }

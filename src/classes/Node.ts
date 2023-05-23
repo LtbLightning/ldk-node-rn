@@ -1,4 +1,5 @@
-import { Address, PublicKey } from './Bindings';
+import { createChannelDetailsObject, createPeerDetailsObject } from '../utils';
+import { Address, ChannelDetails, PeerDetails, PublicKey } from './Bindings';
 import { NativeLoader } from './NativeLoader';
 
 export class Node extends NativeLoader {
@@ -126,6 +127,26 @@ export class Node extends NativeLoader {
   }
 
   /**
+   * Send payment to invoice using amount
+   * @requires [invoice]
+   * @requires [amountMsat]
+   * @returns {Promise<boolean>}
+   */
+  async sendPaymentUsingAmount(invoice: string, amountMsat: number): Promise<string> {
+    return await this._ldk.sendPaymentUsingAmount(this.id, invoice, amountMsat);
+  }
+
+  /**
+   * Send Spontaneous payment
+   * @requires [invoice]
+   * @requires [amountMsat]
+   * @returns {Promise<boolean>}
+   */
+  async sendSpontaneousPayment(amountMsat: number, nodeId: PublicKey): Promise<string> {
+    return await this._ldk.sendSpontaneousPayment(this.id, amountMsat, nodeId.keyHex);
+  }
+
+  /**
    * Invoice to receive payment
    * @requires [amountMsat] amount in sats
    * @requires [description]
@@ -134,5 +155,23 @@ export class Node extends NativeLoader {
    */
   async receivePayment(amountMsat: number, description: string, expirySecs: number): Promise<string> {
     return await this._ldk.receivePayment(this.id, amountMsat, description, expirySecs);
+  }
+
+  /**
+   * Get list of connect peers
+   * @returns {Promise<Array<PeerDetails>>}
+   */
+  async listPeers(): Promise<Array<PeerDetails>> {
+    const peersList = await this._ldk.listPeers(this.id);
+    return peersList.map((item) => createPeerDetailsObject(item));
+  }
+
+  /**
+   * Get list of opened channels
+   * @returns {Promise<Array<ChannelDetails>>}
+   */
+  async listChannels(): Promise<Array<ChannelDetails>> {
+    const channelsList = await this._ldk.listChannels(this.id);
+    return channelsList.map((item) => createChannelDetailsObject(item));
   }
 }

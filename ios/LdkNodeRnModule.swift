@@ -222,6 +222,39 @@ class LdkNodeRnModule: NSObject {
     }
 
     @objc
+    func sendPaymentUsingAmount(_
+        nodeId: String,
+        invoice: String,
+        amountMsat: NSNumber,
+        resolve: @escaping RCTPromiseResolveBlock,
+        reject: @escaping RCTPromiseRejectBlock
+    ) {
+        do {
+            let invoice = try _nodes[nodeId]!.sendPaymentUsingAmount(invoice: invoice, amountMsat: UInt64(truncating: amountMsat))
+            resolve(invoice)
+        } catch let error {
+            reject("Send payment invoice error", "\(error)", error)
+        }
+    }
+
+    @objc
+    func sendSpontaneousPayment(_
+        nodeId: String,
+        amountMsat: NSNumber,
+        pubKey: String,
+        resolve: @escaping RCTPromiseResolveBlock,
+        reject: @escaping RCTPromiseRejectBlock
+    ) {
+        do {
+            let invoice = try _nodes[nodeId]!.sendSpontaneousPayment(amountMsat: UInt64(truncating: amountMsat), nodeId: pubKey)
+            resolve(invoice)
+        } catch let error {
+            reject("Send payment invoice error", "\(error)", error)
+        }
+    }
+
+
+    @objc
     func receivePayment(_
         nodeId: String,
         amountMsat: NSNumber,
@@ -241,6 +274,39 @@ class LdkNodeRnModule: NSObject {
             reject("Receive payment invoice error", "\(error)", error)
         }
     }
+
+
+    @objc
+    func listPeers(_
+        nodeId: String,
+        resolve: @escaping RCTPromiseResolveBlock,
+        reject: @escaping RCTPromiseRejectBlock
+    ) {
+        let list: [PeerDetails] = _nodes[nodeId]!.listPeers()
+        var responseObject: [Any] = []
+        for item in list {
+            responseObject.append(getPeerDetails(peer: item))
+        }
+        resolve(responseObject)
+    }
+
+    @objc
+    func listChannels(_
+        nodeId: String,
+        resolve: @escaping RCTPromiseResolveBlock,
+        reject: @escaping RCTPromiseRejectBlock
+    ) {
+        let list: [ChannelDetails] = _nodes[nodeId]!.listChannels()
+        var responseObject: [Any] = []
+        for item in list {
+            responseObject.append(getChannelDetails(channel: item))
+        }
+        resolve(responseObject)
+    }
+
+
+
+
     /** Node methods ends */
 
 

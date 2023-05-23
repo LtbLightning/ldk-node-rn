@@ -1,3 +1,4 @@
+import { ChannelDetails, PeerDetails } from './Bindings';
 import { NativeModules } from 'react-native';
 
 export interface NativeLdkNodeRn {
@@ -31,6 +32,10 @@ export interface NativeLdkNodeRn {
   ): boolean;
   receivePayment(nodeId: string, amountMsat: number, description: string, expirySecs: number): string;
   sendPayment(nodeId: string, invoice: string): string;
+  sendPaymentUsingAmount(nodeId: string, invoice: string, amountMsat: number): string;
+  sendSpontaneousPayment(nodeId: string, amountMsat: number, pubKey: string): string;
+  listPeers(nodeId: string): Array<PeerDetails>;
+  listChannels(nodeId: string): Array<ChannelDetails>;
 }
 
 export class NativeLoader {
