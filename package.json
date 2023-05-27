@@ -1,11 +1,11 @@
 {
-  "name": "ldk-node-rn",
-  "version": "0.0.0",
-  "description": "ldk-node-rn",
+  "name": "ldk-node",
+  "version": "0.0.1",
+  "description": "ldk-node",
   "homepage": "https://github.com/LtbLightning",
   "main": "src/index.ts",
   "types": "lib/index.d.ts",
-  "author": "BitcoinZavior <BitcoinZavior@gmail.io>",
+  "author": "BitcoinZavior <BitcoinZavior@GMail.Com>",
   "license": "MIT",
   "files": [
     "android",
