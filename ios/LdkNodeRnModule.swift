@@ -274,6 +274,25 @@ class LdkNodeRnModule: NSObject {
             reject("Receive payment invoice error", "\(error)", error)
         }
     }
+    
+    @objc
+    func receiveVariableAmountPayment(_
+        nodeId: String,
+        description: String,
+        expirySecs: NSNumber,
+        resolve: @escaping RCTPromiseResolveBlock,
+        reject: @escaping RCTPromiseRejectBlock
+    ) {
+        do {
+            let invoice = try _nodes[nodeId]!.receiveVariableAmountPayment(
+                description: description,
+                expirySecs: UInt32(truncating: expirySecs)
+            )
+            resolve(invoice)
+        } catch let error {
+            reject("Receive variable amount payment invoice error", "\(error)", error)
+        }
+    }
 
 
     @objc

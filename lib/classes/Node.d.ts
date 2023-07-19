@@ -7,27 +7,32 @@ export declare class Node extends NativeLoader {
      */
     constructor(id: string);
     /**
-     * Start node
+     * Starts the necessary background tasks, such as handling events coming from user input, LDK/BDK, and the peer-to-peer network.
+     *
+     * After this returns, the [Node] instance can be controlled via the provided API methods in a thread-safe manner.
+     *
      * @returns {Promise<boolean>}
      */
     start(): Promise<boolean>;
     /**
-     * Stop node
+     * Disconnects all peers, stops all running background tasks, and shuts down [Node].
+     *
+     * After this returns most API methods will throw NotRunning Exception.
      * @returns {Promise<boolean>}
      */
     stop(): Promise<boolean>;
     /**
-     * Sync Wallets
+     * Sync the LDK and BDK wallets with the current chain state.
      * @returns {Promise<boolean>}
      */
     syncWallets(): Promise<boolean>;
     /**
-     * Get nodeId
+     * Returns our own node id
      * @returns {Promise<PublicKey>}
      */
     nodeId(): Promise<PublicKey>;
     /**
-     * Get new funding address
+     * Retrieve a new on-chain/funding address.
      * @returns {Promise<Address>}
      */
     newFundingAddress(): Promise<Address>;
@@ -42,7 +47,10 @@ export declare class Node extends NativeLoader {
      */
     totalOnchainBalanceSats(): Promise<number>;
     /**
-     * Connect to another node
+     * Connect to a node on the peer-to-peer network.
+     *
+     * If `permanently` is set to `true`, we'll remember the peer and reconnect to it on restart.
+     *
      * @requires [nodeId] publicKey of Node
      * @requires [address] IP:PORT of Node
      * @requires [permanently] open node permanently or not
@@ -50,13 +58,16 @@ export declare class Node extends NativeLoader {
      */
     connect(nodeId: string, address: string, permanently: boolean): Promise<boolean>;
     /**
-     * Disconnect from node
+     * Disconnects the peer with the given node id.
+     *
+     * Will also remove the peer from the peer store, i.e., after this has been called we won't try to reconnect on restart.
+     *
      * @requires [nodeId] publicKey of Node
      * @returns {Promise<boolean>}
      */
     disconnect(nodeId: string): Promise<boolean>;
     /**
-     * Node open channel
+     * Connect to a node and open a new channel. Disconnects and re-connects are handled automatically
      * @requires [nodeId] publicKey of Node
      * @requires [address] IP:PORT of Node
      * @requires [channelAmountSats] number
@@ -66,27 +77,32 @@ export declare class Node extends NativeLoader {
      */
     connectOpenChannel(nodeId: string, address: string, channelAmountSats: number, pushToCounterpartyMsat: number, announceChannel: boolean): Promise<boolean>;
     /**
-     * Send payment to invoice
+     * Send a payement given an invoice.
      * @requires [invoice]
      * @returns {Promise<boolean>}
      */
     sendPayment(invoice: string): Promise<string>;
     /**
-     * Send payment to invoice using amount
+     * Send a payment given an invoice and an amount in millisatoshi.
+     * This will fail if the amount given is less than the value required by the given invoice.
+     *
+     * This can be used to pay a so - called "zero-amount" invoice, i.e., an invoice that leaves the
+     * amount paid to be determined by the user.
+     *
      * @requires [invoice]
      * @requires [amountMsat]
      * @returns {Promise<boolean>}
      */
     sendPaymentUsingAmount(invoice: string, amountMsat: number): Promise<string>;
     /**
-     * Send Spontaneous payment
+     * Send a spontaneous, aka. "keysend", payment
      * @requires [invoice]
      * @requires [amountMsat]
      * @returns {Promise<boolean>}
      */
     sendSpontaneousPayment(amountMsat: number, nodeId: PublicKey): Promise<string>;
     /**
-     * Invoice to receive payment
+     * Returns a payable invoice that can be used to request and receive a payment of the amount given.
      * @requires [amountMsat] amount in sats
      * @requires [description]
      * @requires [expirySecs] number
@@ -94,7 +110,14 @@ export declare class Node extends NativeLoader {
      */
     receivePayment(amountMsat: number, description: string, expirySecs: number): Promise<string>;
     /**
-     * Get list of connect peers
+     * Returns a payable invoice that can be used to request and receive a payment for which the amount is to be determined by the user, also known as a "zero-amount" invoice.
+     * @requires [description]
+     * @requires [expirySecs] number
+     * @returns {Promise<boolean>}
+     */
+    receiveVariableAmountPayment(description: string, expirySecs: number): Promise<string>;
+    /**
+     * Get list of connected peers
      * @returns {Promise<Array<PeerDetails>>}
      */
     listPeers(): Promise<Array<PeerDetails>>;

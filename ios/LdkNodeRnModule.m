@@ -133,6 +133,14 @@ RCT_EXTERN_METHOD(
 )
 
 RCT_EXTERN_METHOD(
+    receiveVariableAmountPayment: (nonnull NSString*)nodeId
+    description: (nonnull NSString*)description
+    expirySecs: (nonnull NSNumber*)expirySecs
+    resolve: (RCTPromiseResolveBlock)resolve
+    reject:(RCTPromiseRejectBlock)reject
+)
+
+RCT_EXTERN_METHOD(
     listPeers: (nonnull NSString*)nodeId
     resolve: (RCTPromiseResolveBlock)resolve
     reject:(RCTPromiseRejectBlock)reject

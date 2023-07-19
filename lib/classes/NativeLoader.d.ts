@@ -14,6 +14,7 @@ export interface NativeLdkNodeRn {
     disconnect(nodeId: string, pubKey: string): boolean;
     connectOpenChannel(nodeId: string, pubKey: string, address: string, channelAmountSats: number, pushToCounterpartyMsat: number, announceChannel: boolean): boolean;
     receivePayment(nodeId: string, amountMsat: number, description: string, expirySecs: number): string;
+    receiveVariableAmountPayment(nodeId: string, description: string, expirySecs: number): string;
     sendPayment(nodeId: string, invoice: string): string;
     sendPaymentUsingAmount(nodeId: string, invoice: string, amountMsat: number): string;
     sendSpontaneousPayment(nodeId: string, amountMsat: number, pubKey: string): string;
