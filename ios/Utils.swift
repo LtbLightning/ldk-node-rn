@@ -10,6 +10,7 @@ func getPeerDetails(peer: PeerDetails) -> [String: Any] {
         "address": peer.address,
         "isConnected": peer.isConnected
     ] as [String: Any]
+
 }
 
 

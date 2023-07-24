@@ -233,7 +233,7 @@ class LdkNodeRnModule: NSObject {
             let invoice = try _nodes[nodeId]!.sendPaymentUsingAmount(invoice: invoice, amountMsat: UInt64(truncating: amountMsat))
             resolve(invoice)
         } catch let error {
-            reject("Send payment invoice error", "\(error)", error)
+            reject("Send payment using amount invoice error", "\(error)", error)
         }
     }
 
@@ -249,7 +249,7 @@ class LdkNodeRnModule: NSObject {
             let invoice = try _nodes[nodeId]!.sendSpontaneousPayment(amountMsat: UInt64(truncating: amountMsat), nodeId: pubKey)
             resolve(invoice)
         } catch let error {
-            reject("Send payment invoice error", "\(error)", error)
+            reject("Send spontaneous payment error", "\(error)", error)
         }
     }
 

@@ -1,5 +1,6 @@
 package io.ltbl.ldknodern
 
+import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
@@ -24,7 +25,7 @@ class LdkNodeRnModule(reactContext: ReactApplicationContext) :
         storageDirPath: String,
         esploraServerUrl: String,
         network: String,
-        listeningAddress: String,
+        listeningAddress: String?,
         defaultCltvExpiryDelta: Int,
         result: Promise
     ) {
@@ -33,7 +34,7 @@ class LdkNodeRnModule(reactContext: ReactApplicationContext) :
             storageDirPath,
             esploraServerUrl,
             network,
-            null,
+            listeningAddress ?: null,
             defaultCltvExpiryDelta.toUInt()
         )
         result.resolve(id)
@@ -184,6 +185,36 @@ class LdkNodeRnModule(reactContext: ReactApplicationContext) :
     }
 
     @ReactMethod
+    fun sendPaymentUsingAmount(
+        nodeId: String,
+        invoice: String,
+        amountMsat: Int,
+        result: Promise
+    ) {
+        try {
+            var paymenthash = _nodes[nodeId]!!.sendPaymentUsingAmount(invoice, amountMsat.toULong())
+            result.resolve(paymenthash)
+        } catch (error: Throwable) {
+            result.reject("Send payment using amount invoice error", error.localizedMessage, error)
+        }
+    }
+
+    @ReactMethod
+    fun sendSpontaneousPayment(
+        nodeId: String,
+        amountMsat: Int,
+        pubKey: String,
+        result: Promise
+    ) {
+        try {
+            var invoice = _nodes[nodeId]!!.sendSpontaneousPayment(amountMsat.toULong(), pubKey)
+            result.resolve(invoice)
+        } catch (error: Throwable) {
+            result.reject("SSend spontaneous payment error", error.localizedMessage, error)
+        }
+    }
+
+    @ReactMethod
     fun receivePayment(
         nodeId: String,
         amountMsat: Int,
@@ -202,6 +233,55 @@ class LdkNodeRnModule(reactContext: ReactApplicationContext) :
             result.reject("Receive payment invoice error", error.localizedMessage, error)
         }
     }
+
+    @ReactMethod
+    fun receiveVariableAmountPayment(
+        nodeId: String,
+        description: String,
+        expirySecs: Int,
+        result: Promise
+    ) {
+        try {
+            val invoice = _nodes[nodeId]!!.receiveVariableAmountPayment(
+                description,
+                expirySecs.toUInt()
+            )
+            result.resolve(invoice)
+        } catch (error: Throwable) {
+            result.reject(
+                "Receive variable amount payment invoice error",
+                error.localizedMessage,
+                error
+            )
+        }
+    }
+
+    @ReactMethod
+    fun listPeers(
+        nodeId: String,
+        result: Promise
+    ) {
+        val list = _nodes[nodeId]!!.listPeers()
+        val peers: MutableList<Map<String, Any?>> = mutableListOf()
+        for (item in list) {
+            peers.add(getPeerDetails(item))
+        }
+        result.resolve(Arguments.makeNativeArray(peers))
+    }
+
+    @ReactMethod
+    fun listChannels(
+        nodeId: String,
+        result: Promise
+    ) {
+        val list = _nodes[nodeId]!!.listChannels()
+        val channels: MutableList<Map<String, Any?>> = mutableListOf()
+        for (item in list) {
+            channels.add(getChannelDetails(item))
+        }
+        result.resolve(Arguments.makeNativeArray(channels))
+    }
+
     /** Node methods ends */
 }
 
