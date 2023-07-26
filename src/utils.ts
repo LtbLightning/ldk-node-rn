@@ -3,6 +3,8 @@ import {
   ChannelDetails,
   ChannelId,
   OutPoint,
+  PaymentDirection,
+  PaymentStatus,
   PeerDetails,
   PublicKey,
   SocketAddr,
@@ -36,3 +38,21 @@ export const createChannelDetailsObject = (item: any): ChannelDetails => {
     item.cltvExpiryDelta
   );
 };
+
+
+/** Get payment direction enum */
+export const getPaymentDirection = (direction: string): PaymentDirection => direction == 'inbound' ? PaymentDirection.inbound : PaymentDirection.outbound
+
+/** Get payment status enum */
+export const getPaymentStatus = (status: string): PaymentStatus => {
+  let statusEnum = PaymentStatus.pending;
+  switch (status) { 
+    case 'succeeded':
+      statusEnum = PaymentStatus.succeeded;
+      break;
+    case "failed":
+      statusEnum = PaymentStatus.failed;
+      break;
+  }
+  return statusEnum;
+}

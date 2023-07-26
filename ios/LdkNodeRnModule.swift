@@ -122,6 +122,36 @@ class LdkNodeRnModule: NSObject {
     }
 
     @objc
+    func sendToOnchainAddress(_
+        nodeId: String,
+        address: String,
+        amountMsat: NSNumber, 
+        resolve: @escaping RCTPromiseResolveBlock,
+        reject: @escaping RCTPromiseRejectBlock
+    ) {
+        do {
+            resolve(try _nodes[nodeId]!.sendToOnchainAddress(address: address, amountMsat: UInt64(truncating: amountMsat)))
+        } catch let error {
+            reject("Node sendToOnchainAddress error", "\(error)", error)
+        }
+    }
+
+    @objc
+    func sendAllToOnchainAddress(_
+        nodeId: String,
+        address: String,
+        resolve: @escaping RCTPromiseResolveBlock,
+        reject: @escaping RCTPromiseRejectBlock
+    ) {
+        do {
+            resolve(try _nodes[nodeId]!.sendAllToOnchainAddress(address: address))
+        } catch let error {
+            reject("Node sendAllToOnchainAddress error", "\(error)", error)
+        }
+    }
+
+
+    @objc
     func spendableOnchainBalanceSats(_
         nodeId: String,
         resolve: @escaping RCTPromiseResolveBlock,
@@ -274,7 +304,7 @@ class LdkNodeRnModule: NSObject {
             reject("Receive payment invoice error", "\(error)", error)
         }
     }
-    
+
     @objc
     func receiveVariableAmountPayment(_
         nodeId: String,
@@ -323,6 +353,32 @@ class LdkNodeRnModule: NSObject {
         resolve(responseObject)
     }
 
+    @objc
+    func payment(_
+        nodeId: String,
+        paymentHash: String,
+        resolve: @escaping RCTPromiseResolveBlock,
+        reject: @escaping RCTPromiseRejectBlock
+    ) {
+        let result = _nodes[nodeId]!.payment(paymentHash: paymentHash)
+        let details = getPaymentDetails(payment: result!)
+        resolve(details)
+    }
+
+    @objc
+    func removePayment(_
+        nodeId: String,
+        paymentHash: String,
+        resolve: @escaping RCTPromiseResolveBlock,
+        reject: @escaping RCTPromiseRejectBlock
+    ) {
+        do {
+            resolve(try _nodes[nodeId]!.removePayment(paymentHash: paymentHash))
+        } catch let error {
+            reject("Remove payment error", "\(error)", error)
+        }
+        
+    }
 
 
 

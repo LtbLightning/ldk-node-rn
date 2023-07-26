@@ -59,6 +59,20 @@ RCT_EXTERN_METHOD(
     reject:(RCTPromiseRejectBlock)reject
 )
 
+RCT_EXTERN_METHOD(
+    sendToOnchainAddress: (nonnull NSString*)nodeId
+    address: (nonnull NSString*)address
+    amountMsat: (nonnull NSNumber*)amountMsat
+    resolve: (RCTPromiseResolveBlock)resolve
+    reject:(RCTPromiseRejectBlock)reject
+)
+
+RCT_EXTERN_METHOD(
+    sendAllToOnchainAddress: (nonnull NSString*)nodeId
+    address: (nonnull NSString*)address
+    resolve: (RCTPromiseResolveBlock)resolve
+    reject:(RCTPromiseRejectBlock)reject
+)
 
 RCT_EXTERN_METHOD(
     spendableOnchainBalanceSats: (nonnull NSString*)nodeId
@@ -152,4 +166,19 @@ RCT_EXTERN_METHOD(
     resolve: (RCTPromiseResolveBlock)resolve
     reject:(RCTPromiseRejectBlock)reject
 )
+
+RCT_EXTERN_METHOD(
+    payment: (nonnull NSString*)nodeId
+    paymentHash: (nonnull NSString*)paymentHash
+    resolve: (RCTPromiseResolveBlock)resolve
+    reject:(RCTPromiseRejectBlock)reject
+)
+
+RCT_EXTERN_METHOD(
+    removePayment: (nonnull NSString*)nodeId
+    paymentHash: (nonnull NSString*)paymentHash
+    resolve: (RCTPromiseResolveBlock)resolve
+    reject:(RCTPromiseRejectBlock)reject
+)
+
 @end

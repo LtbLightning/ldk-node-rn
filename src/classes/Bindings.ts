@@ -115,3 +115,97 @@ export class ChannelDetails {
     this.cltvExpiryDelta = cltvExpiryDelta;
   }
 }
+
+/**A bitcoin transaction hash/transaction ID. */
+export class Txid {
+  field0: string;
+
+  constructor(feild0: string) {
+    this.field0 = feild0;
+  }
+}
+
+/**PaymentHash type, use to cross-lock hop */
+export class PaymentHash {
+  field0: string;
+
+  constructor(feild0: string) {
+    this.field0 = feild0;
+  }
+}
+
+/** PaymentPreimage type, use to route payment between hop */
+export class PaymentPreimage {
+  field0: string;
+
+  constructor(feild0: string) {
+    this.field0 = feild0;
+  }
+}
+
+/** Payment_secret type, use to authenticate sender to the receiver and tie MPP HTLCs together */
+export class PaymentSecret {
+  field0: string;
+
+  constructor(feild0: string) {
+    this.field0 = feild0;
+  }
+}
+
+/**  Represents the current status of a payment. */
+export enum PaymentStatus {
+  // The payment is still pending.
+  pending = 'pending',
+
+  // The payment suceeded.
+  succeeded = 'succeeded',
+
+  // The payment failed.
+  failed = 'failed',
+}
+
+/** Represents the direction of a payment. */
+export enum PaymentDirection {
+  // The payment is inbound.
+  inbound = 'inbound',
+
+  // The payment is outbound.
+  outbound = 'outbound',
+}
+
+/** Represents a payment. */
+export class PaymentDetails {
+  // The payment hash, i.e., the hash of the `preimage`.
+  hash: PaymentHash;
+
+  // The pre-image used by the payment.
+  preimage: PaymentPreimage;
+
+  // The secret used by the payment.
+  secret: PaymentSecret;
+
+  // The amount transferred.
+  amountMsat: number;
+
+  // The direction of the payment.
+  direction: PaymentDirection;
+
+  // The status of the payment.
+  status: PaymentStatus;
+
+  constructor(
+    hash: PaymentHash,
+    preimage: PaymentPreimage,
+    secret: PaymentSecret,
+    amountMsat: number,
+    direction: PaymentDirection,
+    status: PaymentStatus
+  ) {
+    this.hash = hash;
+    this.preimage = preimage;
+    this.secret = secret;
+    this.amountMsat = amountMsat;
+    this.direction = direction;
+    this.status = status;
+  }
+}

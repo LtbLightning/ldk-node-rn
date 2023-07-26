@@ -1,5 +1,5 @@
-import { createChannelDetailsObject, createPeerDetailsObject } from '../utils';
-import { Address, ChannelDetails, PeerDetails, PublicKey } from './Bindings';
+import { createChannelDetailsObject, createPeerDetailsObject, getPaymentDirection, getPaymentStatus } from '../utils';
+import { Address, ChannelDetails, PaymentDetails, PaymentDirection, PaymentHash, PaymentPreimage, PaymentSecret, PaymentStatus, PeerDetails, PublicKey, Txid } from './Bindings';
 import { NativeLoader } from './NativeLoader';
 
 export class Node extends NativeLoader {
@@ -58,6 +58,27 @@ export class Node extends NativeLoader {
   async newFundingAddress(): Promise<Address> {
     let hex = await this._ldk.newFundingAddress(this.id);
     return new Address(hex);
+  }
+
+  /**
+   * Send an on-chain payment to the given address.
+   * @requires [address] address of Node
+   * @requires [amountMsat] amount in milli sats
+   * @returns {Promise<TxId>}
+   */
+  async sendToOnchainAddress(address: Address, amountMsat: number): Promise<Txid> {
+    let txid = await this._ldk.sendToOnchainAddress(this.id, address.addressHex, amountMsat);
+    return new Txid(txid);
+  }
+
+  /**
+   * Send an on-chain payment to the given address, draining all the available funds.
+   * @requires [address] address of Node
+   * @returns {Promise<TxId>}
+   */
+  async sendAllToOnchainAddress(address: Address): Promise<Txid> {
+    let txid = await this._ldk.sendAllToOnchainAddress(this.id, address.addressHex);
+    return new Txid(txid);
   }
 
   /**
@@ -131,10 +152,11 @@ export class Node extends NativeLoader {
   /**
    * Send a payement given an invoice.
    * @requires [invoice]
-   * @returns {Promise<boolean>}
+   * @returns {Promise<PaymentHash>}
    */
-  async sendPayment(invoice: string): Promise<string> {
-    return await this._ldk.sendPayment(this.id, invoice);
+  async sendPayment(invoice: string): Promise<PaymentHash> {
+    let hash = await this._ldk.sendPayment(this.id, invoice);
+    return new PaymentHash(hash);
   }
 
   /**
@@ -146,20 +168,22 @@ export class Node extends NativeLoader {
    *
    * @requires [invoice]
    * @requires [amountMsat]
-   * @returns {Promise<boolean>}
+   * @returns {Promise<PaymentHash>}
    */
-  async sendPaymentUsingAmount(invoice: string, amountMsat: number): Promise<string> {
-    return await this._ldk.sendPaymentUsingAmount(this.id, invoice, amountMsat);
+  async sendPaymentUsingAmount(invoice: string, amountMsat: number): Promise<PaymentHash> {
+    let hash = await this._ldk.sendPaymentUsingAmount(this.id, invoice, amountMsat);
+    return new PaymentHash(hash);
   }
 
   /**
    * Send a spontaneous, aka. "keysend", payment
    * @requires [invoice]
    * @requires [amountMsat]
-   * @returns {Promise<boolean>}
+   * @returns {Promise<PaymentHash>}
    */
-  async sendSpontaneousPayment(amountMsat: number, nodeId: PublicKey): Promise<string> {
-    return await this._ldk.sendSpontaneousPayment(this.id, amountMsat, nodeId.keyHex);
+  async sendSpontaneousPayment(amountMsat: number, nodeId: PublicKey): Promise<PaymentHash> {
+    let hash = await this._ldk.sendSpontaneousPayment(this.id, amountMsat, nodeId.keyHex);
+    return new PaymentHash(hash);
   }
 
   /**
@@ -199,5 +223,28 @@ export class Node extends NativeLoader {
   async listChannels(): Promise<Array<ChannelDetails>> {
     const channelsList = await this._ldk.listChannels(this.id);
     return channelsList.map((item) => createChannelDetailsObject(item));
+  }
+
+  /**
+   * Get payment details of from paymentHash
+   * @returns {Promise<PaymentDetails>}
+   */
+  async payment(paymetHash: PaymentHash): Promise<PaymentDetails> {
+    const paymentDetails = await this._ldk.payment(this.id, paymetHash.field0);
+    return new PaymentDetails(
+      new PaymentHash(paymentDetails.hash),
+      new PaymentPreimage(paymentDetails.preimage),
+      new PaymentSecret(paymentDetails.secret),
+      paymentDetails.amountMsat,
+      getPaymentDirection(paymentDetails.direction),
+      getPaymentStatus(paymentDetails.status),
+    );
+  }
+
+  /**
+   * Remove payment from paymentHash
+   * @returns {Promise<boolean>*/
+  async removePayment(paymetHash: PaymentHash): Promise<boolean> {
+    return await this._ldk.removePayment(this.id, paymetHash.field0);
   }
 }

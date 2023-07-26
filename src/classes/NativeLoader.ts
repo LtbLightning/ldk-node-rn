@@ -1,4 +1,4 @@
-import { ChannelDetails, PeerDetails } from './Bindings';
+import { ChannelDetails, PaymentDetails, PaymentHash, PeerDetails } from './Bindings';
 import { NativeModules } from 'react-native';
 
 export interface NativeLdkNodeRn {
@@ -18,6 +18,10 @@ export interface NativeLdkNodeRn {
   syncWallets(nodeId: string): boolean;
   nodeId(nodeId: string): string;
   newFundingAddress(nodeId: string): string;
+
+  sendToOnchainAddress(nodeId: string, address: string, amountMsat: number): string;
+  sendAllToOnchainAddress(nodeId: string, address: string): string;
+
   spendableOnchainBalanceSats(nodeId: string): number;
   totalOnchainBalanceSats(nodeId: string): number;
   connect(nodeId: string, pubKey: string, address: string, permanently: boolean): boolean;
@@ -37,6 +41,9 @@ export interface NativeLdkNodeRn {
   sendSpontaneousPayment(nodeId: string, amountMsat: number, pubKey: string): string;
   listPeers(nodeId: string): Array<PeerDetails>;
   listChannels(nodeId: string): Array<ChannelDetails>;
+
+  payment(nodeId: string, paymentHash: string): any;
+  removePayment(nodeId: string, paymentHash: string): boolean;
 }
 
 export class NativeLoader {
