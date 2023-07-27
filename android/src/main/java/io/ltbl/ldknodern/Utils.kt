@@ -34,6 +34,30 @@ fun getChannelDetails(channel: ChannelDetails): MutableMap<String, Any> {
         "isPublic" to channel.isPublic,
         "cltvExpiryDelta" to channel.cltvExpiryDelta.toString()
     )
+}
 
+fun getPaymentDetails(payment: PaymentDetails): MutableMap<String, Any> {
+    return mutableMapOf (
+        "hash" to payment.hash,
+        "preimage" to payment.preimage as Any,
+        "secret" to payment.secret as Any,
+        "amountMsat" to payment.amountMsat as Any,
+        "direction" to getPaymentDirection(payment.direction),
+        "status" to getPaymentStatus(payment.status)
+    )
+}
 
+fun getPaymentDirection(direction: PaymentDirection): String {
+    return when (direction) {
+        PaymentDirection.INBOUND -> "inbound"
+        PaymentDirection.OUTBOUND -> "outbound"
+    }
+}
+
+fun getPaymentStatus(status: PaymentStatus): String {
+    return when (status) {
+        PaymentStatus.PENDING -> "pending"
+        PaymentStatus.FAILED -> "failed"
+        PaymentStatus.SUCCEEDED -> "succeeded"
+    }
 }

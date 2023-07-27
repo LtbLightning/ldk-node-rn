@@ -25,7 +25,7 @@ class LdkNodeRnModule(reactContext: ReactApplicationContext) :
         storageDirPath: String,
         esploraServerUrl: String,
         network: String,
-        listeningAddress: String?,
+        listeningAddress: String? = null,
         defaultCltvExpiryDelta: Int,
         result: Promise
     ) {
@@ -34,7 +34,7 @@ class LdkNodeRnModule(reactContext: ReactApplicationContext) :
             storageDirPath,
             esploraServerUrl,
             network,
-            listeningAddress ?: null,
+            listeningAddress,
             defaultCltvExpiryDelta.toUInt()
         )
         result.resolve(id)
@@ -104,6 +104,24 @@ class LdkNodeRnModule(reactContext: ReactApplicationContext) :
     }
 
     @ReactMethod
+    fun sendToOnchainAddress(nodeId: String, address: String, amountMsat: Int, result: Promise) {
+        try {
+            result.resolve(_nodes[nodeId]!!.sendToOnchainAddress(address, amountMsat.toULong()))
+        } catch (error: Throwable) {
+            result.reject("Node sendToOnchainAddress error", error.localizedMessage, error)
+        }
+    }
+
+    @ReactMethod
+    fun sendAllToOnchainAddress(nodeId: String, address: String, result: Promise) {
+        try {
+            result.resolve(_nodes[nodeId]!!.sendAllToOnchainAddress(address))
+        } catch (error: Throwable) {
+            result.reject("Node sendAllToOnchainAddress error", error.localizedMessage, error)
+        }
+    }
+
+    @ReactMethod
     fun spendableOnchainBalanceSats(nodeId: String, result: Promise) {
         try {
             result.resolve(_nodes[nodeId]!!.spendableOnchainBalanceSats().toInt())
@@ -138,11 +156,7 @@ class LdkNodeRnModule(reactContext: ReactApplicationContext) :
     }
 
     @ReactMethod
-    fun disconnect(
-        nodeId: String,
-        pubKey: String,
-        result: Promise
-    ) {
+    fun disconnect(nodeId: String, pubKey: String, result: Promise) {
         try {
             _nodes[nodeId]!!.disconnect(pubKey)
             result.resolve(true)
@@ -257,10 +271,7 @@ class LdkNodeRnModule(reactContext: ReactApplicationContext) :
     }
 
     @ReactMethod
-    fun listPeers(
-        nodeId: String,
-        result: Promise
-    ) {
+    fun listPeers(nodeId: String, result: Promise) {
         val list = _nodes[nodeId]!!.listPeers()
         val peers: MutableList<Map<String, Any?>> = mutableListOf()
         for (item in list) {
@@ -270,16 +281,21 @@ class LdkNodeRnModule(reactContext: ReactApplicationContext) :
     }
 
     @ReactMethod
-    fun listChannels(
-        nodeId: String,
-        result: Promise
-    ) {
+    fun listChannels(nodeId: String, result: Promise) {
         val list = _nodes[nodeId]!!.listChannels()
         val channels: MutableList<Map<String, Any?>> = mutableListOf()
         for (item in list) {
             channels.add(getChannelDetails(item))
         }
         result.resolve(Arguments.makeNativeArray(channels))
+    }
+
+
+    @ReactMethod
+    fun payment(nodeId: String, paymentHash: String, result: Promise) {
+        var res = _nodes[nodeId]!!.payment(paymentHash)
+        var details = getPaymentDetails(res!!)
+        result.resolve(Arguments.makeNativeMap(details))
     }
 
     /** Node methods ends */
