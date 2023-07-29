@@ -67,3 +67,12 @@ func getPaymentStatus(status: PaymentStatus) -> String {
         case PaymentStatus.failed: return "failed"
     }
 }
+
+
+func getMessage(msg: NSArray) -> Array<UInt8> {
+    var msgArray: [UInt8] = []
+    for i in msg {
+        msgArray.append(UInt8(Int8(i as! UInt8)))
+    }
+    return msgArray
+}

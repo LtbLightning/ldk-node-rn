@@ -377,9 +377,38 @@ class LdkNodeRnModule: NSObject {
         } catch let error {
             reject("Remove payment error", "\(error)", error)
         }
-        
+
     }
 
+
+    @objc
+    func signMessage(_
+        nodeId: String,
+        msg: NSArray,
+        resolve: @escaping RCTPromiseResolveBlock,
+        reject: @escaping RCTPromiseRejectBlock
+    ) {
+        do {
+            let message = try _nodes[nodeId]!.signMessage(msg: getMessage(msg: msg))
+            resolve(message)
+        } catch let error {
+            reject("Sign message error", "\(error)", error)
+        }
+
+    }
+
+    @objc
+    func verifySignature(_
+        nodeId: String,
+        msg: NSArray,
+        sig: String,
+        pkey: String,
+        resolve: @escaping RCTPromiseResolveBlock,
+        reject: @escaping RCTPromiseRejectBlock
+    ) {
+        resolve(_nodes[nodeId]!.verifySignature(msg: getMessage(msg: msg), sig: sig, pkey: pkey))
+
+    }
 
 
     /** Node methods ends */

@@ -44,10 +44,13 @@ export interface NativeLdkNodeRn {
 
   payment(nodeId: string, paymentHash: string): any;
   removePayment(nodeId: string, paymentHash: string): boolean;
+
+  signMessage(nodeId: string, msg: Array<number>): string;
+  verifySignature(nodeId: string, msg: Array<number>, sig: string, pkey: string): boolean;
 }
 
 export class NativeLoader {
-  protected _ldk: NativeLdkNodeRn = NativeModules.LdkNodeRnModule;
+  protected _ldk: NativeLdkNodeRn;
 
   constructor() {
     this._ldk = NativeModules.LdkNodeRnModule;

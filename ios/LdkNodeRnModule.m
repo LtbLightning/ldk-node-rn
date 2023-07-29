@@ -181,4 +181,20 @@ RCT_EXTERN_METHOD(
     reject:(RCTPromiseRejectBlock)reject
 )
 
+RCT_EXTERN_METHOD(
+    signMessage: (nonnull NSString*)nodeId
+    msg: (nonnull NSArray*)msg
+    resolve: (RCTPromiseResolveBlock)resolve
+    reject:(RCTPromiseRejectBlock)reject
+)
+
+RCT_EXTERN_METHOD(
+    verifySignature: (nonnull NSString*)nodeId
+    msg: (nonnull NSArray*)msg
+    sig: (nonnull NSString*)sig
+    pkey: (nonnull NSString*)pkey
+    resolve: (RCTPromiseResolveBlock)resolve
+    reject:(RCTPromiseRejectBlock)reject
+)
+
 @end

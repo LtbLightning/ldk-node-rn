@@ -1,5 +1,6 @@
 package io.ltbl.ldknodern
 
+import com.facebook.react.bridge.ReadableArray
 import java.util.UUID
 
 fun randomId() = UUID.randomUUID().toString()
@@ -60,4 +61,12 @@ fun getPaymentStatus(status: PaymentStatus): String {
         PaymentStatus.FAILED -> "failed"
         PaymentStatus.SUCCEEDED -> "succeeded"
     }
+}
+
+fun getMessage(msg: ReadableArray): List<UByte> {
+    val msgArray = ArrayList<UByte>()
+    for (i in 0 until msg.size()) {
+        msgArray.add(msg.getInt(i).toUByte())
+    }
+    return msgArray
 }

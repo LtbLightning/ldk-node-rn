@@ -24,6 +24,8 @@ export interface NativeLdkNodeRn {
     listChannels(nodeId: string): Array<ChannelDetails>;
     payment(nodeId: string, paymentHash: string): any;
     removePayment(nodeId: string, paymentHash: string): boolean;
+    signMessage(nodeId: string, msg: Array<number>): string;
+    verifySignature(nodeId: string, msg: Array<number>, sig: string, pkey: string): boolean;
 }
 export declare class NativeLoader {
     protected _ldk: NativeLdkNodeRn;

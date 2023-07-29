@@ -5,6 +5,7 @@ import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
+import com.facebook.react.bridge.ReadableArray
 
 
 class LdkNodeRnModule(reactContext: ReactApplicationContext) :
@@ -297,6 +298,36 @@ class LdkNodeRnModule(reactContext: ReactApplicationContext) :
         var details = getPaymentDetails(res!!)
         result.resolve(Arguments.makeNativeMap(details))
     }
+
+    @ReactMethod
+    fun removePayment(nodeId: String, paymentHash: String, result: Promise) {
+        try {
+            result.resolve(_nodes[nodeId]!!.removePayment(paymentHash))
+        } catch (error: Throwable) {
+            result.reject("Remove payment error", error.localizedMessage, error)
+        }
+    }
+
+    @ReactMethod
+    fun signMessage(nodeId: String, msg: ReadableArray, result: Promise) {
+        try {
+            result.resolve(_nodes[nodeId]!!.signMessage(getMessage(msg)))
+        } catch (error: Throwable) {
+            result.reject("Sign message error", error.localizedMessage, error)
+        }
+    }
+
+    @ReactMethod
+    fun verifySignature(
+        nodeId: String,
+        msg: ReadableArray,
+        sig: String,
+        pkey: String,
+        result: Promise
+    ) {
+        result.resolve(_nodes[nodeId]!!.verifySignature(getMessage(msg), sig, pkey))
+    }
+
 
     /** Node methods ends */
 }
