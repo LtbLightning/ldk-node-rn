@@ -34,7 +34,7 @@ export declare class ChannelDetails {
     channelId: ChannelId;
     counterpartyNodeId: PublicKey;
     fundingTxo?: OutPoint;
-    channelValueSatoshis: number;
+    channelValueSats: number;
     unspendablePunishmentReserve?: number;
     userChannelId: UserChannelId;
     balanceMsat: number;
@@ -47,7 +47,7 @@ export declare class ChannelDetails {
     isUsable: boolean;
     isPublic: boolean;
     cltvExpiryDelta?: number;
-    constructor(channelId: ChannelId, counterpartyNodeId: PublicKey, fundingTxo: OutPoint, channelValueSatoshis: number, unspendablePunishmentReserve: number, userChannelId: UserChannelId, balanceMsat: number, outboundCapacityMsat: number, inboundCapacityMsat: number, confirmationsRequired: number, confirmations: number, isOutbound: boolean, isChannelReady: boolean, isUsable: boolean, isPublic: boolean, cltvExpiryDelta: number);
+    constructor(channelId: ChannelId, counterpartyNodeId: PublicKey, fundingTxo: OutPoint, channelValueSats: number, unspendablePunishmentReserve: number, userChannelId: UserChannelId, balanceMsat: number, outboundCapacityMsat: number, inboundCapacityMsat: number, confirmationsRequired: number, confirmations: number, isOutbound: boolean, isChannelReady: boolean, isUsable: boolean, isPublic: boolean, cltvExpiryDelta: number);
 }
 /**A bitcoin transaction hash/transaction ID. */
 export declare class Txid {

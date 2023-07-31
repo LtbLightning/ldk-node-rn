@@ -23,7 +23,7 @@ export const createChannelDetailsObject = (item: any): ChannelDetails => {
     new ChannelId(item.channelId),
     new PublicKey(item.counterpartyNodeId),
     new OutPoint(item.fundingTxo?.txid, item.fundingTxo?.vout),
-    item.channelValueSatoshis,
+    item.channelValueSats,
     item.unspendablePunishmentReserve,
     new UserChannelId(item.userChannelId),
     item.balanceMsat,

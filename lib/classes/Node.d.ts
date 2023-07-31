@@ -35,7 +35,7 @@ export declare class Node extends NativeLoader {
      * Retrieve a new on-chain/funding address.
      * @returns {Promise<Address>}
      */
-    newFundingAddress(): Promise<Address>;
+    newOnchainAddress(): Promise<Address>;
     /**
      * Send an on-chain payment to the given address.
      * @requires [address] address of Node

@@ -1,4 +1,3 @@
-import { createChannelDetailsObject, createPeerDetailsObject, getPaymentDirection, getPaymentStatus } from '../utils';
 import {
   Address,
   ChannelDetails,
@@ -10,6 +9,8 @@ import {
   PublicKey,
   Txid,
 } from './Bindings';
+import { createChannelDetailsObject, createPeerDetailsObject, getPaymentDirection, getPaymentStatus } from '../utils';
+
 import { NativeLoader } from './NativeLoader';
 
 export class Node extends NativeLoader {
@@ -65,8 +66,8 @@ export class Node extends NativeLoader {
    * Retrieve a new on-chain/funding address.
    * @returns {Promise<Address>}
    */
-  async newFundingAddress(): Promise<Address> {
-    let hex = await this._ldk.newFundingAddress(this.id);
+  async newOnchainAddress(): Promise<Address> {
+    let hex = await this._ldk.newOnchainAddress(this.id);
     return new Address(hex);
   }
 

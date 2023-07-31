@@ -5,13 +5,12 @@ class LdkNodeRnModule: NSObject {
 
     var _configs: [String: Config] = [:]
     var _builders: [String: Builder] = [:]
-    var _nodes: [String: Node] = [:]
+    var _nodes: [String: LdkNode] = [:]
 
     /** Config Methods starts */
     @objc
     func createConfig(_
         storageDirPath: String,
-        esploraServerUrl: String,
         network: String,
         listeningAddress: String? = nil,
         defaultCltvExpiryDelta: NSNumber,
@@ -21,8 +20,7 @@ class LdkNodeRnModule: NSObject {
         let id = randomId()
         _configs[id] = Config(
             storageDirPath: storageDirPath,
-            esploraServerUrl: esploraServerUrl,
-            network: network,
+            network: Network.regtest,
             listeningAddress: listeningAddress,
             defaultCltvExpiryDelta: UInt32(truncating: defaultCltvExpiryDelta)
         )
@@ -43,14 +41,29 @@ class LdkNodeRnModule: NSObject {
     }
 
     @objc
+    func setEsploraServer(_
+        builderId: String,
+        esploraServerUrl: String,
+        resolve: @escaping RCTPromiseResolveBlock,
+        reject: @escaping RCTPromiseRejectBlock
+    ) {
+        _builders[builderId]!.setEsploraServer(esploraServerUrl: "http://192.168.8.100:30000")
+        resolve(true)
+    }
+
+    @objc
     func build(_
         builderId: String,
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        let id = randomId()
-        _nodes[id] = _builders[builderId]!.build()
-        resolve(id)
+        do {
+            let id = randomId()
+            _nodes[id] = try _builders[builderId]!.build()
+            resolve(id)
+        } catch let error {
+            reject("Node build error", "\(error)", error)
+        }
     }
     /** Builder Methods ends */
 
@@ -109,15 +122,15 @@ class LdkNodeRnModule: NSObject {
     }
 
     @objc
-    func newFundingAddress(_
+    func newOnchainAddress(_
         nodeId: String,
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
         do {
-            resolve(try _nodes[nodeId]!.newFundingAddress())
+            resolve(try _nodes[nodeId]!.newOnchainAddress())
         } catch let error {
-            reject("Node newFundingAddress error", "\(error)", error)
+            reject("Node newOnchainAddress error", "\(error)", error)
         }
     }
 
@@ -188,7 +201,7 @@ class LdkNodeRnModule: NSObject {
         reject: @escaping RCTPromiseRejectBlock
     ) {
         do {
-            try _nodes[nodeId]!.connect(nodeId: pubKey, address: address, permanently: permanently)
+            try _nodes[nodeId]!.connect(nodeId: pubKey, address: address, persist: permanently)
             resolve(true)
         } catch let error {
             reject("Node connect error", "\(error)", error)
@@ -227,6 +240,7 @@ class LdkNodeRnModule: NSObject {
                 address: address,
                 channelAmountSats: UInt64(truncating: channelAmountSats),
                 pushToCounterpartyMsat: UInt64(truncating: pushToCounterpartyMsat),
+                channelConfig: nil,
                 announceChannel: announceChannel
             )
             resolve(true)

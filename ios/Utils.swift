@@ -22,7 +22,7 @@ func getChannelDetails(channel: ChannelDetails) -> [String: Any] {
             "txid": channel.fundingTxo?.txid as Any,
             "vout": channel.fundingTxo?.vout as Any
         ],
-        "channelValueSatoshis": channel.channelValueSatoshis,
+        "channelValueSats": channel.channelValueSats,
         "unspendablePunishmentReserve": channel.unspendablePunishmentReserve!,
         "userChannelId": channel.userChannelId,
         "balanceMsat": channel.balanceMsat,

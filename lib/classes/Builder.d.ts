@@ -1,6 +1,6 @@
-import { Node } from './Node';
 import { Config } from './Config';
 import { NativeLoader } from './NativeLoader';
+import { Node } from './Node';
 export declare class Builder extends NativeLoader {
     id: string;
     /**
@@ -9,6 +9,12 @@ export declare class Builder extends NativeLoader {
      * @returns Promise<Builder>
      */
     fromConfig(config: Config): Promise<Builder>;
+    /**
+     * Set Esplora server URL
+     * @param setEsploraServer
+     * @returns Promise<boolean>
+     */
+    setEsploraServer(esploraServerUrl: string): Promise<boolean>;
     /**
      * Create node
      * @returns Promise<Node>

@@ -1,23 +1,24 @@
 import { ChannelDetails, PaymentDetails, PaymentHash, PeerDetails } from './Bindings';
+
 import { NativeModules } from 'react-native';
 
 export interface NativeLdkNodeRn {
   createConfig(
     storageDirPath: string,
-    esploraServerUrl: string,
     network: string,
     listeningAddress: string | null,
     defaultCltvExpiryDelta: number
   ): string;
 
   fromConfig(configId: string): string;
+  setEsploraServer(buildId: string, esploraServerUrl: string): boolean;
   build(buildId: string): string;
 
   start(nodeId: string): boolean;
   stop(nodeId: string): boolean;
   syncWallets(nodeId: string): boolean;
   nodeId(nodeId: string): string;
-  newFundingAddress(nodeId: string): string;
+  newOnchainAddress(nodeId: string): string;
 
   sendToOnchainAddress(nodeId: string, address: string, amountMsat: number): string;
   sendAllToOnchainAddress(nodeId: string, address: string): string;

@@ -1,7 +1,7 @@
 # OSX
 #
 .DS_Store
-ios/ldk_nodeFFI.xcframework
+*.xcframework
 
 # Xcode
 #

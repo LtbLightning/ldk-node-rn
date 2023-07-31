@@ -1,6 +1,6 @@
-import { Node } from './Node';
 import { Config } from './Config';
 import { NativeLoader } from './NativeLoader';
+import { Node } from './Node';
 
 export class Builder extends NativeLoader {
   id: string = '';
@@ -13,6 +13,15 @@ export class Builder extends NativeLoader {
   async fromConfig(config: Config): Promise<Builder> {
     this.id = await this._ldk.fromConfig(config.id);
     return this;
+  }
+
+  /**
+   * Set Esplora server URL
+   * @param setEsploraServer
+   * @returns Promise<boolean>
+   */
+  async setEsploraServer(esploraServerUrl: string): Promise<boolean> {
+    return await this._ldk.setEsploraServer(this.id, esploraServerUrl);
   }
 
   /**

@@ -1,5 +1,5 @@
-import { SocketAddr } from './Bindings';
 import { NativeLoader } from './NativeLoader';
+import { SocketAddr } from './Bindings';
 
 export class Config extends NativeLoader {
   id: string = '';
@@ -7,7 +7,6 @@ export class Config extends NativeLoader {
   /**
    *  Create config
    * @param storageDirPath
-   * @param esploraServerUrl
    * @param network
    * @param listeningAddress
    * @param defaultCltvExpiryDelta
@@ -15,14 +14,12 @@ export class Config extends NativeLoader {
    */
   async create(
     storageDirPath: string,
-    esploraServerUrl: string,
     network: string,
     listeningAddress: SocketAddr | null,
     defaultCltvExpiryDelta: number
   ): Promise<Config> {
     this.id = await this._ldk.createConfig(
       storageDirPath,
-      esploraServerUrl,
       network,
       listeningAddress == null ? null : `${listeningAddress.ip}:${listeningAddress.port}`,
       defaultCltvExpiryDelta

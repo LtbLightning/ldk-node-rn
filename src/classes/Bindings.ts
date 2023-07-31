@@ -65,7 +65,7 @@ export class ChannelDetails {
   channelId: ChannelId;
   counterpartyNodeId: PublicKey;
   fundingTxo?: OutPoint;
-  channelValueSatoshis: number;
+  channelValueSats: number;
   unspendablePunishmentReserve?: number;
   userChannelId: UserChannelId;
   balanceMsat: number;
@@ -83,7 +83,7 @@ export class ChannelDetails {
     channelId: ChannelId,
     counterpartyNodeId: PublicKey,
     fundingTxo: OutPoint,
-    channelValueSatoshis: number,
+    channelValueSats: number,
     unspendablePunishmentReserve: number,
     userChannelId: UserChannelId,
     balanceMsat: number,
@@ -100,7 +100,7 @@ export class ChannelDetails {
     this.channelId = channelId;
     this.counterpartyNodeId = counterpartyNodeId;
     this.fundingTxo = fundingTxo;
-    this.channelValueSatoshis = channelValueSatoshis;
+    this.channelValueSats = channelValueSats;
     this.unspendablePunishmentReserve = unspendablePunishmentReserve;
     this.userChannelId = userChannelId;
     this.balanceMsat = balanceMsat;

@@ -7,7 +7,6 @@
 /** Config methods */
 RCT_EXTERN_METHOD(
     createConfig: (nonnull NSString*)storageDirPath
-    esploraServerUrl: (nonnull NSString*)esploraServerUrl
     network: (nonnull NSString*)network
     listeningAddress: (nullable NSString*)listeningAddress
     defaultCltvExpiryDelta: (nonnull NSNumber*)defaultCltvExpiryDelta
@@ -18,6 +17,13 @@ RCT_EXTERN_METHOD(
 /** Builder methods */
 RCT_EXTERN_METHOD(
     fromConfig: (nonnull NSString*)configId
+    resolve: (RCTPromiseResolveBlock)resolve
+    reject:(RCTPromiseRejectBlock)reject
+)
+
+RCT_EXTERN_METHOD(
+    setEsploraServer: (nonnull NSString*)buildId
+    esploraServerUrl: (nonnull NSString*)esploraServerUrl
     resolve: (RCTPromiseResolveBlock)resolve
     reject:(RCTPromiseRejectBlock)reject
 )
@@ -54,7 +60,7 @@ RCT_EXTERN_METHOD(
 )
 
 RCT_EXTERN_METHOD(
-    newFundingAddress: (nonnull NSString*)nodeId
+    newOnchainAddress: (nonnull NSString*)nodeId
     resolve: (RCTPromiseResolveBlock)resolve
     reject:(RCTPromiseRejectBlock)reject
 )
