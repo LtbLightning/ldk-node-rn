@@ -1,20 +1,19 @@
 import {
-  Address,
   ChannelDetails,
   ChannelId,
+  NetAddress,
   OutPoint,
   PaymentDirection,
   PaymentStatus,
   PeerDetails,
   PublicKey,
-  SocketAddr,
   UserChannelId,
 } from './classes/Bindings';
 
 /** Create PeerDetails object */
 export const createPeerDetailsObject = (item: any): PeerDetails => {
   let address = item.address.split(':');
-  return new PeerDetails(new PublicKey(item.nodeId), new SocketAddr(address[0], address[1]), item.isConnected);
+  return new PeerDetails(new PublicKey(item.nodeId), new NetAddress(address[0], address[1]), item.isConnected);
 };
 
 /** Create ChannelDetails object */
@@ -39,20 +38,23 @@ export const createChannelDetailsObject = (item: any): ChannelDetails => {
   );
 };
 
-
 /** Get payment direction enum */
-export const getPaymentDirection = (direction: string): PaymentDirection => direction == 'inbound' ? PaymentDirection.inbound : PaymentDirection.outbound
+export const getPaymentDirection = (direction: string): PaymentDirection =>
+  direction === 'inbound' ? PaymentDirection.inbound : PaymentDirection.outbound;
 
 /** Get payment status enum */
 export const getPaymentStatus = (status: string): PaymentStatus => {
   let statusEnum = PaymentStatus.pending;
-  switch (status) { 
+  switch (status) {
     case 'succeeded':
       statusEnum = PaymentStatus.succeeded;
       break;
-    case "failed":
+    case 'failed':
       statusEnum = PaymentStatus.failed;
       break;
   }
   return statusEnum;
-}
+};
+
+/** Convert NetAddress object to URL */
+export const addressToString = (addr: NetAddress) => `${addr.ip}:${addr.port}`;

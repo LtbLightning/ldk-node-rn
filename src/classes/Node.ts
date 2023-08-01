@@ -1,6 +1,8 @@
+import { createChannelDetailsObject, createPeerDetailsObject, getPaymentDirection, getPaymentStatus } from '../utils';
 import {
   Address,
   ChannelDetails,
+  ChannelId,
   PaymentDetails,
   PaymentHash,
   PaymentPreimage,
@@ -9,8 +11,6 @@ import {
   PublicKey,
   Txid,
 } from './Bindings';
-import { createChannelDetailsObject, createPeerDetailsObject, getPaymentDirection, getPaymentStatus } from '../utils';
-
 import { NativeLoader } from './NativeLoader';
 
 export class Node extends NativeLoader {
@@ -115,11 +115,11 @@ export class Node extends NativeLoader {
    *
    * @requires [nodeId] publicKey of Node
    * @requires [address] IP:PORT of Node
-   * @requires [permanently] open node permanently or not
+   * @requires [persist] open node permanently or not
    * @returns {Promise<boolean>}
    */
-  async connect(nodeId: string, address: string, permanently: boolean): Promise<boolean> {
-    return await this._ldk.connect(this.id, nodeId, address, permanently);
+  async connect(nodeId: string, address: string, persist: boolean): Promise<boolean> {
+    return await this._ldk.connect(this.id, nodeId, address, persist);
   }
 
   /**
@@ -158,6 +158,16 @@ export class Node extends NativeLoader {
       pushToCounterpartyMsat,
       announceChannel
     );
+  }
+
+  /**
+   * Close a previously opened channel.
+   * @requires [channelId]
+   * @requires [counterpartyNodeId] publicKey of counterparty Node
+   * @returns {Promise<boolean>}
+   */
+  async closeChannel(channelId: ChannelId, counterpartyNodeId: PublicKey): Promise<boolean> {
+    return await this._ldk.closeChannel(this.id, channelId.channelIdHex, counterpartyNodeId.keyHex);
   }
 
   /**

@@ -22,11 +22,69 @@ RCT_EXTERN_METHOD(
 )
 
 RCT_EXTERN_METHOD(
+    setEntropySeedPath: (nonnull NSString*)buildId
+    seedPath: (nonnull NSString*)seedPath
+    resolve: (RCTPromiseResolveBlock)resolve
+    reject:(RCTPromiseRejectBlock)reject
+)
+
+RCT_EXTERN_METHOD(
+    setEntropySeedBytes: (nonnull NSString*)buildId
+    seedBytes: (nonnull NSArray*)seedBytes
+    resolve: (RCTPromiseResolveBlock)resolve
+    reject:(RCTPromiseRejectBlock)reject
+)
+
+RCT_EXTERN_METHOD(
+    setEntropyBip39Mnemonic: (nonnull NSString*)buildId
+    mnemonic: (nonnull NSString*)mnemonic
+    passphrase: (nullable NSString*)passphrase
+    resolve: (RCTPromiseResolveBlock)resolve
+    reject:(RCTPromiseRejectBlock)reject
+)
+
+RCT_EXTERN_METHOD(
     setEsploraServer: (nonnull NSString*)buildId
     esploraServerUrl: (nonnull NSString*)esploraServerUrl
     resolve: (RCTPromiseResolveBlock)resolve
     reject:(RCTPromiseRejectBlock)reject
 )
+
+
+RCT_EXTERN_METHOD(
+    setGossipSourceP2p: (nonnull NSString*)buildId
+    resolve: (RCTPromiseResolveBlock)resolve
+    reject:(RCTPromiseRejectBlock)reject
+)
+
+RCT_EXTERN_METHOD(
+    setGossipSourceRgs: (nonnull NSString*)buildId
+    rgsServerUrl: (nonnull NSString*)rgsServerUrl
+    resolve: (RCTPromiseResolveBlock)resolve
+    reject:(RCTPromiseRejectBlock)reject
+)
+
+RCT_EXTERN_METHOD(
+    setStorageDirPath: (nonnull NSString*)buildId
+    storageDirPath: (nonnull NSString*)storageDirPath
+    resolve: (RCTPromiseResolveBlock)resolve
+    reject:(RCTPromiseRejectBlock)reject
+)
+
+RCT_EXTERN_METHOD(
+    setNetwork: (nonnull NSString*)buildId
+    network: (nonnull NSString*)network
+    resolve: (RCTPromiseResolveBlock)resolve
+    reject:(RCTPromiseRejectBlock)reject
+)
+
+RCT_EXTERN_METHOD(
+    setListeningAddress: (nonnull NSString*)buildId
+    listeningAddress: (nonnull NSString*)listeningAddress
+    resolve: (RCTPromiseResolveBlock)resolve
+    reject:(RCTPromiseRejectBlock)reject
+)
+
 
 RCT_EXTERN_METHOD(
     build: (nonnull NSString*)buildId
@@ -96,7 +154,7 @@ RCT_EXTERN_METHOD(
     connect: (nonnull NSString*)nodeId
     pubKey: (nonnull NSString*)pubKey
     address: (nonnull NSString*)address
-    permanently: (nonnull BOOL*)permanently
+    persist: (nonnull BOOL*)persist
     resolve: (RCTPromiseResolveBlock)resolve
     reject:(RCTPromiseRejectBlock)reject
 )
@@ -115,6 +173,14 @@ RCT_EXTERN_METHOD(
     channelAmountSats: (nonnull NSNumber*)channelAmountSats
     pushToCounterpartyMsat: (nonnull NSNumber*)pushToCounterpartyMsat
     announceChannel: (nonnull BOOL*)announceChannel
+    resolve: (RCTPromiseResolveBlock)resolve
+    reject:(RCTPromiseRejectBlock)reject
+)
+
+RCT_EXTERN_METHOD(
+    closeChannel: (nonnull NSString*)nodeId
+    channelId: (nonnull NSString*)channelId
+    counterpartyNodeId: (nonnull NSString*)counterpartyNodeId
     resolve: (RCTPromiseResolveBlock)resolve
     reject:(RCTPromiseRejectBlock)reject
 )

@@ -41,13 +41,106 @@ class LdkNodeRnModule: NSObject {
     }
 
     @objc
+    func setEntropySeedPath(_
+        builderId: String,
+        seedPath: String,
+        resolve: @escaping RCTPromiseResolveBlock,
+        reject: @escaping RCTPromiseRejectBlock
+    ) {
+        _builders[builderId]!.setEntropySeedPath(seedPath: seedPath)
+        resolve(true)
+    }
+
+    @objc
+    func setEntropySeedBytes(_
+        builderId: String,
+        seedBytes: NSArray,
+        resolve: @escaping RCTPromiseResolveBlock,
+        reject: @escaping RCTPromiseRejectBlock
+    ) {
+        do {
+            try _builders[builderId]!.setEntropySeedBytes(seedBytes: getNatieBytes(list: seedBytes))
+            resolve(true)
+        } catch let error {
+            reject("Set entropy seed bytes array", "\(error)", error)
+        }
+
+    }
+
+    @objc
+    func setEntropyBip39Mnemonic(_
+        builderId: String,
+        mnemonic: String,
+        passphrase: String?,
+        resolve: @escaping RCTPromiseResolveBlock,
+        reject: @escaping RCTPromiseRejectBlock
+    ) {
+        _builders[builderId]!.setEntropyBip39Mnemonic(mnemonic: mnemonic, passphrase: passphrase)
+        resolve(true)
+    }
+
+    @objc
     func setEsploraServer(_
         builderId: String,
         esploraServerUrl: String,
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        _builders[builderId]!.setEsploraServer(esploraServerUrl: "http://192.168.8.100:30000")
+        _builders[builderId]!.setEsploraServer(esploraServerUrl: esploraServerUrl)
+        resolve(true)
+    }
+
+    @objc
+    func setGossipSourceP2p(_
+        builderId: String,
+        resolve: @escaping RCTPromiseResolveBlock,
+        reject: @escaping RCTPromiseRejectBlock
+    ) {
+        _builders[builderId]!.setGossipSourceP2p()
+        resolve(true)
+    }
+
+    @objc
+    func setGossipSourceRgs(_
+        builderId: String,
+        rgsServerUrl: String,
+        resolve: @escaping RCTPromiseResolveBlock,
+        reject: @escaping RCTPromiseRejectBlock
+    ) {
+        _builders[builderId]!.setGossipSourceRgs(rgsServerUrl: rgsServerUrl)
+        resolve(true)
+    }
+
+    @objc
+    func setStorageDirPath(_
+        builderId: String,
+        storageDirPath: String,
+        resolve: @escaping RCTPromiseResolveBlock,
+        reject: @escaping RCTPromiseRejectBlock
+    ) {
+        _builders[builderId]!.setStorageDirPath(storageDirPath: storageDirPath)
+        resolve(true)
+    }
+
+    @objc
+    func setNetwork(_
+        builderId: String,
+        network: String,
+        resolve: @escaping RCTPromiseResolveBlock,
+        reject: @escaping RCTPromiseRejectBlock
+    ) {
+        _builders[builderId]!.setNetwork(network: getNetworkEnum(networkStr: network))
+        resolve(true)
+    }
+
+    @objc
+    func setListeningAddress(_
+        builderId: String,
+        listeningAddress: String,
+        resolve: @escaping RCTPromiseResolveBlock,
+        reject: @escaping RCTPromiseRejectBlock
+    ) {
+        _builders[builderId]!.setListeningAddress(listeningAddress: listeningAddress)
         resolve(true)
     }
 
@@ -196,12 +289,12 @@ class LdkNodeRnModule: NSObject {
         nodeId: String,
         pubKey: String,
         address: String,
-        permanently: Bool,
+        persist: Bool,
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
         do {
-            try _nodes[nodeId]!.connect(nodeId: pubKey, address: address, persist: permanently)
+            try _nodes[nodeId]!.connect(nodeId: pubKey, address: address, persist: persist)
             resolve(true)
         } catch let error {
             reject("Node connect error", "\(error)", error)
@@ -246,6 +339,24 @@ class LdkNodeRnModule: NSObject {
             resolve(true)
         } catch let error {
             reject("Node open channel error", "\(error)", error)
+        }
+    }
+
+    @objc
+    func closeChannel(_
+        nodeId: String,
+        channelId: String,
+        counterpartyNodeId: String,
+        resolve: @escaping RCTPromiseResolveBlock,
+        reject: @escaping RCTPromiseRejectBlock
+    ) {
+        do {
+            print("==>", channelId, counterpartyNodeId)
+            try _nodes[nodeId]!.closeChannel(channelId: channelId, counterpartyNodeId: counterpartyNodeId)
+            resolve(true)
+        } catch let error {
+            print("CLOSE CHANNEL ERROR==========>", error)
+            reject("Node close channel error", "\(error)", error)
         }
     }
 
@@ -403,7 +514,7 @@ class LdkNodeRnModule: NSObject {
         reject: @escaping RCTPromiseRejectBlock
     ) {
         do {
-            let message = try _nodes[nodeId]!.signMessage(msg: getMessage(msg: msg))
+            let message = try _nodes[nodeId]!.signMessage(msg: getNatieBytes(list: msg))
             resolve(message)
         } catch let error {
             reject("Sign message error", "\(error)", error)
@@ -420,7 +531,7 @@ class LdkNodeRnModule: NSObject {
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        resolve(_nodes[nodeId]!.verifySignature(msg: getMessage(msg: msg), sig: sig, pkey: pkey))
+        resolve(_nodes[nodeId]!.verifySignature(msg: getNatieBytes(list: msg), sig: sig, pkey: pkey))
 
     }
 

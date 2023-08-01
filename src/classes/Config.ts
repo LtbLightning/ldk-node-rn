@@ -1,5 +1,6 @@
+import { addressToString } from '../utils';
+import { NetAddress } from './Bindings';
 import { NativeLoader } from './NativeLoader';
-import { SocketAddr } from './Bindings';
 
 export class Config extends NativeLoader {
   id: string = '';
@@ -15,13 +16,13 @@ export class Config extends NativeLoader {
   async create(
     storageDirPath: string,
     network: string,
-    listeningAddress: SocketAddr | null,
+    listeningAddress: NetAddress | null,
     defaultCltvExpiryDelta: number
   ): Promise<Config> {
     this.id = await this._ldk.createConfig(
       storageDirPath,
       network,
-      listeningAddress == null ? null : `${listeningAddress.ip}:${listeningAddress.port}`,
+      listeningAddress == null ? null : addressToString(listeningAddress),
       defaultCltvExpiryDelta
     );
     return this;

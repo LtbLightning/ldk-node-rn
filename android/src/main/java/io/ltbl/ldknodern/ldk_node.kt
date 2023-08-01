@@ -814,7 +814,7 @@ public interface NodeInterface {
     
     fun `nodeId`(): PublicKey
     
-    fun `listeningAddress`(): SocketAddr?
+    fun `listeningAddress`(): NetAddress?
     
     @Throws(NodeException::class)
     fun `newFundingAddress`(): Address
@@ -832,13 +832,13 @@ public interface NodeInterface {
     fun `totalOnchainBalanceSats`(): ULong
     
     @Throws(NodeException::class)
-    fun `connect`(`nodeId`: PublicKey, `address`: SocketAddr, `permanently`: Boolean)
+    fun `connect`(`nodeId`: PublicKey, `address`: NetAddress, `permanently`: Boolean)
     
     @Throws(NodeException::class)
     fun `disconnect`(`nodeId`: PublicKey)
     
     @Throws(NodeException::class)
-    fun `connectOpenChannel`(`nodeId`: PublicKey, `address`: SocketAddr, `channelAmountSats`: ULong, `pushToCounterpartyMsat`: ULong?, `announceChannel`: Boolean)
+    fun `connectOpenChannel`(`nodeId`: PublicKey, `address`: NetAddress, `channelAmountSats`: ULong, `pushToCounterpartyMsat`: ULong?, `announceChannel`: Boolean)
     
     @Throws(NodeException::class)
     fun `closeChannel`(`channelId`: ChannelId, `counterpartyNodeId`: PublicKey)
@@ -942,13 +942,13 @@ class Node(
         }.let {
             FfiConverterTypePublicKey.lift(it)
         }
-    override fun `listeningAddress`(): SocketAddr? =
+    override fun `listeningAddress`(): NetAddress? =
         callWithPointer {
     rustCall() { _status ->
     _UniFFILib.INSTANCE.ldk_node_a283_Node_listening_address(it,  _status)
 }
         }.let {
-            FfiConverterOptionalTypeSocketAddr.lift(it)
+            FfiConverterOptionalTypeNetAddress.lift(it)
         }
     
     @Throws(NodeException::class)override fun `newFundingAddress`(): Address =
@@ -996,10 +996,10 @@ class Node(
             FfiConverterULong.lift(it)
         }
     
-    @Throws(NodeException::class)override fun `connect`(`nodeId`: PublicKey, `address`: SocketAddr, `permanently`: Boolean) =
+    @Throws(NodeException::class)override fun `connect`(`nodeId`: PublicKey, `address`: NetAddress, `permanently`: Boolean) =
         callWithPointer {
     rustCallWithError(NodeException) { _status ->
-    _UniFFILib.INSTANCE.ldk_node_a283_Node_connect(it, FfiConverterTypePublicKey.lower(`nodeId`), FfiConverterTypeSocketAddr.lower(`address`), FfiConverterBoolean.lower(`permanently`),  _status)
+    _UniFFILib.INSTANCE.ldk_node_a283_Node_connect(it, FfiConverterTypePublicKey.lower(`nodeId`), FfiConverterTypeNetAddress.lower(`address`), FfiConverterBoolean.lower(`permanently`),  _status)
 }
         }
     
@@ -1012,10 +1012,10 @@ class Node(
         }
     
     
-    @Throws(NodeException::class)override fun `connectOpenChannel`(`nodeId`: PublicKey, `address`: SocketAddr, `channelAmountSats`: ULong, `pushToCounterpartyMsat`: ULong?, `announceChannel`: Boolean) =
+    @Throws(NodeException::class)override fun `connectOpenChannel`(`nodeId`: PublicKey, `address`: NetAddress, `channelAmountSats`: ULong, `pushToCounterpartyMsat`: ULong?, `announceChannel`: Boolean) =
         callWithPointer {
     rustCallWithError(NodeException) { _status ->
-    _UniFFILib.INSTANCE.ldk_node_a283_Node_connect_open_channel(it, FfiConverterTypePublicKey.lower(`nodeId`), FfiConverterTypeSocketAddr.lower(`address`), FfiConverterULong.lower(`channelAmountSats`), FfiConverterOptionalULong.lower(`pushToCounterpartyMsat`), FfiConverterBoolean.lower(`announceChannel`),  _status)
+    _UniFFILib.INSTANCE.ldk_node_a283_Node_connect_open_channel(it, FfiConverterTypePublicKey.lower(`nodeId`), FfiConverterTypeNetAddress.lower(`address`), FfiConverterULong.lower(`channelAmountSats`), FfiConverterOptionalULong.lower(`pushToCounterpartyMsat`), FfiConverterBoolean.lower(`announceChannel`),  _status)
 }
         }
     
@@ -1249,7 +1249,7 @@ data class Config (
     var `storageDirPath`: String, 
     var `esploraServerUrl`: String, 
     var `network`: Network, 
-    var `listeningAddress`: SocketAddr?, 
+    var `listeningAddress`: NetAddress?, 
     var `defaultCltvExpiryDelta`: UInt
 ) {
     
@@ -1261,7 +1261,7 @@ public object FfiConverterTypeConfig: FfiConverterRustBuffer<Config> {
             FfiConverterString.read(buf),
             FfiConverterString.read(buf),
             FfiConverterTypeNetwork.read(buf),
-            FfiConverterOptionalTypeSocketAddr.read(buf),
+            FfiConverterOptionalTypeNetAddress.read(buf),
             FfiConverterUInt.read(buf),
         )
     }
@@ -1270,7 +1270,7 @@ public object FfiConverterTypeConfig: FfiConverterRustBuffer<Config> {
             FfiConverterString.allocationSize(value.`storageDirPath`) +
             FfiConverterString.allocationSize(value.`esploraServerUrl`) +
             FfiConverterTypeNetwork.allocationSize(value.`network`) +
-            FfiConverterOptionalTypeSocketAddr.allocationSize(value.`listeningAddress`) +
+            FfiConverterOptionalTypeNetAddress.allocationSize(value.`listeningAddress`) +
             FfiConverterUInt.allocationSize(value.`defaultCltvExpiryDelta`)
     )
 
@@ -1278,7 +1278,7 @@ public object FfiConverterTypeConfig: FfiConverterRustBuffer<Config> {
             FfiConverterString.write(value.`storageDirPath`, buf)
             FfiConverterString.write(value.`esploraServerUrl`, buf)
             FfiConverterTypeNetwork.write(value.`network`, buf)
-            FfiConverterOptionalTypeSocketAddr.write(value.`listeningAddress`, buf)
+            FfiConverterOptionalTypeNetAddress.write(value.`listeningAddress`, buf)
             FfiConverterUInt.write(value.`defaultCltvExpiryDelta`, buf)
     }
 }
@@ -1362,7 +1362,7 @@ public object FfiConverterTypePaymentDetails: FfiConverterRustBuffer<PaymentDeta
 
 data class PeerDetails (
     var `nodeId`: PublicKey, 
-    var `address`: SocketAddr, 
+    var `address`: NetAddress, 
     var `isConnected`: Boolean
 ) {
     
@@ -1372,20 +1372,20 @@ public object FfiConverterTypePeerDetails: FfiConverterRustBuffer<PeerDetails> {
     override fun read(buf: ByteBuffer): PeerDetails {
         return PeerDetails(
             FfiConverterTypePublicKey.read(buf),
-            FfiConverterTypeSocketAddr.read(buf),
+            FfiConverterTypeNetAddress.read(buf),
             FfiConverterBoolean.read(buf),
         )
     }
 
     override fun allocationSize(value: PeerDetails) = (
             FfiConverterTypePublicKey.allocationSize(value.`nodeId`) +
-            FfiConverterTypeSocketAddr.allocationSize(value.`address`) +
+            FfiConverterTypeNetAddress.allocationSize(value.`address`) +
             FfiConverterBoolean.allocationSize(value.`isConnected`)
     )
 
     override fun write(value: PeerDetails, buf: ByteBuffer) {
             FfiConverterTypePublicKey.write(value.`nodeId`, buf)
-            FfiConverterTypeSocketAddr.write(value.`address`, buf)
+            FfiConverterTypeNetAddress.write(value.`address`, buf)
             FfiConverterBoolean.write(value.`isConnected`, buf)
     }
 }
@@ -2024,28 +2024,28 @@ public object FfiConverterOptionalTypePaymentSecret: FfiConverterRustBuffer<Paym
 
 
 
-public object FfiConverterOptionalTypeSocketAddr: FfiConverterRustBuffer<SocketAddr?> {
-    override fun read(buf: ByteBuffer): SocketAddr? {
+public object FfiConverterOptionalTypeNetAddress: FfiConverterRustBuffer<NetAddress?> {
+    override fun read(buf: ByteBuffer): NetAddress? {
         if (buf.get().toInt() == 0) {
             return null
         }
-        return FfiConverterTypeSocketAddr.read(buf)
+        return FfiConverterTypeNetAddress.read(buf)
     }
 
-    override fun allocationSize(value: SocketAddr?): Int {
+    override fun allocationSize(value: NetAddress?): Int {
         if (value == null) {
             return 1
         } else {
-            return 1 + FfiConverterTypeSocketAddr.allocationSize(value)
+            return 1 + FfiConverterTypeNetAddress.allocationSize(value)
         }
     }
 
-    override fun write(value: SocketAddr?, buf: ByteBuffer) {
+    override fun write(value: NetAddress?, buf: ByteBuffer) {
         if (value == null) {
             buf.put(0)
         } else {
             buf.put(1)
-            FfiConverterTypeSocketAddr.write(value, buf)
+            FfiConverterTypeNetAddress.write(value, buf)
         }
     }
 }
@@ -2212,8 +2212,8 @@ public typealias FfiConverterTypePublicKey = FfiConverterString
  * is needed because the UDL type name is used in function/method signatures.
  * It's also what we have an external type that references a custom type.
  */
-public typealias SocketAddr = String
-public typealias FfiConverterTypeSocketAddr = FfiConverterString
+public typealias NetAddress = String
+public typealias FfiConverterTypeNetAddress = FfiConverterString
 
 
 

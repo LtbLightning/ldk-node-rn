@@ -14,16 +14,16 @@ export declare class UserChannelId {
     userChannelIdHex: string;
     constructor(hex: string);
 }
-export declare class SocketAddr {
+export declare class NetAddress {
     ip: string;
     port: number;
     constructor(ip: string, port: number);
 }
 export declare class PeerDetails {
     nodeId: PublicKey;
-    address: SocketAddr;
+    address: NetAddress;
     isConnected: boolean;
-    constructor(nodeId: PublicKey, address: SocketAddr, isConnected: boolean);
+    constructor(nodeId: PublicKey, address: NetAddress, isConnected: boolean);
 }
 export declare class OutPoint {
     txid: string;

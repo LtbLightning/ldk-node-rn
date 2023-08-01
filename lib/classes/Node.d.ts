@@ -1,4 +1,4 @@
-import { Address, ChannelDetails, PaymentDetails, PaymentHash, PeerDetails, PublicKey, Txid } from './Bindings';
+import { Address, ChannelDetails, ChannelId, PaymentDetails, PaymentHash, PeerDetails, PublicKey, Txid } from './Bindings';
 import { NativeLoader } from './NativeLoader';
 export declare class Node extends NativeLoader {
     id: string;
@@ -66,10 +66,10 @@ export declare class Node extends NativeLoader {
      *
      * @requires [nodeId] publicKey of Node
      * @requires [address] IP:PORT of Node
-     * @requires [permanently] open node permanently or not
+     * @requires [persist] open node permanently or not
      * @returns {Promise<boolean>}
      */
-    connect(nodeId: string, address: string, permanently: boolean): Promise<boolean>;
+    connect(nodeId: string, address: string, persist: boolean): Promise<boolean>;
     /**
      * Disconnects the peer with the given node id.
      *
@@ -89,6 +89,13 @@ export declare class Node extends NativeLoader {
      * @returns {Promise<boolean>}
      */
     connectOpenChannel(nodeId: string, address: string, channelAmountSats: number, pushToCounterpartyMsat: number, announceChannel: boolean): Promise<boolean>;
+    /**
+     * Close a previously opened channel.
+     * @requires [channelId]
+     * @requires [counterpartyNodeId] publicKey of counterparty Node
+     * @returns {Promise<boolean>}
+     */
+    closeChannel(channelId: ChannelId, counterpartyNodeId: PublicKey): Promise<boolean>;
     /**
      * Send a payement given an invoice.
      * @requires [invoice]

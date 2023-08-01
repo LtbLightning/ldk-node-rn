@@ -29,7 +29,7 @@ export class UserChannelId {
   }
 }
 
-export class SocketAddr {
+export class NetAddress {
   ip: string;
   port: number;
 
@@ -41,10 +41,10 @@ export class SocketAddr {
 
 export class PeerDetails {
   nodeId: PublicKey;
-  address: SocketAddr;
+  address: NetAddress;
   isConnected: boolean;
 
-  constructor(nodeId: PublicKey, address: SocketAddr, isConnected: boolean) {
+  constructor(nodeId: PublicKey, address: NetAddress, isConnected: boolean) {
     this.nodeId = nodeId;
     this.address = address;
     this.isConnected = isConnected;

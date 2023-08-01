@@ -69,10 +69,20 @@ func getPaymentStatus(status: PaymentStatus) -> String {
 }
 
 
-func getMessage(msg: NSArray) -> Array<UInt8> {
-    var msgArray: [UInt8] = []
-    for i in msg {
-        msgArray.append(UInt8(Int8(i as! UInt8)))
+func getNatieBytes(list: NSArray) -> Array<UInt8> {
+    var array: [UInt8] = []
+    for i in list {
+        array.append(UInt8(Int8(i as! UInt8)))
     }
-    return msgArray
+    return array
+}
+
+func getNetworkEnum(networkStr: String?) -> Network {
+    switch (networkStr) {
+    case "testnet": return Network.testnet
+    case "bitcoin": return Network.bitcoin
+    case "regtest": return Network.regtest
+    case "signet": return Network.signet
+    default: return Network.testnet
+    }
 }

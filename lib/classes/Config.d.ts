@@ -1,5 +1,5 @@
+import { NetAddress } from './Bindings';
 import { NativeLoader } from './NativeLoader';
-import { SocketAddr } from './Bindings';
 export declare class Config extends NativeLoader {
     id: string;
     /**
@@ -10,5 +10,5 @@ export declare class Config extends NativeLoader {
      * @param defaultCltvExpiryDelta
      * @returns {Promise<Config>}
      */
-    create(storageDirPath: string, network: string, listeningAddress: SocketAddr | null, defaultCltvExpiryDelta: number): Promise<Config>;
+    create(storageDirPath: string, network: string, listeningAddress: NetAddress | null, defaultCltvExpiryDelta: number): Promise<Config>;
 }
