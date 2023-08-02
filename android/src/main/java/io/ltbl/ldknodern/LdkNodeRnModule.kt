@@ -18,13 +18,12 @@ class LdkNodeRnModule(reactContext: ReactApplicationContext) :
     /***================ LDK code ===============*/
     private var _configs = mutableMapOf<String, Config>()
     private var _builders = mutableMapOf<String, Builder>()
-    private var _nodes = mutableMapOf<String, Node>()
+    private var _nodes = mutableMapOf<String, LdkNode>()
 
     /** Config Methods starts */
     @ReactMethod
     fun createConfig(
         storageDirPath: String,
-        esploraServerUrl: String,
         network: String,
         listeningAddress: String? = null,
         defaultCltvExpiryDelta: Int,
@@ -33,8 +32,8 @@ class LdkNodeRnModule(reactContext: ReactApplicationContext) :
         val id = randomId()
         _configs[id] = Config(
             storageDirPath,
-            esploraServerUrl,
-            network,
+            null,
+            getNetworkEnum(network),
             listeningAddress,
             defaultCltvExpiryDelta.toUInt()
         )
@@ -48,6 +47,65 @@ class LdkNodeRnModule(reactContext: ReactApplicationContext) :
         val id = randomId()
         _builders[id] = Builder.fromConfig(_configs[configId]!!)
         result.resolve(id)
+    }
+
+    @ReactMethod
+    fun setEntropySeedPath(builderId: String, seedPath: String, result: Promise) {
+        _builders[builderId]!!.setEntropySeedPath(seedPath)
+        result.resolve(true)
+    }
+
+    @ReactMethod
+    fun setEntropySeedBytes(builderId: String, seedBytes: ReadableArray, result: Promise) {
+        _builders[builderId]!!.setEntropySeedBytes(getNatieBytes(seedBytes))
+        result.resolve(true)
+    }
+
+    @ReactMethod
+    fun setEntropyBip39Mnemonic(
+        builderId: String,
+        mnemonic: String,
+        passphrase: String?,
+        result: Promise
+    ) {
+        _builders[builderId]!!.setEntropyBip39Mnemonic(mnemonic, passphrase)
+        result.resolve(true)
+    }
+
+    @ReactMethod
+    fun setEsploraServer(builderId: String, esploraServerUrl: String, result: Promise) {
+        _builders[builderId]!!.setEsploraServer(esploraServerUrl)
+        result.resolve(true)
+    }
+
+    @ReactMethod
+    fun setGossipSourceP2p(builderId: String, result: Promise) {
+        _builders[builderId]!!.setGossipSourceP2p()
+        result.resolve(true)
+    }
+
+    @ReactMethod
+    fun setGossipSourceRgs(builderId: String, rgsServerUrl: String, result: Promise) {
+        _builders[builderId]!!.setGossipSourceRgs(rgsServerUrl)
+        result.resolve(true)
+    }
+
+    @ReactMethod
+    fun setStorageDirPath(builderId: String, storageDirPath: String, result: Promise) {
+        _builders[builderId]!!.setStorageDirPath(storageDirPath)
+        result.resolve(true)
+    }
+
+    @ReactMethod
+    fun setNetwork(builderId: String, network: String, result: Promise) {
+        _builders[builderId]!!.setNetwork(getNetworkEnum(network))
+        result.resolve(true)
+    }
+
+    @ReactMethod
+    fun setListeningAddress(builderId: String, listeningAddress: String, result: Promise) {
+        _builders[builderId]!!.setListeningAddress(listeningAddress)
+        result.resolve(true)
     }
 
     @ReactMethod
@@ -98,7 +156,7 @@ class LdkNodeRnModule(reactContext: ReactApplicationContext) :
     @ReactMethod
     fun newFundingAddress(nodeId: String, result: Promise) {
         try {
-            result.resolve(_nodes[nodeId]!!.newFundingAddress())
+            result.resolve(_nodes[nodeId]!!.newOnchainAddress())
         } catch (error: Throwable) {
             result.reject("Node newFundingAddress error", error.localizedMessage, error)
         }
@@ -182,6 +240,7 @@ class LdkNodeRnModule(reactContext: ReactApplicationContext) :
                 address,
                 channelAmountSats.toULong(),
                 pushToCounterpartyMsat.toULong(),
+                null,
                 announceChannel
             )
             result.resolve(true)
@@ -225,7 +284,7 @@ class LdkNodeRnModule(reactContext: ReactApplicationContext) :
             var invoice = _nodes[nodeId]!!.sendSpontaneousPayment(amountMsat.toULong(), pubKey)
             result.resolve(invoice)
         } catch (error: Throwable) {
-            result.reject("SSend spontaneous payment error", error.localizedMessage, error)
+            result.reject("Send spontaneous payment error", error.localizedMessage, error)
         }
     }
 
@@ -311,7 +370,7 @@ class LdkNodeRnModule(reactContext: ReactApplicationContext) :
     @ReactMethod
     fun signMessage(nodeId: String, msg: ReadableArray, result: Promise) {
         try {
-            result.resolve(_nodes[nodeId]!!.signMessage(getMessage(msg)))
+            result.resolve(_nodes[nodeId]!!.signMessage(getNatieBytes(msg)))
         } catch (error: Throwable) {
             result.reject("Sign message error", error.localizedMessage, error)
         }
@@ -325,7 +384,7 @@ class LdkNodeRnModule(reactContext: ReactApplicationContext) :
         pkey: String,
         result: Promise
     ) {
-        result.resolve(_nodes[nodeId]!!.verifySignature(getMessage(msg), sig, pkey))
+        result.resolve(_nodes[nodeId]!!.verifySignature(getNatieBytes(msg), sig, pkey))
     }
 
 

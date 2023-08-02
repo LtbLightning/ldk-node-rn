@@ -36,8 +36,9 @@ export interface NativeLdkNodeRn {
     removePayment(nodeId: string, paymentHash: string): boolean;
     signMessage(nodeId: string, msg: Array<number>): string;
     verifySignature(nodeId: string, msg: Array<number>, sig: string, pkey: string): boolean;
+    createEntropyMnemonic(): string;
 }
 export declare class NativeLoader {
-    protected _ldk: NativeLdkNodeRn;
+    _ldk: NativeLdkNodeRn;
     constructor();
 }

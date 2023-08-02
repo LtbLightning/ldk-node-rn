@@ -21,7 +21,7 @@ fun getChannelDetails(channel: ChannelDetails): MutableMap<String, Any> {
             "txid" to channel.fundingTxo?.txid as Any,
             "vout" to channel.fundingTxo?.vout?.toInt()
         ),
-        "channelValueSatoshis" to channel.channelValueSatoshis.toInt(),
+        "channelValueSats" to channel.channelValueSats.toInt(),
         "unspendablePunishmentReserve" to channel.unspendablePunishmentReserve!!.toInt(),
         "userChannelId" to channel.userChannelId,
         "balanceMsat" to channel.balanceMsat.toInt(),
@@ -63,10 +63,21 @@ fun getPaymentStatus(status: PaymentStatus): String {
     }
 }
 
-fun getMessage(msg: ReadableArray): List<UByte> {
-    val msgArray = ArrayList<UByte>()
-    for (i in 0 until msg.size()) {
-        msgArray.add(msg.getInt(i).toUByte())
+fun getNatieBytes(list: ReadableArray): List<UByte> {
+    val array = ArrayList<UByte>()
+    for (i in 0 until list.size()) {
+        array.add(list.getInt(i).toUByte())
     }
-    return msgArray
+    return array
 }
+
+fun getNetworkEnum(networkStr: String? = "testnet"): Network {
+    return when (networkStr) {
+        "testnet" -> Network.TESTNET
+        "bitcoin" -> Network.BITCOIN
+        "regtest" -> Network.REGTEST
+        "signet" -> Network.SIGNET
+        else -> Network.TESTNET
+    }
+}
+

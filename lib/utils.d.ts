@@ -9,3 +9,5 @@ export declare const getPaymentDirection: (direction: string) => PaymentDirectio
 export declare const getPaymentStatus: (status: string) => PaymentStatus;
 /** Convert NetAddress object to URL */
 export declare const addressToString: (addr: NetAddress) => string;
+/**  Generate Entropy Mnemonic */
+export declare const generateEntropyMnemonic: () => Promise<string>;

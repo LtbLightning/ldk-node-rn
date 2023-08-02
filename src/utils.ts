@@ -10,6 +10,8 @@ import {
   UserChannelId,
 } from './classes/Bindings';
 
+import { NativeLoader } from './classes/NativeLoader';
+
 /** Create PeerDetails object */
 export const createPeerDetailsObject = (item: any): PeerDetails => {
   let address = item.address.split(':');
@@ -57,4 +59,7 @@ export const getPaymentStatus = (status: string): PaymentStatus => {
 };
 
 /** Convert NetAddress object to URL */
-export const addressToString = (addr: NetAddress) => `${addr.ip}:${addr.port}`;
+export const addressToString = (addr: NetAddress) => `http://${addr.ip}:${addr.port}`;
+
+/**  Generate Entropy Mnemonic */
+export const generateEntropyMnemonic = async () => new NativeLoader()._ldk.createEntropyMnemonic();

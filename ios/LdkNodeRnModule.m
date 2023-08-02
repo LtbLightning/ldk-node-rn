@@ -269,4 +269,10 @@ RCT_EXTERN_METHOD(
     reject:(RCTPromiseRejectBlock)reject
 )
 
+/** Utilities */
+RCT_EXTERN_METHOD(
+    createEntropyMnemonic: (RCTPromiseResolveBlock)resolve
+    reject:(RCTPromiseRejectBlock)reject
+)
+
 @end

@@ -534,9 +534,13 @@ class LdkNodeRnModule: NSObject {
         resolve(_nodes[nodeId]!.verifySignature(msg: getNatieBytes(list: msg), sig: sig, pkey: pkey))
 
     }
-
-
     /** Node methods ends */
+    
+    /** Utilities methods start */
+    @objc
+    func createEntropyMnemonic(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock){
+        resolve(generateEntropyMnemonic())
+    }
 
 
 }

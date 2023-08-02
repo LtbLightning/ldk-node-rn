@@ -1,6 +1,6 @@
-import { NativeModules } from 'react-native';
-
 import { ChannelDetails, PeerDetails } from './Bindings';
+
+import { NativeModules } from 'react-native';
 
 export interface NativeLdkNodeRn {
   createConfig(
@@ -56,10 +56,11 @@ export interface NativeLdkNodeRn {
 
   signMessage(nodeId: string, msg: Array<number>): string;
   verifySignature(nodeId: string, msg: Array<number>, sig: string, pkey: string): boolean;
+  createEntropyMnemonic(): string;
 }
 
 export class NativeLoader {
-  protected _ldk: NativeLdkNodeRn;
+  _ldk: NativeLdkNodeRn;
 
   constructor() {
     this._ldk = NativeModules.LdkNodeRnModule;

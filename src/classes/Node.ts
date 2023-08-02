@@ -1,4 +1,3 @@
-import { createChannelDetailsObject, createPeerDetailsObject, getPaymentDirection, getPaymentStatus } from '../utils';
 import {
   Address,
   ChannelDetails,
@@ -11,6 +10,8 @@ import {
   PublicKey,
   Txid,
 } from './Bindings';
+import { createChannelDetailsObject, createPeerDetailsObject, getPaymentDirection, getPaymentStatus } from '../utils';
+
 import { NativeLoader } from './NativeLoader';
 
 export class Node extends NativeLoader {
