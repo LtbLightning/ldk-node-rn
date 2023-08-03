@@ -1,4 +1,4 @@
-import { Address, ChannelDetails, ChannelId, PaymentDetails, PaymentHash, PeerDetails, PublicKey, Txid } from './Bindings';
+import { Address, ChannelConfig, ChannelDetails, ChannelId, PaymentDetails, PaymentHash, PeerDetails, PublicKey, Txid } from './Bindings';
 import { NativeLoader } from './NativeLoader';
 export declare class Node extends NativeLoader {
     id: string;
@@ -88,7 +88,7 @@ export declare class Node extends NativeLoader {
      * @requires [announceChannel] announceChannel or not
      * @returns {Promise<boolean>}
      */
-    connectOpenChannel(nodeId: string, address: string, channelAmountSats: number, pushToCounterpartyMsat: number, announceChannel: boolean): Promise<boolean>;
+    connectOpenChannel(nodeId: string, address: string, channelAmountSats: number, pushToCounterpartyMsat: number, channelConfig: ChannelConfig | null | undefined, announceChannel: boolean): Promise<boolean>;
     /**
      * Close a previously opened channel.
      * @requires [channelId]
@@ -181,4 +181,13 @@ export declare class Node extends NativeLoader {
      * @returns {Promise<string>}
      */
     verifySignature(msg: Array<number>, sig: string, pkey: PublicKey): Promise<boolean>;
+    /**
+     * Update the config for a previously opened channel.
+     *
+     * @requires [channelId]
+     * @requires [counterpartyNodeId]
+     * @requires [channelConfig]
+     * @returns {Promise<string>}
+     */
+    updateChannelConfig(channelId: ChannelId, counterpartyNodeId: PublicKey, channelConfig: ChannelConfig): Promise<boolean>;
 }

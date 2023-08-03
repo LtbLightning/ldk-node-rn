@@ -54,17 +54,17 @@ func getPaymentDetails(payment: PaymentDetails) -> [String: Any] {
 
 func getPaymentDirection(direction: PaymentDirection) -> String {
     switch (direction) {
-        case PaymentDirection.inbound: return "inbound"
-        case PaymentDirection.outbound: return "outbound"
+    case PaymentDirection.inbound: return "inbound"
+    case PaymentDirection.outbound: return "outbound"
     }
 }
 
 
 func getPaymentStatus(status: PaymentStatus) -> String {
     switch (status) {
-        case PaymentStatus.pending: return "pending"
-        case PaymentStatus.succeeded: return "succeeded"
-        case PaymentStatus.failed: return "failed"
+    case PaymentStatus.pending: return "pending"
+    case PaymentStatus.succeeded: return "succeeded"
+    case PaymentStatus.failed: return "failed"
     }
 }
 
@@ -84,5 +84,30 @@ func getNetworkEnum(networkStr: String?) -> Network {
     case "regtest": return Network.regtest
     case "signet": return Network.signet
     default: return Network.testnet
+    }
+}
+
+
+func createChannelConfig(config: NSDictionary) -> ChannelConfig {
+    return ChannelConfig(
+        forwardingFeeProportionalMillionths: (config["forwardingFeeProportionalMillionths"] as? UInt32)!,
+        forwardingFeeBaseMsat: (config["forwardingFeeBaseMsat"] as? UInt32)!,
+        cltvExpiryDelta: (config["cltvExpiryDelta"] as? UInt16)!,
+        maxDustHtlcExposureMsat: (config["maxDustHtlcExposureMsat"] as? UInt64)!,
+        forceCloseAvoidanceMaxFeeSatoshis: (config["forceCloseAvoidanceMaxFeeSatoshis"] as? UInt64)!
+    )
+}
+
+
+
+func getLogLevelEnum(logLevel: String) -> LogLevel {
+    switch (logLevel) {
+    case "gossip": return LogLevel.gossip
+    case "trace": return LogLevel.trace
+    case "debug": return LogLevel.debug
+    case "info": return LogLevel.info
+    case "warn": return LogLevel.warn
+    case "error": return LogLevel.error
+    default: return LogLevel.debug
     }
 }

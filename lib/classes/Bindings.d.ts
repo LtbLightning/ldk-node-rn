@@ -90,3 +90,20 @@ export declare class PaymentDetails {
     status: PaymentStatus;
     constructor(hash: PaymentHash, preimage: PaymentPreimage, secret: PaymentSecret, amountMsat: number, direction: PaymentDirection, status: PaymentStatus);
 }
+export declare class ChannelConfig {
+    forwardingFeeProportionalMillionths: number;
+    forwardingFeeBaseMsat: number;
+    cltvExpiryDelta: number;
+    maxDustHtlcExposureMsat: number;
+    forceCloseAvoidanceMaxFeeSatoshis: number;
+    constructor(forwardingFeeProportionalMillionths: number, forwardingFeeBaseMsat: number, cltvExpiryDelta: number, maxDustHtlcExposureMsat: number, forceCloseAvoidanceMaxFeeSatoshis: number);
+}
+/** An enum representing the available verbosity levels of the logger. */
+export declare enum LogLevel {
+    gossip = "gossip",
+    trace = "trace",
+    debug = "debug",
+    info = "info",
+    warn = "warn",
+    error = "error"
+}

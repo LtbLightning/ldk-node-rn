@@ -1,5 +1,6 @@
 import {
   Address,
+  ChannelConfig,
   ChannelDetails,
   ChannelId,
   PaymentDetails,
@@ -149,6 +150,7 @@ export class Node extends NativeLoader {
     address: string,
     channelAmountSats: number,
     pushToCounterpartyMsat: number,
+    channelConfig: ChannelConfig | null = null,
     announceChannel: boolean
   ): Promise<boolean> {
     return await this._ldk.connectOpenChannel(
@@ -157,6 +159,7 @@ export class Node extends NativeLoader {
       address,
       channelAmountSats,
       pushToCounterpartyMsat,
+      channelConfig,
       announceChannel
     );
   }
@@ -300,5 +303,26 @@ export class Node extends NativeLoader {
    */
   async verifySignature(msg: Array<number>, sig: string, pkey: PublicKey): Promise<boolean> {
     return await this._ldk.verifySignature(this.id, msg, sig, pkey.keyHex);
+  }
+
+  /**
+   * Update the config for a previously opened channel.
+   *
+   * @requires [channelId]
+   * @requires [counterpartyNodeId]
+   * @requires [channelConfig]
+   * @returns {Promise<string>}
+   */
+  async updateChannelConfig(
+    channelId: ChannelId,
+    counterpartyNodeId: PublicKey,
+    channelConfig: ChannelConfig
+  ): Promise<boolean> {
+    return await this._ldk.updateChannelConfig(
+      this.id,
+      channelId.channelIdHex,
+      counterpartyNodeId.keyHex,
+      channelConfig
+    );
   }
 }

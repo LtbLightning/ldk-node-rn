@@ -1,13 +1,19 @@
-import { ChannelDetails, PeerDetails } from './Bindings';
+import { ChannelConfig, ChannelDetails, PeerDetails } from './Bindings';
 
 import { NativeModules } from 'react-native';
 
 export interface NativeLdkNodeRn {
   createConfig(
     storageDirPath: string,
+    logDirPath: string | null,
     network: string,
     listeningAddress: string | null,
-    defaultCltvExpiryDelta: number
+    defaultCltvExpiryDelta: number,
+    onchainWalletSyncIntervalSecs: number,
+    walletSyncIntervalSecs: number,
+    feeRateCacheUpdateIntervalSecs: number,
+    logLevel: string,
+    trustedPeers0conf: Array<string>
   ): string;
 
   fromConfig(configId: string): string;
@@ -39,6 +45,7 @@ export interface NativeLdkNodeRn {
     address: string,
     channelAmountSats: number,
     pushToCounterpartyMsat: number,
+    channelConfig: any,
     announceChannel: boolean
   ): boolean;
   closeChannel(nodeId: string, channelId: string, counterpartyNodeId: string): boolean;
@@ -56,6 +63,13 @@ export interface NativeLdkNodeRn {
 
   signMessage(nodeId: string, msg: Array<number>): string;
   verifySignature(nodeId: string, msg: Array<number>, sig: string, pkey: string): boolean;
+  updateChannelConfig(
+    nodeId: string,
+    channelId: string,
+    counterpartyNodeId: string,
+    channelConfig: ChannelConfig
+  ): boolean;
+
   createEntropyMnemonic(): string;
 }
 

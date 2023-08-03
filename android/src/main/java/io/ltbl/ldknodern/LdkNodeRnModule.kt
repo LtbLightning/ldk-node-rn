@@ -387,7 +387,13 @@ class LdkNodeRnModule(reactContext: ReactApplicationContext) :
         result.resolve(_nodes[nodeId]!!.verifySignature(getNatieBytes(msg), sig, pkey))
     }
 
-
     /** Node methods ends */
+
+
+    /** Utilities methods start */
+    @ReactMethod
+    fun createEntropyMnemonic(result: Promise) {
+        result.resolve(generateEntropyMnemonic())
+    }
 }
 

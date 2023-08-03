@@ -11,18 +11,30 @@ class LdkNodeRnModule: NSObject {
     @objc
     func createConfig(_
         storageDirPath: String,
+        logDirPath: String,
         network: String,
         listeningAddress: String? = nil,
-        defaultCltvExpiryDelta: NSNumber,
+        defaultCltvExpiryDelta: NSNumber? = 144,
+        onchainWalletSyncIntervalSecs: NSNumber? = 80,
+        walletSyncIntervalSecs: NSNumber? = 30,
+        feeRateCacheUpdateIntervalSecs: NSNumber? = 600,
+        logLevel: String,
+        trustedPeers0conf: NSArray,
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
         let id = randomId()
         _configs[id] = Config(
             storageDirPath: storageDirPath,
+            logDirPath: logDirPath,
             network: Network.regtest,
             listeningAddress: listeningAddress,
-            defaultCltvExpiryDelta: UInt32(truncating: defaultCltvExpiryDelta)
+            defaultCltvExpiryDelta: UInt32(truncating: defaultCltvExpiryDelta!),
+            onchainWalletSyncIntervalSecs: UInt64(truncating: onchainWalletSyncIntervalSecs!),
+            walletSyncIntervalSecs: UInt64(truncating: walletSyncIntervalSecs!),
+            feeRateCacheUpdateIntervalSecs: UInt64(truncating: feeRateCacheUpdateIntervalSecs!),
+            logLevel: getLogLevelEnum(logLevel: logLevel),
+            trustedPeers0conf: trustedPeers0conf as! [PublicKey]
         )
         resolve(id)
     }
@@ -323,17 +335,24 @@ class LdkNodeRnModule: NSObject {
         address: String,
         channelAmountSats: NSNumber,
         pushToCounterpartyMsat: NSNumber,
+        channelConfig: Any? = nil,
         announceChannel: Bool,
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
         do {
+
+            var config: ChannelConfig? = nil
+            if channelConfig != nil {
+                config = createChannelConfig(config: channelConfig as! NSDictionary)
+            }
+
             try _nodes[nodeId]!.connectOpenChannel(
                 nodeId: pubKey,
                 address: address,
                 channelAmountSats: UInt64(truncating: channelAmountSats),
                 pushToCounterpartyMsat: UInt64(truncating: pushToCounterpartyMsat),
-                channelConfig: nil,
+                channelConfig: config,
                 announceChannel: announceChannel
             )
             resolve(true)
@@ -534,11 +553,34 @@ class LdkNodeRnModule: NSObject {
         resolve(_nodes[nodeId]!.verifySignature(msg: getNatieBytes(list: msg), sig: sig, pkey: pkey))
 
     }
+
+    @objc
+    func updateChannelConfig(_
+        nodeId: String,
+        channelId: String,
+        counterpartyNodeId: String,
+        channelConfig: NSDictionary,
+        resolve: @escaping RCTPromiseResolveBlock,
+        reject: @escaping RCTPromiseRejectBlock
+    ) {
+        do {
+            try _nodes[nodeId]!.updateChannelConfig(
+                channelId: channelId,
+                counterpartyNodeId: counterpartyNodeId,
+                channelConfig: createChannelConfig(config: channelConfig)
+            )
+            resolve(true)
+        } catch let error {
+            reject("Sign message error", "\(error)", error)
+        }
+
+
+    }
     /** Node methods ends */
-    
+
     /** Utilities methods start */
     @objc
-    func createEntropyMnemonic(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock){
+    func createEntropyMnemonic(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         resolve(generateEntropyMnemonic())
     }
 

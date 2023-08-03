@@ -7,9 +7,15 @@
 /** Config methods */
 RCT_EXTERN_METHOD(
     createConfig: (nonnull NSString*)storageDirPath
+    logDirPath: (nonnull NSString*)logDirPath
     network: (nonnull NSString*)network
     listeningAddress: (nullable NSString*)listeningAddress
     defaultCltvExpiryDelta: (nonnull NSNumber*)defaultCltvExpiryDelta
+    onchainWalletSyncIntervalSecs: (nonnull NSNumber*)onchainWalletSyncIntervalSecs
+    walletSyncIntervalSecs: (nonnull NSNumber*)walletSyncIntervalSecs
+    feeRateCacheUpdateIntervalSecs: (nonnull NSNumber*)feeRateCacheUpdateIntervalSecs
+    logLevel: (nonnull NSString*)logLevel
+    trustedPeers0conf: (nonnull NSArray*)trustedPeers0conf
     resolve: (RCTPromiseResolveBlock)resolve
     reject:(RCTPromiseRejectBlock)reject
 )
@@ -172,6 +178,7 @@ RCT_EXTERN_METHOD(
     address: (nonnull NSString*)address
     channelAmountSats: (nonnull NSNumber*)channelAmountSats
     pushToCounterpartyMsat: (nonnull NSNumber*)pushToCounterpartyMsat
+    channelConfig: (nullable NSDictionary*)channelConfig
     announceChannel: (nonnull BOOL*)announceChannel
     resolve: (RCTPromiseResolveBlock)resolve
     reject:(RCTPromiseRejectBlock)reject
@@ -265,6 +272,15 @@ RCT_EXTERN_METHOD(
     msg: (nonnull NSArray*)msg
     sig: (nonnull NSString*)sig
     pkey: (nonnull NSString*)pkey
+    resolve: (RCTPromiseResolveBlock)resolve
+    reject:(RCTPromiseRejectBlock)reject
+)
+
+RCT_EXTERN_METHOD(
+    updateChannelConfig: (nonnull NSString*)nodeId
+    channelId: (nonnull NSString*)channelId
+    counterpartyNodeId: (nonnull NSString*)counterpartyNodeId
+    channelConfig: (nonnull NSDictionary*)channelConfig
     resolve: (RCTPromiseResolveBlock)resolve
     reject:(RCTPromiseRejectBlock)reject
 )

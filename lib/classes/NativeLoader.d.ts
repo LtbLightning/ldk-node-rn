@@ -1,6 +1,6 @@
-import { ChannelDetails, PeerDetails } from './Bindings';
+import { ChannelConfig, ChannelDetails, PeerDetails } from './Bindings';
 export interface NativeLdkNodeRn {
-    createConfig(storageDirPath: string, network: string, listeningAddress: string | null, defaultCltvExpiryDelta: number): string;
+    createConfig(storageDirPath: string, logDirPath: string | null, network: string, listeningAddress: string | null, defaultCltvExpiryDelta: number, onchainWalletSyncIntervalSecs: number, walletSyncIntervalSecs: number, feeRateCacheUpdateIntervalSecs: number, logLevel: string, trustedPeers0conf: Array<string>): string;
     fromConfig(configId: string): string;
     setEntropySeedPath(buildId: string, seedPath: string): boolean;
     setEntropySeedBytes(buildId: string, seedBytes: Array<number>): boolean;
@@ -23,7 +23,7 @@ export interface NativeLdkNodeRn {
     totalOnchainBalanceSats(nodeId: string): number;
     connect(nodeId: string, pubKey: string, address: string, persist: boolean): boolean;
     disconnect(nodeId: string, pubKey: string): boolean;
-    connectOpenChannel(nodeId: string, pubKey: string, address: string, channelAmountSats: number, pushToCounterpartyMsat: number, announceChannel: boolean): boolean;
+    connectOpenChannel(nodeId: string, pubKey: string, address: string, channelAmountSats: number, pushToCounterpartyMsat: number, channelConfig: any, announceChannel: boolean): boolean;
     closeChannel(nodeId: string, channelId: string, counterpartyNodeId: string): boolean;
     receivePayment(nodeId: string, amountMsat: number, description: string, expirySecs: number): string;
     receiveVariableAmountPayment(nodeId: string, description: string, expirySecs: number): string;
@@ -36,6 +36,7 @@ export interface NativeLdkNodeRn {
     removePayment(nodeId: string, paymentHash: string): boolean;
     signMessage(nodeId: string, msg: Array<number>): string;
     verifySignature(nodeId: string, msg: Array<number>, sig: string, pkey: string): boolean;
+    updateChannelConfig(nodeId: string, channelId: string, counterpartyNodeId: string, channelConfig: ChannelConfig): boolean;
     createEntropyMnemonic(): string;
 }
 export declare class NativeLoader {
