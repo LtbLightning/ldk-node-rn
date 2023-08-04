@@ -1,6 +1,6 @@
-import { NetAddress } from './Bindings';
 import { Config } from './Config';
 import { NativeLoader } from './NativeLoader';
+import { NetAddress } from './Bindings';
 import { Node } from './Node';
 export declare class Builder extends NativeLoader {
     id: string;
@@ -39,7 +39,7 @@ export declare class Builder extends NativeLoader {
      * @requires esploraServerUrl
      * @returns {Promise<boolean>}
      */
-    setEsploraServer(esploraServerUrl: NetAddress): Promise<boolean>;
+    setEsploraServer(esploraServerUrl: string): Promise<boolean>;
     /**
      * Configures the [Node] instance to source its gossip data from the Lightning peer-to-peer network.
      * @returns {Promise<boolean>}
@@ -50,7 +50,7 @@ export declare class Builder extends NativeLoader {
      * @requires rgsServerUrl
      * @returns {Promise<boolean>}
      */
-    setGossipSourceRgs(rgsServerUrl: NetAddress): Promise<boolean>;
+    setGossipSourceRgs(rgsServerUrl: string): Promise<boolean>;
     /**
      * Sets the used storage directory path.
      * @requires storageDirPath

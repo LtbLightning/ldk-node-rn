@@ -225,6 +225,15 @@ class LdkNodeRnModule: NSObject {
     ) {
         resolve(_nodes[nodeId]!.nodeId())
     }
+    
+    @objc
+    func listeningAddress(_
+        nodeId: String,
+        resolve: @escaping RCTPromiseResolveBlock,
+        reject: @escaping RCTPromiseRejectBlock
+    ) {
+        resolve(_nodes[nodeId]!.listeningAddress())
+    }
 
     @objc
     func newOnchainAddress(_
@@ -469,6 +478,21 @@ class LdkNodeRnModule: NSObject {
     }
 
 
+    @objc
+    func listPayments(_
+        nodeId: String,
+        resolve: @escaping RCTPromiseResolveBlock,
+        reject: @escaping RCTPromiseRejectBlock
+    ) {
+        let list: [PaymentDetails] = _nodes[nodeId]!.listPayments()
+        var responseObject: [Any] = []
+        print("Payments===>", list)
+        for item in list {
+            responseObject.append(getPaymentDetails(payment: item))
+        }
+        resolve(responseObject)
+    }
+    
     @objc
     func listPeers(_
         nodeId: String,

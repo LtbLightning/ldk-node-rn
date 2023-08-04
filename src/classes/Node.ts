@@ -3,6 +3,7 @@ import {
   ChannelConfig,
   ChannelDetails,
   ChannelId,
+  NetAddress,
   PaymentDetails,
   PaymentHash,
   PaymentPreimage,
@@ -11,7 +12,15 @@ import {
   PublicKey,
   Txid,
 } from './Bindings';
-import { createChannelDetailsObject, createPeerDetailsObject, getPaymentDirection, getPaymentStatus } from '../utils';
+import {
+  addressToString,
+  createChannelDetailsObject,
+  createPaymentDetails,
+  createPeerDetailsObject,
+  getPaymentDirection,
+  getPaymentStatus,
+  stringToAddress,
+} from '../utils';
 
 import { NativeLoader } from './NativeLoader';
 
@@ -62,6 +71,15 @@ export class Node extends NativeLoader {
   async nodeId(): Promise<PublicKey> {
     let keyHex = await this._ldk.nodeId(this.id);
     return new PublicKey(keyHex);
+  }
+
+  /**
+   * Returns listening Address
+   * @returns {Promise<NetAddress>}
+   */
+  async listeningAddress(): Promise<NetAddress | null> {
+    let addr = await this._ldk.listeningAddress(this.id);
+    return addr == undefined ? null : stringToAddress(addr);
   }
 
   /**
@@ -116,12 +134,12 @@ export class Node extends NativeLoader {
    * If `permanently` is set to `true`, we'll remember the peer and reconnect to it on restart.
    *
    * @requires [nodeId] publicKey of Node
-   * @requires [address] IP:PORT of Node
+   * @requires [address] NetAddress
    * @requires [persist] open node permanently or not
    * @returns {Promise<boolean>}
    */
-  async connect(nodeId: string, address: string, persist: boolean): Promise<boolean> {
-    return await this._ldk.connect(this.id, nodeId, address, persist);
+  async connect(nodeId: string, address: NetAddress, persist: boolean): Promise<boolean> {
+    return await this._ldk.connect(this.id, nodeId, addressToString(address), persist);
   }
 
   /**
@@ -139,7 +157,7 @@ export class Node extends NativeLoader {
   /**
    * Connect to a node and open a new channel. Disconnects and re-connects are handled automatically
    * @requires [nodeId] publicKey of Node
-   * @requires [address] IP:PORT of Node
+   * @requires [address] NetAddress
    * @requires [channelAmountSats] number
    * @requires [pushToCounterpartyMsat] number
    * @requires [announceChannel] announceChannel or not
@@ -147,7 +165,7 @@ export class Node extends NativeLoader {
    */
   async connectOpenChannel(
     nodeId: string,
-    address: string,
+    address: NetAddress,
     channelAmountSats: number,
     pushToCounterpartyMsat: number,
     channelConfig: ChannelConfig | null = null,
@@ -156,7 +174,7 @@ export class Node extends NativeLoader {
     return await this._ldk.connectOpenChannel(
       this.id,
       nodeId,
-      address,
+      addressToString(address),
       channelAmountSats,
       pushToCounterpartyMsat,
       channelConfig,
@@ -233,6 +251,15 @@ export class Node extends NativeLoader {
   }
 
   /**
+   * Get list of payments
+   * @returns {Promise<Array<PaymentDetails>>}
+   */
+  async listPayments(): Promise<Array<PaymentDetails>> {
+    const list = await this._ldk.listPayments(this.id);
+    return list.map((item) => createPaymentDetails(item));
+  }
+
+  /**
    * Get list of connected peers
    * @returns {Promise<Array<PeerDetails>>}
    */
@@ -258,15 +285,7 @@ export class Node extends NativeLoader {
    * @returns {Promise<PaymentDetails>}
    */
   async payment(paymetHash: PaymentHash): Promise<PaymentDetails> {
-    const paymentDetails = await this._ldk.payment(this.id, paymetHash.field0);
-    return new PaymentDetails(
-      new PaymentHash(paymentDetails.hash),
-      new PaymentPreimage(paymentDetails.preimage),
-      new PaymentSecret(paymentDetails.secret),
-      paymentDetails.amountMsat,
-      getPaymentDirection(paymentDetails.direction),
-      getPaymentStatus(paymentDetails.status)
-    );
+    return createPaymentDetails(await this._ldk.payment(this.id, paymetHash.field0));
   }
 
   /**

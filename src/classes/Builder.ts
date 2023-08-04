@@ -1,8 +1,8 @@
-import { addressToString } from '../utils';
-import { NetAddress } from './Bindings';
 import { Config } from './Config';
 import { NativeLoader } from './NativeLoader';
+import { NetAddress } from './Bindings';
 import { Node } from './Node';
+import { addressToString } from '../utils';
 
 export class Builder extends NativeLoader {
   id: string = '';
@@ -55,8 +55,8 @@ export class Builder extends NativeLoader {
    * @requires esploraServerUrl
    * @returns {Promise<boolean>}
    */
-  async setEsploraServer(esploraServerUrl: NetAddress): Promise<boolean> {
-    return await this._ldk.setEsploraServer(this.id, addressToString(esploraServerUrl));
+  async setEsploraServer(esploraServerUrl: string): Promise<boolean> {
+    return await this._ldk.setEsploraServer(this.id, esploraServerUrl);
   }
 
   /**
@@ -72,8 +72,8 @@ export class Builder extends NativeLoader {
    * @requires rgsServerUrl
    * @returns {Promise<boolean>}
    */
-  async setGossipSourceRgs(rgsServerUrl: NetAddress): Promise<boolean> {
-    return await this._ldk.setGossipSourceRgs(this.id, addressToString(rgsServerUrl));
+  async setGossipSourceRgs(rgsServerUrl: string): Promise<boolean> {
+    return await this._ldk.setGossipSourceRgs(this.id, rgsServerUrl);
   }
 
   /**

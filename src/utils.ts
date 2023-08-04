@@ -3,7 +3,11 @@ import {
   ChannelId,
   NetAddress,
   OutPoint,
+  PaymentDetails,
   PaymentDirection,
+  PaymentHash,
+  PaymentPreimage,
+  PaymentSecret,
   PaymentStatus,
   PeerDetails,
   PublicKey,
@@ -59,7 +63,24 @@ export const getPaymentStatus = (status: string): PaymentStatus => {
 };
 
 /** Convert NetAddress object to URL */
-export const addressToString = (addr: NetAddress) => `http://${addr.ip}:${addr.port}`;
+export const addressToString = (addr: NetAddress) => `${addr.ip}:${addr.port}`;
+
+/** Convert string to NetAddress */
+export const stringToAddress = (addr: string) => {
+  let splittedAddress = addr.split(':');
+  return new NetAddress(splittedAddress[0], parseInt(splittedAddress[1]));
+};
 
 /**  Generate Entropy Mnemonic */
 export const generateEntropyMnemonic = async () => new NativeLoader()._ldk.createEntropyMnemonic();
+
+/** Create payment details object */
+export const createPaymentDetails = (paymentDetails: any) =>
+  new PaymentDetails(
+    new PaymentHash(paymentDetails.hash),
+    new PaymentPreimage(paymentDetails.preimage),
+    new PaymentSecret(paymentDetails.secret),
+    paymentDetails.amountMsat,
+    getPaymentDirection(paymentDetails.direction),
+    getPaymentStatus(paymentDetails.status)
+  );

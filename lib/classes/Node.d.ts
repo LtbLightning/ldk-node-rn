@@ -1,4 +1,4 @@
-import { Address, ChannelConfig, ChannelDetails, ChannelId, PaymentDetails, PaymentHash, PeerDetails, PublicKey, Txid } from './Bindings';
+import { Address, ChannelConfig, ChannelDetails, ChannelId, NetAddress, PaymentDetails, PaymentHash, PeerDetails, PublicKey, Txid } from './Bindings';
 import { NativeLoader } from './NativeLoader';
 export declare class Node extends NativeLoader {
     id: string;
@@ -31,6 +31,11 @@ export declare class Node extends NativeLoader {
      * @returns {Promise<PublicKey>}
      */
     nodeId(): Promise<PublicKey>;
+    /**
+     * Returns listening Address
+     * @returns {Promise<NetAddress>}
+     */
+    listeningAddress(): Promise<NetAddress | null>;
     /**
      * Retrieve a new on-chain/funding address.
      * @returns {Promise<Address>}
@@ -65,11 +70,11 @@ export declare class Node extends NativeLoader {
      * If `permanently` is set to `true`, we'll remember the peer and reconnect to it on restart.
      *
      * @requires [nodeId] publicKey of Node
-     * @requires [address] IP:PORT of Node
+     * @requires [address] NetAddress
      * @requires [persist] open node permanently or not
      * @returns {Promise<boolean>}
      */
-    connect(nodeId: string, address: string, persist: boolean): Promise<boolean>;
+    connect(nodeId: string, address: NetAddress, persist: boolean): Promise<boolean>;
     /**
      * Disconnects the peer with the given node id.
      *
@@ -82,13 +87,13 @@ export declare class Node extends NativeLoader {
     /**
      * Connect to a node and open a new channel. Disconnects and re-connects are handled automatically
      * @requires [nodeId] publicKey of Node
-     * @requires [address] IP:PORT of Node
+     * @requires [address] NetAddress
      * @requires [channelAmountSats] number
      * @requires [pushToCounterpartyMsat] number
      * @requires [announceChannel] announceChannel or not
      * @returns {Promise<boolean>}
      */
-    connectOpenChannel(nodeId: string, address: string, channelAmountSats: number, pushToCounterpartyMsat: number, channelConfig: ChannelConfig | null | undefined, announceChannel: boolean): Promise<boolean>;
+    connectOpenChannel(nodeId: string, address: NetAddress, channelAmountSats: number, pushToCounterpartyMsat: number, channelConfig: ChannelConfig | null | undefined, announceChannel: boolean): Promise<boolean>;
     /**
      * Close a previously opened channel.
      * @requires [channelId]
@@ -136,6 +141,11 @@ export declare class Node extends NativeLoader {
      * @returns {Promise<boolean>}
      */
     receiveVariableAmountPayment(description: string, expirySecs: number): Promise<string>;
+    /**
+     * Get list of payments
+     * @returns {Promise<Array<PaymentDetails>>}
+     */
+    listPayments(): Promise<Array<PaymentDetails>>;
     /**
      * Get list of connected peers
      * @returns {Promise<Array<PeerDetails>>}

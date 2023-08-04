@@ -1,4 +1,4 @@
-import { ChannelConfig, ChannelDetails, PeerDetails } from './Bindings';
+import { ChannelConfig, ChannelDetails, PaymentDetails, PeerDetails } from './Bindings';
 export interface NativeLdkNodeRn {
     createConfig(storageDirPath: string, logDirPath: string | null, network: string, listeningAddress: string | null, defaultCltvExpiryDelta: number, onchainWalletSyncIntervalSecs: number, walletSyncIntervalSecs: number, feeRateCacheUpdateIntervalSecs: number, logLevel: string, trustedPeers0conf: Array<string>): string;
     fromConfig(configId: string): string;
@@ -16,6 +16,7 @@ export interface NativeLdkNodeRn {
     stop(nodeId: string): boolean;
     syncWallets(nodeId: string): boolean;
     nodeId(nodeId: string): string;
+    listeningAddress(nodeId: string): string;
     newOnchainAddress(nodeId: string): string;
     sendToOnchainAddress(nodeId: string, address: string, amountMsat: number): string;
     sendAllToOnchainAddress(nodeId: string, address: string): string;
@@ -30,6 +31,7 @@ export interface NativeLdkNodeRn {
     sendPayment(nodeId: string, invoice: string): string;
     sendPaymentUsingAmount(nodeId: string, invoice: string, amountMsat: number): string;
     sendSpontaneousPayment(nodeId: string, amountMsat: number, pubKey: string): string;
+    listPayments(nodeId: string): Array<PaymentDetails>;
     listPeers(nodeId: string): Array<PeerDetails>;
     listChannels(nodeId: string): Array<ChannelDetails>;
     payment(nodeId: string, paymentHash: string): any;
