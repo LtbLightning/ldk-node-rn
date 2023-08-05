@@ -1,6 +1,7 @@
 package io.ltbl.ldknodern
 
 import com.facebook.react.bridge.ReadableArray
+import com.facebook.react.bridge.ReadableMap
 import java.util.UUID
 
 fun randomId() = UUID.randomUUID().toString()
@@ -81,3 +82,12 @@ fun getNetworkEnum(networkStr: String? = "testnet"): Network {
     }
 }
 
+fun createChannelConfig(options: ReadableMap): ChannelConfig {
+    return ChannelConfig(
+        options.getInt("forwardingFeeProportionalMillionths").toUInt(),
+        options.getInt("forwardingFeeBaseMsat").toUInt(),
+        options.getInt("cltvExpiryDelta").toUShort(),
+        options.getInt("maxDustHtlcExposureMsat").toULong(),
+        options.getInt("forceCloseAvoidanceMaxFeeSatoshis").toULong()
+    )
+}

@@ -484,13 +484,12 @@ class LdkNodeRnModule: NSObject {
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        let list: [PaymentDetails] = _nodes[nodeId]!.listPayments()
-        var responseObject: [Any] = []
-        print("Payments===>", list)
-        for item in list {
-            responseObject.append(getPaymentDetails(payment: item))
+        let items: [PaymentDetails] = _nodes[nodeId]!.listPayments()
+        var payments: [Any] = []
+        for item in items {
+            payments.append(getPaymentDetails(payment: item))
         }
-        resolve(responseObject)
+        resolve(payments)
     }
     
     @objc
@@ -499,12 +498,12 @@ class LdkNodeRnModule: NSObject {
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        let list: [PeerDetails] = _nodes[nodeId]!.listPeers()
-        var responseObject: [Any] = []
-        for item in list {
-            responseObject.append(getPeerDetails(peer: item))
+        let items: [PeerDetails] = _nodes[nodeId]!.listPeers()
+        var peers: [Any] = []
+        for item in items {
+            peers.append(getPeerDetails(peer: item))
         }
-        resolve(responseObject)
+        resolve(peers)
     }
 
     @objc
@@ -513,12 +512,12 @@ class LdkNodeRnModule: NSObject {
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        let list: [ChannelDetails] = _nodes[nodeId]!.listChannels()
-        var responseObject: [Any] = []
-        for item in list {
-            responseObject.append(getChannelDetails(channel: item))
+        let items: [ChannelDetails] = _nodes[nodeId]!.listChannels()
+        var channels: [Any] = []
+        for item in items {
+            channels.append(getChannelDetails(channel: item))
         }
-        resolve(responseObject)
+        resolve(channels)
     }
 
     @objc
@@ -595,10 +594,8 @@ class LdkNodeRnModule: NSObject {
             )
             resolve(true)
         } catch let error {
-            reject("Sign message error", "\(error)", error)
+            reject("Update channel config error", "\(error)", error)
         }
-
-
     }
     /** Node methods ends */
 

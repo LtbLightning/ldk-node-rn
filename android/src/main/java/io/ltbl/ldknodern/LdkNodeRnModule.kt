@@ -6,6 +6,7 @@ import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.bridge.ReadableArray
+import com.facebook.react.bridge.ReadableMap
 
 
 class LdkNodeRnModule(reactContext: ReactApplicationContext) :
@@ -24,18 +25,29 @@ class LdkNodeRnModule(reactContext: ReactApplicationContext) :
     @ReactMethod
     fun createConfig(
         storageDirPath: String,
+        logDirPath: String,
         network: String,
         listeningAddress: String? = null,
-        defaultCltvExpiryDelta: Int,
+        defaultCltvExpiryDelta: Int? = 144,
+        onchainWalletSyncIntervalSecs: Int? = 80,
+        walletSyncIntervalSecs: Int? = 30,
+        feeRateCacheUpdateIntervalSecs: Int? = 600,
+        logLevel: String,
+        trustedPeers0conf: ReadableArray,
         result: Promise
     ) {
         val id = randomId()
         _configs[id] = Config(
             storageDirPath,
-            null,
+            logDirPath,
             getNetworkEnum(network),
             listeningAddress,
-            defaultCltvExpiryDelta.toUInt()
+            defaultCltvExpiryDelta!!.toUInt(),
+            onchainWalletSyncIntervalSecs!!.toULong(),
+            walletSyncIntervalSecs!!.toULong(),
+            feeRateCacheUpdateIntervalSecs!!.toULong(),
+            LogLevel.DEBUG,
+            trustedPeers0conf as List<PublicKey>
         )
         result.resolve(id)
     }
@@ -152,9 +164,14 @@ class LdkNodeRnModule(reactContext: ReactApplicationContext) :
         result.resolve(_nodes[nodeId]!!.nodeId())
     }
 
+    @ReactMethod
+    fun listeningAddress(nodeId: String, result: Promise) {
+        result.resolve(_nodes[nodeId]!!.listeningAddress())
+    }
+
 
     @ReactMethod
-    fun newFundingAddress(nodeId: String, result: Promise) {
+    fun newOnchainAddress(nodeId: String, result: Promise) {
         try {
             result.resolve(_nodes[nodeId]!!.newOnchainAddress())
         } catch (error: Throwable) {
@@ -203,11 +220,11 @@ class LdkNodeRnModule(reactContext: ReactApplicationContext) :
         nodeId: String,
         pubKey: String,
         address: String,
-        permanently: Boolean,
+        persist: Boolean,
         result: Promise
     ) {
         try {
-            _nodes[nodeId]!!.connect(pubKey, address, permanently)
+            _nodes[nodeId]!!.connect(pubKey, address, persist)
             result.resolve(true)
         } catch (error: Throwable) {
             result.reject("Node connect error", error.localizedMessage, error)
@@ -231,16 +248,20 @@ class LdkNodeRnModule(reactContext: ReactApplicationContext) :
         address: String,
         channelAmountSats: Int,
         pushToCounterpartyMsat: Int,
+        channelConfig: ReadableMap? = null,
         announceChannel: Boolean,
         result: Promise
     ) {
         try {
+            var config: ChannelConfig? = null
+            if (channelConfig != null) config = createChannelConfig(channelConfig)
+
             _nodes[nodeId]!!.connectOpenChannel(
                 pubKey,
                 address,
                 channelAmountSats.toULong(),
                 pushToCounterpartyMsat.toULong(),
-                null,
+                config,
                 announceChannel
             )
             result.resolve(true)
@@ -331,10 +352,20 @@ class LdkNodeRnModule(reactContext: ReactApplicationContext) :
     }
 
     @ReactMethod
+    fun listPayments(nodeId: String, result: Promise) {
+        val items = _nodes[nodeId]!!.listPayments()
+        val payments: MutableList<Map<String, Any?>> = mutableListOf()
+        for (item in items) {
+            payments.add(getPaymentDetails(item))
+        }
+        result.resolve(Arguments.makeNativeArray(payments))
+    }
+
+    @ReactMethod
     fun listPeers(nodeId: String, result: Promise) {
-        val list = _nodes[nodeId]!!.listPeers()
+        val items = _nodes[nodeId]!!.listPeers()
         val peers: MutableList<Map<String, Any?>> = mutableListOf()
-        for (item in list) {
+        for (item in items) {
             peers.add(getPeerDetails(item))
         }
         result.resolve(Arguments.makeNativeArray(peers))
@@ -342,9 +373,9 @@ class LdkNodeRnModule(reactContext: ReactApplicationContext) :
 
     @ReactMethod
     fun listChannels(nodeId: String, result: Promise) {
-        val list = _nodes[nodeId]!!.listChannels()
+        val items = _nodes[nodeId]!!.listChannels()
         val channels: MutableList<Map<String, Any?>> = mutableListOf()
-        for (item in list) {
+        for (item in items) {
             channels.add(getChannelDetails(item))
         }
         result.resolve(Arguments.makeNativeArray(channels))
@@ -385,6 +416,26 @@ class LdkNodeRnModule(reactContext: ReactApplicationContext) :
         result: Promise
     ) {
         result.resolve(_nodes[nodeId]!!.verifySignature(getNatieBytes(msg), sig, pkey))
+    }
+
+    @ReactMethod
+    fun updateChannelConfig(
+        nodeId: String,
+        channelId: String,
+        counterpartyNodeId: String,
+        channelConfig: ReadableMap,
+        result: Promise
+    ) {
+        try {
+            _nodes[nodeId]!!.updateChannelConfig(
+                channelId,
+                counterpartyNodeId,
+                createChannelConfig(channelConfig)
+            )
+            result.resolve(true)
+        } catch (error: Throwable) {
+            result.reject("Update channel config error", error.localizedMessage, error)
+        }
     }
 
     /** Node methods ends */
