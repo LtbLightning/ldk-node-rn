@@ -39,7 +39,7 @@ fun getChannelDetails(channel: ChannelDetails): MutableMap<String, Any> {
 }
 
 fun getPaymentDetails(payment: PaymentDetails): MutableMap<String, Any> {
-    return mutableMapOf (
+    return mutableMapOf(
         "hash" to payment.hash,
         "preimage" to payment.preimage as Any,
         "secret" to payment.secret as Any,
@@ -90,4 +90,16 @@ fun createChannelConfig(options: ReadableMap): ChannelConfig {
         options.getInt("maxDustHtlcExposureMsat").toULong(),
         options.getInt("forceCloseAvoidanceMaxFeeSatoshis").toULong()
     )
+}
+
+fun getLogLevelEnum(logLevel: String): LogLevel {
+    return when (logLevel) {
+        "gossip" -> LogLevel.GOSSIP
+        "trace" -> LogLevel.TRACE
+        "debug" -> LogLevel.DEBUG
+        "info" -> LogLevel.INFO
+        "warn" -> LogLevel.WARN
+        "error" -> LogLevel.ERROR
+        else -> LogLevel.DEBUG
+    }
 }

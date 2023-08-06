@@ -46,7 +46,7 @@ class LdkNodeRnModule(reactContext: ReactApplicationContext) :
             onchainWalletSyncIntervalSecs!!.toULong(),
             walletSyncIntervalSecs!!.toULong(),
             feeRateCacheUpdateIntervalSecs!!.toULong(),
-            LogLevel.DEBUG,
+            getLogLevelEnum(logLevel),
             trustedPeers0conf as List<PublicKey>
         )
         result.resolve(id)
