@@ -41,9 +41,9 @@ fun getChannelDetails(channel: ChannelDetails): MutableMap<String, Any> {
 fun getPaymentDetails(payment: PaymentDetails): MutableMap<String, Any> {
     return mutableMapOf(
         "hash" to payment.hash,
-        "preimage" to payment.preimage as Any,
-        "secret" to payment.secret as Any,
-        "amountMsat" to payment.amountMsat as Any,
+        "preimage" to payment.preimage.toString(),
+        "secret" to payment.secret.toString(),
+        "amountMsat" to payment.amountMsat!!.toInt(),
         "direction" to getPaymentDirection(payment.direction),
         "status" to getPaymentStatus(payment.status)
     )
@@ -102,4 +102,13 @@ fun getLogLevelEnum(logLevel: String): LogLevel {
         "error" -> LogLevel.ERROR
         else -> LogLevel.DEBUG
     }
+}
+
+
+fun getNatieTrustedPeers0conf(list: ReadableArray): List<PublicKey> {
+    val array = ArrayList<PublicKey>()
+    for (i in 0 until list.size()) {
+        array.add(list.getString(i))
+    }
+    return array
 }

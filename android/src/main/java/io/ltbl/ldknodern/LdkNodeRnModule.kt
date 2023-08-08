@@ -47,7 +47,7 @@ class LdkNodeRnModule(reactContext: ReactApplicationContext) :
             walletSyncIntervalSecs!!.toULong(),
             feeRateCacheUpdateIntervalSecs!!.toULong(),
             getLogLevelEnum(logLevel),
-            trustedPeers0conf as List<PublicKey>
+            getNatieTrustedPeers0conf(trustedPeers0conf)
         )
         result.resolve(id)
     }
