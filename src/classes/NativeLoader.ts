@@ -5,7 +5,6 @@ import { NativeModules } from 'react-native';
 export interface NativeLdkNodeRn {
   createConfig(
     storageDirPath: string,
-    logDirPath: string | null,
     network: string,
     listeningAddress: string | null,
     defaultCltvExpiryDelta: number,

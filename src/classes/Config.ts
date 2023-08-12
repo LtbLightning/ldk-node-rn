@@ -9,7 +9,6 @@ export class Config extends NativeLoader {
   /**
    *  Create config
    * @requires storageDirPath
-   * @requries logDirPath
    * @requires network
    * @param listeningAddress
    * @param defaultCltvExpiryDelta
@@ -22,7 +21,6 @@ export class Config extends NativeLoader {
    */
   async create(
     storageDirPath: string,
-    logDirPath: string,
     network: string,
     listeningAddress: NetAddress | null,
     defaultCltvExpiryDelta: number = 144,
@@ -34,7 +32,6 @@ export class Config extends NativeLoader {
   ): Promise<Config> {
     this.id = await this._ldk.createConfig(
       storageDirPath,
-      logDirPath,
       network,
       listeningAddress == null ? null : addressToString(listeningAddress),
       defaultCltvExpiryDelta,

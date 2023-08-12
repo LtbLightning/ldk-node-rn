@@ -5,7 +5,6 @@ export declare class Config extends NativeLoader {
     /**
      *  Create config
      * @requires storageDirPath
-     * @requries logDirPath
      * @requires network
      * @param listeningAddress
      * @param defaultCltvExpiryDelta
@@ -16,5 +15,5 @@ export declare class Config extends NativeLoader {
      * @param trustedPeers0conf
      * @returns {Promise<Config>}
      */
-    create(storageDirPath: string, logDirPath: string, network: string, listeningAddress: NetAddress | null, defaultCltvExpiryDelta?: number, onchainWalletSyncIntervalSecs?: number, walletSyncIntervalSecs?: number, feeRateCacheUpdateIntervalSecs?: number, logLevel?: LogLevel, trustedPeers0conf?: Array<string>): Promise<Config>;
+    create(storageDirPath: string, network: string, listeningAddress: NetAddress | null, defaultCltvExpiryDelta?: number, onchainWalletSyncIntervalSecs?: number, walletSyncIntervalSecs?: number, feeRateCacheUpdateIntervalSecs?: number, logLevel?: LogLevel, trustedPeers0conf?: Array<string>): Promise<Config>;
 }

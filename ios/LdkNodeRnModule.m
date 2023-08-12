@@ -7,7 +7,6 @@
 /** Config methods */
 RCT_EXTERN_METHOD(
     createConfig: (nonnull NSString*)storageDirPath
-    logDirPath: (nonnull NSString*)logDirPath
     network: (nonnull NSString*)network
     listeningAddress: (nullable NSString*)listeningAddress
     defaultCltvExpiryDelta: (nonnull NSNumber*)defaultCltvExpiryDelta

@@ -1,6 +1,6 @@
 import { ChannelConfig, ChannelDetails, PaymentDetails, PeerDetails } from './Bindings';
 export interface NativeLdkNodeRn {
-    createConfig(storageDirPath: string, logDirPath: string | null, network: string, listeningAddress: string | null, defaultCltvExpiryDelta: number, onchainWalletSyncIntervalSecs: number, walletSyncIntervalSecs: number, feeRateCacheUpdateIntervalSecs: number, logLevel: string, trustedPeers0conf: Array<string>): string;
+    createConfig(storageDirPath: string, network: string, listeningAddress: string | null, defaultCltvExpiryDelta: number, onchainWalletSyncIntervalSecs: number, walletSyncIntervalSecs: number, feeRateCacheUpdateIntervalSecs: number, logLevel: string, trustedPeers0conf: Array<string>): string;
     fromConfig(configId: string): string;
     setEntropySeedPath(buildId: string, seedPath: string): boolean;
     setEntropySeedBytes(buildId: string, seedBytes: Array<number>): boolean;

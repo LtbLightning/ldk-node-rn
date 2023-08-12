@@ -11,7 +11,6 @@ class LdkNodeRnModule: NSObject {
     @objc
     func createConfig(_
         storageDirPath: String,
-        logDirPath: String,
         network: String,
         listeningAddress: String? = nil,
         defaultCltvExpiryDelta: NSNumber? = 144,
@@ -26,7 +25,6 @@ class LdkNodeRnModule: NSObject {
         let id = randomId()
         _configs[id] = Config(
             storageDirPath: storageDirPath,
-            logDirPath: logDirPath,
             network: Network.regtest,
             listeningAddress: listeningAddress,
             defaultCltvExpiryDelta: UInt32(truncating: defaultCltvExpiryDelta!),
