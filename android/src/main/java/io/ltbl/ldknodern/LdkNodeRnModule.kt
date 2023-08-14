@@ -7,6 +7,7 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.bridge.ReadableArray
 import com.facebook.react.bridge.ReadableMap
+import org.lightningdevkit.ldknode.*
 
 
 class LdkNodeRnModule(reactContext: ReactApplicationContext) :
@@ -25,7 +26,6 @@ class LdkNodeRnModule(reactContext: ReactApplicationContext) :
     @ReactMethod
     fun createConfig(
         storageDirPath: String,
-        logDirPath: String,
         network: String,
         listeningAddress: String? = null,
         defaultCltvExpiryDelta: Int? = 144,
@@ -39,7 +39,6 @@ class LdkNodeRnModule(reactContext: ReactApplicationContext) :
         val id = randomId()
         _configs[id] = Config(
             storageDirPath,
-            logDirPath,
             getNetworkEnum(network),
             listeningAddress,
             defaultCltvExpiryDelta!!.toUInt(),

@@ -2,6 +2,7 @@ package io.ltbl.ldknodern
 
 import com.facebook.react.bridge.ReadableArray
 import com.facebook.react.bridge.ReadableMap
+import org.lightningdevkit.ldknode.*
 import java.util.UUID
 
 fun randomId() = UUID.randomUUID().toString()
