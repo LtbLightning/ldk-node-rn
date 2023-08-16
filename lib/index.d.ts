@@ -1,4 +1,5 @@
-import { Config } from './classes/Config';
 import { Builder } from './classes/Builder';
+import { Config } from './classes/Config';
 import { Node } from './classes/Node';
-export { Config, Builder, Node };
+import { generateEntropyMnemonic } from './utils';
+export { Builder, Config, Node, generateEntropyMnemonic };
