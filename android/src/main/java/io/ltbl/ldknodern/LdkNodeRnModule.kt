@@ -286,7 +286,7 @@ class LdkNodeRnModule(reactContext: ReactApplicationContext) :
         try {
             Thread {
                 runOnUiThread {
-                    result.resolve(_nodes[nodeId]!!.spendableOnchainBalanceSats().toInt())
+                    result.resolve(_nodes[nodeId]!!.spendableOnchainBalanceSats().toFloat())
                 }
             }.start()
         } catch (error: Throwable) {
@@ -299,7 +299,7 @@ class LdkNodeRnModule(reactContext: ReactApplicationContext) :
         try {
             Thread {
                 runOnUiThread {
-                    result.resolve(_nodes[nodeId]!!.totalOnchainBalanceSats().toInt())
+                    result.resolve(_nodes[nodeId]!!.totalOnchainBalanceSats().toFloat())
                 }
             }.start()
         } catch (error: Throwable) {
