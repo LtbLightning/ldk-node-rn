@@ -62,7 +62,7 @@ cd ios && pod install
 
 ```js
 import {Builder, Config, Node} from 'ldk-node';
-import {LogLevel} from 'ldk-node/lib/classes/Bindings';
+import {NetAddress} from 'ldk-node/lib/classes/Bindings';
 
 // ....
 
@@ -70,7 +70,7 @@ import {LogLevel} from 'ldk-node/lib/classes/Bindings';
 const esploraUrl = https://blockstream.info/testnet/api;
 
 // configuration options for the node
-const config = await new Config().create('alice_node', 'log_dir', 'regtest', null, 144, 80, 30, 60, LogLevel.debug, []);
+const config = await new Config().create('alice_node', 'regtest', new NetAddress('127.0.0.1', 5001));
 
 const builder = await new Builder().fromConfig(config);
 await builder.setEsploraServer(esploraUrl);

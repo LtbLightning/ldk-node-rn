@@ -56,17 +56,6 @@
     "react": "*",
     "react-native": "*"
   },
-  "jest": {
-    "preset": "react-native",
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js",
-      "jsx",
-      "json",
-      "node"
-    ]
-  },
   "dependencies": {
     "adm-zip": "^0.5.9",
     "request": "^2.88.2"

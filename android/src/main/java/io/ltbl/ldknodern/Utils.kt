@@ -23,12 +23,12 @@ fun getChannelDetails(channel: ChannelDetails): MutableMap<String, Any> {
             "txid" to channel.fundingTxo?.txid as Any,
             "vout" to channel.fundingTxo?.vout?.toInt()
         ),
-        "channelValueSats" to channel.channelValueSats.toInt(),
-        "unspendablePunishmentReserve" to channel.unspendablePunishmentReserve!!.toInt(),
+        "channelValueSats" to channel.channelValueSats.toFloat(),
+        "unspendablePunishmentReserve" to channel.unspendablePunishmentReserve!!.toFloat(),
         "userChannelId" to channel.userChannelId,
-        "balanceMsat" to channel.balanceMsat.toInt(),
-        "outboundCapacityMsat" to channel.outboundCapacityMsat.toInt(),
-        "inboundCapacityMsat" to channel.inboundCapacityMsat.toInt(),
+        "balanceMsat" to channel.balanceMsat.toFloat(),
+        "outboundCapacityMsat" to channel.outboundCapacityMsat.toFloat(),
+        "inboundCapacityMsat" to channel.inboundCapacityMsat.toFloat(),
         "confirmationsRequired" to channel.confirmationsRequired!!.toInt(),
         "confirmations" to channel.confirmations!!.toInt(),
         "isOutbound" to channel.isOutbound,
@@ -44,7 +44,7 @@ fun getPaymentDetails(payment: PaymentDetails): MutableMap<String, Any> {
         "hash" to payment.hash,
         "preimage" to payment.preimage.toString(),
         "secret" to payment.secret.toString(),
-        "amountMsat" to payment.amountMsat!!.toInt(),
+        "amountMsat" to payment.amountMsat!!.toFloat(),
         "direction" to getPaymentDirection(payment.direction),
         "status" to getPaymentStatus(payment.status)
     )

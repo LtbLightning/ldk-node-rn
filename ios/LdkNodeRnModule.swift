@@ -22,19 +22,21 @@ class LdkNodeRnModule: NSObject {
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        let id = randomId()
-        _configs[id] = Config(
-            storageDirPath: storageDirPath,
-            network: Network.regtest,
-            listeningAddress: listeningAddress,
-            defaultCltvExpiryDelta: UInt32(truncating: defaultCltvExpiryDelta!),
-            onchainWalletSyncIntervalSecs: UInt64(truncating: onchainWalletSyncIntervalSecs!),
-            walletSyncIntervalSecs: UInt64(truncating: walletSyncIntervalSecs!),
-            feeRateCacheUpdateIntervalSecs: UInt64(truncating: feeRateCacheUpdateIntervalSecs!),
-            logLevel: getLogLevelEnum(logLevel: logLevel),
-            trustedPeers0conf: trustedPeers0conf as! [PublicKey]
-        )
-        resolve(id)
+        DispatchQueue.main.async { [self] in
+            let id = randomId()
+            _configs[id] = Config(
+                storageDirPath: storageDirPath,
+                network: Network.regtest,
+                listeningAddress: listeningAddress,
+                defaultCltvExpiryDelta: UInt32(truncating: defaultCltvExpiryDelta!),
+                onchainWalletSyncIntervalSecs: UInt64(truncating: onchainWalletSyncIntervalSecs!),
+                walletSyncIntervalSecs: UInt64(truncating: walletSyncIntervalSecs!),
+                feeRateCacheUpdateIntervalSecs: UInt64(truncating: feeRateCacheUpdateIntervalSecs!),
+                logLevel: getLogLevelEnum(logLevel: logLevel),
+                trustedPeers0conf: trustedPeers0conf as! [PublicKey]
+            )
+            resolve(id)
+        }
     }
     /** Config Method ends */
 
@@ -45,9 +47,11 @@ class LdkNodeRnModule: NSObject {
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        let id = randomId()
-        _builders[id] = Builder.fromConfig(config: _configs[configId]!)
-        resolve(id)
+        DispatchQueue.main.async { [self] in
+            let id = randomId()
+            _builders[id] = Builder.fromConfig(config: _configs[configId]!)
+            resolve(id)
+        }
     }
 
     @objc
@@ -57,8 +61,10 @@ class LdkNodeRnModule: NSObject {
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        _builders[builderId]!.setEntropySeedPath(seedPath: seedPath)
-        resolve(true)
+        DispatchQueue.main.async { [self] in
+            _builders[builderId]!.setEntropySeedPath(seedPath: seedPath)
+            resolve(true)
+        }
     }
 
     @objc
@@ -68,13 +74,14 @@ class LdkNodeRnModule: NSObject {
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        do {
-            try _builders[builderId]!.setEntropySeedBytes(seedBytes: getNatieBytes(list: seedBytes))
-            resolve(true)
-        } catch let error {
-            reject("Set entropy seed bytes array", "\(error)", error)
+        DispatchQueue.main.async { [self] in
+            do {
+                try _builders[builderId]!.setEntropySeedBytes(seedBytes: getNatieBytes(list: seedBytes))
+                resolve(true)
+            } catch let error {
+                reject("Set entropy seed bytes array", "\(error)", error)
+            }
         }
-
     }
 
     @objc
@@ -85,8 +92,10 @@ class LdkNodeRnModule: NSObject {
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        _builders[builderId]!.setEntropyBip39Mnemonic(mnemonic: mnemonic, passphrase: passphrase)
-        resolve(true)
+        DispatchQueue.main.async { [self] in
+            _builders[builderId]!.setEntropyBip39Mnemonic(mnemonic: mnemonic, passphrase: passphrase)
+            resolve(true)
+        }
     }
 
     @objc
@@ -96,8 +105,10 @@ class LdkNodeRnModule: NSObject {
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        _builders[builderId]!.setEsploraServer(esploraServerUrl: esploraServerUrl)
-        resolve(true)
+        DispatchQueue.main.async { [self] in
+            _builders[builderId]!.setEsploraServer(esploraServerUrl: esploraServerUrl)
+            resolve(true)
+        }
     }
 
     @objc
@@ -106,8 +117,10 @@ class LdkNodeRnModule: NSObject {
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        _builders[builderId]!.setGossipSourceP2p()
-        resolve(true)
+        DispatchQueue.main.async { [self] in
+            _builders[builderId]!.setGossipSourceP2p()
+            resolve(true)
+        }
     }
 
     @objc
@@ -117,8 +130,10 @@ class LdkNodeRnModule: NSObject {
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        _builders[builderId]!.setGossipSourceRgs(rgsServerUrl: rgsServerUrl)
-        resolve(true)
+        DispatchQueue.main.async { [self] in
+            _builders[builderId]!.setGossipSourceRgs(rgsServerUrl: rgsServerUrl)
+            resolve(true)
+        }
     }
 
     @objc
@@ -128,8 +143,10 @@ class LdkNodeRnModule: NSObject {
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        _builders[builderId]!.setStorageDirPath(storageDirPath: storageDirPath)
-        resolve(true)
+        DispatchQueue.main.async { [self] in
+            _builders[builderId]!.setStorageDirPath(storageDirPath: storageDirPath)
+            resolve(true)
+        }
     }
 
     @objc
@@ -139,8 +156,10 @@ class LdkNodeRnModule: NSObject {
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        _builders[builderId]!.setNetwork(network: getNetworkEnum(networkStr: network))
-        resolve(true)
+        DispatchQueue.main.async { [self] in
+            _builders[builderId]!.setNetwork(network: getNetworkEnum(networkStr: network))
+            resolve(true)
+        }
     }
 
     @objc
@@ -150,8 +169,10 @@ class LdkNodeRnModule: NSObject {
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        _builders[builderId]!.setListeningAddress(listeningAddress: listeningAddress)
-        resolve(true)
+        DispatchQueue.main.async { [self] in
+            _builders[builderId]!.setListeningAddress(listeningAddress: listeningAddress)
+            resolve(true)
+        }
     }
 
     @objc
@@ -160,12 +181,14 @@ class LdkNodeRnModule: NSObject {
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        do {
-            let id = randomId()
-            _nodes[id] = try _builders[builderId]!.build()
-            resolve(id)
-        } catch let error {
-            reject("Node build error", "\(error)", error)
+        DispatchQueue.main.async { [self] in
+            do {
+                let id = randomId()
+                _nodes[id] = try _builders[builderId]!.build()
+                resolve(id)
+            } catch let error {
+                reject("Node build error", "\(error)", error)
+            }
         }
     }
     /** Builder Methods ends */
@@ -177,11 +200,13 @@ class LdkNodeRnModule: NSObject {
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        do {
-            try _nodes[nodeId]!.start()
-            resolve(true)
-        } catch let error {
-            reject("Node start error", "\(error)", error)
+        DispatchQueue.main.async { [self] in
+            do {
+                try _nodes[nodeId]!.start()
+                resolve(true)
+            } catch let error {
+                reject("Node start error", "\(error)", error)
+            }
         }
     }
 
@@ -191,11 +216,13 @@ class LdkNodeRnModule: NSObject {
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        do {
-            try _nodes[nodeId]!.stop()
-            resolve(true)
-        } catch let error {
-            reject("Node stop error", "\(error)", error)
+        DispatchQueue.main.async { [self] in
+            do {
+                try _nodes[nodeId]!.stop()
+                resolve(true)
+            } catch let error {
+                reject("Node stop error", "\(error)", error)
+            }
         }
     }
 
@@ -206,11 +233,13 @@ class LdkNodeRnModule: NSObject {
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        do {
-            try _nodes[nodeId]!.syncWallets()
-            resolve(true)
-        } catch let error {
-            reject("Node syncWallets error", "\(error)", error)
+        DispatchQueue.main.async { [self] in
+            do {
+                try _nodes[nodeId]!.syncWallets()
+                resolve(true)
+            } catch let error {
+                reject("Node syncWallets error", "\(error)", error)
+            }
         }
     }
 
@@ -221,7 +250,9 @@ class LdkNodeRnModule: NSObject {
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        resolve(_nodes[nodeId]!.nodeId())
+        DispatchQueue.main.async { [self] in
+            resolve(_nodes[nodeId]!.nodeId())
+        }
     }
     
     @objc
@@ -230,7 +261,9 @@ class LdkNodeRnModule: NSObject {
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        resolve(_nodes[nodeId]!.listeningAddress())
+        DispatchQueue.main.async { [self] in
+            resolve(_nodes[nodeId]!.listeningAddress())
+        }
     }
 
     @objc
@@ -239,10 +272,12 @@ class LdkNodeRnModule: NSObject {
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        do {
-            resolve(try _nodes[nodeId]!.newOnchainAddress())
-        } catch let error {
-            reject("Node newOnchainAddress error", "\(error)", error)
+        DispatchQueue.main.async { [self] in
+            do {
+                resolve(try _nodes[nodeId]!.newOnchainAddress())
+            } catch let error {
+                reject("Node newOnchainAddress error", "\(error)", error)
+            }
         }
     }
 
@@ -254,10 +289,12 @@ class LdkNodeRnModule: NSObject {
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        do {
-            resolve(try _nodes[nodeId]!.sendToOnchainAddress(address: address, amountMsat: UInt64(truncating: amountMsat)))
-        } catch let error {
-            reject("Node sendToOnchainAddress error", "\(error)", error)
+        DispatchQueue.main.async { [self] in
+            do {
+                resolve(try _nodes[nodeId]!.sendToOnchainAddress(address: address, amountMsat: UInt64(truncating: amountMsat)))
+            } catch let error {
+                reject("Node sendToOnchainAddress error", "\(error)", error)
+            }
         }
     }
 
@@ -268,10 +305,12 @@ class LdkNodeRnModule: NSObject {
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        do {
-            resolve(try _nodes[nodeId]!.sendAllToOnchainAddress(address: address))
-        } catch let error {
-            reject("Node sendAllToOnchainAddress error", "\(error)", error)
+        DispatchQueue.main.async { [self] in
+            do {
+                resolve(try _nodes[nodeId]!.sendAllToOnchainAddress(address: address))
+            } catch let error {
+                reject("Node sendAllToOnchainAddress error", "\(error)", error)
+            }
         }
     }
 
@@ -282,10 +321,12 @@ class LdkNodeRnModule: NSObject {
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        do {
-            resolve(try _nodes[nodeId]!.spendableOnchainBalanceSats())
-        } catch let error {
-            reject("Node spendableOnchainBalanceSats error", "\(error)", error)
+        DispatchQueue.main.async { [self] in
+            do {
+                resolve(try _nodes[nodeId]!.spendableOnchainBalanceSats())
+            } catch let error {
+                reject("Node spendableOnchainBalanceSats error", "\(error)", error)
+            }
         }
     }
 
@@ -295,10 +336,12 @@ class LdkNodeRnModule: NSObject {
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        do {
-            resolve(try _nodes[nodeId]!.totalOnchainBalanceSats())
-        } catch let error {
-            reject("Node totalOnchainBalanceSats error", "\(error)", error)
+        DispatchQueue.main.async { [self] in
+            do {
+                resolve(try _nodes[nodeId]!.totalOnchainBalanceSats())
+            } catch let error {
+                reject("Node totalOnchainBalanceSats error", "\(error)", error)
+            }
         }
     }
 
@@ -312,11 +355,13 @@ class LdkNodeRnModule: NSObject {
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        do {
-            try _nodes[nodeId]!.connect(nodeId: pubKey, address: address, persist: persist)
-            resolve(true)
-        } catch let error {
-            reject("Node connect error", "\(error)", error)
+        DispatchQueue.main.async { [self] in
+            do {
+                try _nodes[nodeId]!.connect(nodeId: pubKey, address: address, persist: persist)
+                resolve(true)
+            } catch let error {
+                reject("Node connect error", "\(error)", error)
+            }
         }
     }
 
@@ -327,11 +372,13 @@ class LdkNodeRnModule: NSObject {
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        do {
-            try _nodes[nodeId]!.disconnect(nodeId: pubKey)
-            resolve(true)
-        } catch let error {
-            reject("Node disconnect error", "\(error)", error)
+        DispatchQueue.main.async { [self] in
+            do {
+                try _nodes[nodeId]!.disconnect(nodeId: pubKey)
+                resolve(true)
+            } catch let error {
+                reject("Node disconnect error", "\(error)", error)
+            }
         }
     }
 
@@ -347,24 +394,24 @@ class LdkNodeRnModule: NSObject {
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        do {
-
-            var config: ChannelConfig? = nil
-            if channelConfig != nil {
-                config = createChannelConfig(config: channelConfig as! NSDictionary)
+        DispatchQueue.main.async { [self] in
+            do {
+                var config: ChannelConfig? = nil
+                if channelConfig != nil {
+                    config = createChannelConfig(config: channelConfig as! NSDictionary)
+                }
+                try _nodes[nodeId]!.connectOpenChannel(
+                    nodeId: pubKey,
+                    address: address,
+                    channelAmountSats: UInt64(truncating: channelAmountSats),
+                    pushToCounterpartyMsat: UInt64(truncating: pushToCounterpartyMsat),
+                    channelConfig: config,
+                    announceChannel: announceChannel
+                )
+                resolve(true)
+            } catch let error {
+                reject("Node open channel error", "\(error)", error)
             }
-
-            try _nodes[nodeId]!.connectOpenChannel(
-                nodeId: pubKey,
-                address: address,
-                channelAmountSats: UInt64(truncating: channelAmountSats),
-                pushToCounterpartyMsat: UInt64(truncating: pushToCounterpartyMsat),
-                channelConfig: config,
-                announceChannel: announceChannel
-            )
-            resolve(true)
-        } catch let error {
-            reject("Node open channel error", "\(error)", error)
         }
     }
 
@@ -376,13 +423,13 @@ class LdkNodeRnModule: NSObject {
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        do {
-            print("==>", channelId, counterpartyNodeId)
-            try _nodes[nodeId]!.closeChannel(channelId: channelId, counterpartyNodeId: counterpartyNodeId)
-            resolve(true)
-        } catch let error {
-            print("CLOSE CHANNEL ERROR==========>", error)
-            reject("Node close channel error", "\(error)", error)
+        DispatchQueue.main.async { [self] in
+            do {
+                try _nodes[nodeId]!.closeChannel(channelId: channelId, counterpartyNodeId: counterpartyNodeId)
+                resolve(true)
+            } catch let error {
+                reject("Node close channel error", "\(error)", error)
+            }
         }
     }
 
@@ -394,11 +441,13 @@ class LdkNodeRnModule: NSObject {
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        do {
-            let invoice = try _nodes[nodeId]!.sendPayment(invoice: invoice)
-            resolve(invoice)
-        } catch let error {
-            reject("Send payment invoice error", "\(error)", error)
+        DispatchQueue.main.async { [self] in
+            do {
+                let invoice = try _nodes[nodeId]!.sendPayment(invoice: invoice)
+                resolve(invoice)
+            } catch let error {
+                reject("Send payment invoice error", "\(error)", error)
+            }
         }
     }
 
@@ -410,11 +459,13 @@ class LdkNodeRnModule: NSObject {
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        do {
-            let invoice = try _nodes[nodeId]!.sendPaymentUsingAmount(invoice: invoice, amountMsat: UInt64(truncating: amountMsat))
-            resolve(invoice)
-        } catch let error {
-            reject("Send payment using amount invoice error", "\(error)", error)
+        DispatchQueue.main.async { [self] in
+            do {
+                let invoice = try _nodes[nodeId]!.sendPaymentUsingAmount(invoice: invoice, amountMsat: UInt64(truncating: amountMsat))
+                resolve(invoice)
+            } catch let error {
+                reject("Send payment using amount invoice error", "\(error)", error)
+            }
         }
     }
 
@@ -426,11 +477,13 @@ class LdkNodeRnModule: NSObject {
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        do {
-            let invoice = try _nodes[nodeId]!.sendSpontaneousPayment(amountMsat: UInt64(truncating: amountMsat), nodeId: pubKey)
-            resolve(invoice)
-        } catch let error {
-            reject("Send spontaneous payment error", "\(error)", error)
+        DispatchQueue.main.async { [self] in
+            do {
+                let invoice = try _nodes[nodeId]!.sendSpontaneousPayment(amountMsat: UInt64(truncating: amountMsat), nodeId: pubKey)
+                resolve(invoice)
+            } catch let error {
+                reject("Send spontaneous payment error", "\(error)", error)
+            }
         }
     }
 
@@ -444,15 +497,17 @@ class LdkNodeRnModule: NSObject {
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        do {
-            let invoice = try _nodes[nodeId]!.receivePayment(
-                amountMsat: UInt64(truncating: amountMsat),
-                description: description,
-                expirySecs: UInt32(truncating: expirySecs)
-            )
-            resolve(invoice)
-        } catch let error {
-            reject("Receive payment invoice error", "\(error)", error)
+        DispatchQueue.main.async { [self] in
+            do {
+                let invoice = try _nodes[nodeId]!.receivePayment(
+                    amountMsat: UInt64(truncating: amountMsat),
+                    description: description,
+                    expirySecs: UInt32(truncating: expirySecs)
+                )
+                resolve(invoice)
+            } catch let error {
+                reject("Receive payment invoice error", "\(error)", error)
+            }
         }
     }
 
@@ -464,14 +519,16 @@ class LdkNodeRnModule: NSObject {
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        do {
-            let invoice = try _nodes[nodeId]!.receiveVariableAmountPayment(
-                description: description,
-                expirySecs: UInt32(truncating: expirySecs)
-            )
-            resolve(invoice)
-        } catch let error {
-            reject("Receive variable amount payment invoice error", "\(error)", error)
+        DispatchQueue.main.async { [self] in
+            do {
+                let invoice = try _nodes[nodeId]!.receiveVariableAmountPayment(
+                    description: description,
+                    expirySecs: UInt32(truncating: expirySecs)
+                )
+                resolve(invoice)
+            } catch let error {
+                reject("Receive variable amount payment invoice error", "\(error)", error)
+            }
         }
     }
 
@@ -482,12 +539,14 @@ class LdkNodeRnModule: NSObject {
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        let items: [PaymentDetails] = _nodes[nodeId]!.listPayments()
-        var payments: [Any] = []
-        for item in items {
-            payments.append(getPaymentDetails(payment: item))
+        DispatchQueue.main.async { [self] in
+            let items: [PaymentDetails] = _nodes[nodeId]!.listPayments()
+            var payments: [Any] = []
+            for item in items {
+                payments.append(getPaymentDetails(payment: item))
+            }
+            resolve(payments)
         }
-        resolve(payments)
     }
     
     @objc
@@ -496,12 +555,14 @@ class LdkNodeRnModule: NSObject {
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        let items: [PeerDetails] = _nodes[nodeId]!.listPeers()
-        var peers: [Any] = []
-        for item in items {
-            peers.append(getPeerDetails(peer: item))
+        DispatchQueue.main.async { [self] in
+            let items: [PeerDetails] = _nodes[nodeId]!.listPeers()
+            var peers: [Any] = []
+            for item in items {
+                peers.append(getPeerDetails(peer: item))
+            }
+            resolve(peers)
         }
-        resolve(peers)
     }
 
     @objc
@@ -510,12 +571,14 @@ class LdkNodeRnModule: NSObject {
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        let items: [ChannelDetails] = _nodes[nodeId]!.listChannels()
-        var channels: [Any] = []
-        for item in items {
-            channels.append(getChannelDetails(channel: item))
+        DispatchQueue.main.async { [self] in
+            let items: [ChannelDetails] = _nodes[nodeId]!.listChannels()
+            var channels: [Any] = []
+            for item in items {
+                channels.append(getChannelDetails(channel: item))
+            }
+            resolve(channels)
         }
-        resolve(channels)
     }
 
     @objc
@@ -525,9 +588,11 @@ class LdkNodeRnModule: NSObject {
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        let result = _nodes[nodeId]!.payment(paymentHash: paymentHash)
-        let details = getPaymentDetails(payment: result!)
-        resolve(details)
+        DispatchQueue.main.async { [self] in
+            let result = _nodes[nodeId]!.payment(paymentHash: paymentHash)
+            let details = getPaymentDetails(payment: result!)
+            resolve(details)
+        }
     }
 
     @objc
@@ -537,12 +602,13 @@ class LdkNodeRnModule: NSObject {
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        do {
-            resolve(try _nodes[nodeId]!.removePayment(paymentHash: paymentHash))
-        } catch let error {
-            reject("Remove payment error", "\(error)", error)
+        DispatchQueue.main.async { [self] in
+            do {
+                resolve(try _nodes[nodeId]!.removePayment(paymentHash: paymentHash))
+            } catch let error {
+                reject("Remove payment error", "\(error)", error)
+            }
         }
-
     }
 
 
@@ -553,13 +619,14 @@ class LdkNodeRnModule: NSObject {
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        do {
-            let message = try _nodes[nodeId]!.signMessage(msg: getNatieBytes(list: msg))
-            resolve(message)
-        } catch let error {
-            reject("Sign message error", "\(error)", error)
+        DispatchQueue.main.async { [self] in
+            do {
+                let message = try _nodes[nodeId]!.signMessage(msg: getNatieBytes(list: msg))
+                resolve(message)
+            } catch let error {
+                reject("Sign message error", "\(error)", error)
+            }
         }
-
     }
 
     @objc
@@ -571,8 +638,9 @@ class LdkNodeRnModule: NSObject {
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        resolve(_nodes[nodeId]!.verifySignature(msg: getNatieBytes(list: msg), sig: sig, pkey: pkey))
-
+        DispatchQueue.main.async { [self] in
+            resolve(_nodes[nodeId]!.verifySignature(msg: getNatieBytes(list: msg), sig: sig, pkey: pkey))
+        }
     }
 
     @objc
@@ -584,15 +652,17 @@ class LdkNodeRnModule: NSObject {
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
-        do {
-            try _nodes[nodeId]!.updateChannelConfig(
-                channelId: channelId,
-                counterpartyNodeId: counterpartyNodeId,
-                channelConfig: createChannelConfig(config: channelConfig)
-            )
-            resolve(true)
-        } catch let error {
-            reject("Update channel config error", "\(error)", error)
+        DispatchQueue.main.async { [self] in
+            do {
+                try _nodes[nodeId]!.updateChannelConfig(
+                    channelId: channelId,
+                    counterpartyNodeId: counterpartyNodeId,
+                    channelConfig: createChannelConfig(config: channelConfig)
+                )
+                resolve(true)
+            } catch let error {
+                reject("Update channel config error", "\(error)", error)
+            }
         }
     }
     /** Node methods ends */
@@ -600,7 +670,9 @@ class LdkNodeRnModule: NSObject {
     /** Utilities methods start */
     @objc
     func createEntropyMnemonic(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
-        resolve(generateEntropyMnemonic())
+        DispatchQueue.main.async { 
+            resolve(generateEntropyMnemonic())
+        }
     }
 
 

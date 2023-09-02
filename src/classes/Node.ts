@@ -6,8 +6,6 @@ import {
   NetAddress,
   PaymentDetails,
   PaymentHash,
-  PaymentPreimage,
-  PaymentSecret,
   PeerDetails,
   PublicKey,
   Txid,
@@ -17,8 +15,6 @@ import {
   createChannelDetailsObject,
   createPaymentDetails,
   createPeerDetailsObject,
-  getPaymentDirection,
-  getPaymentStatus,
   stringToAddress,
 } from '../utils';
 

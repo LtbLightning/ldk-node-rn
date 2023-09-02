@@ -66,3 +66,6 @@ buck-out/
 # CocoaPods
 /ios/Pods/
 *.zip
+
+# dev
+coverage
