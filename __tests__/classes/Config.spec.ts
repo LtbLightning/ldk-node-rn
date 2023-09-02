@@ -1,8 +1,8 @@
 import { mockLdkNodeModule } from '../setup';
-import { Config } from '../../src';
-import { mockConfig, mockUUID } from '../mockData';
+import { Config, generateEntropyMnemonic } from '../../src';
+import { mockConfig, mockUUID, seedPhrase } from '../mockData';
 
-describe('Config', () => {
+describe('Config and utils', () => {
   mockLdkNodeModule.createConfig.mockResolvedValue(mockUUID);
 
   afterEach(() => {
@@ -13,5 +13,10 @@ describe('Config', () => {
     let config = await mockConfig();
     expect(config).toBeInstanceOf(Config);
     expect(config.id).toBe(mockUUID);
+  });
+
+  it('should create entropy mnemonic', async () => {
+    mockLdkNodeModule.createEntropyMnemonic.mockResolvedValue(seedPhrase);
+    expect(await generateEntropyMnemonic()).toBe(seedPhrase);
   });
 });
