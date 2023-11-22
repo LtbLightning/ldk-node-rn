@@ -26,7 +26,7 @@ class LdkNodeRnModule: NSObject {
             let id = randomId()
             _configs[id] = Config(
                 storageDirPath: storageDirPath,
-                network: Network.regtest,
+                network: getNetworkEnum(networkStr: network),
                 listeningAddress: listeningAddress,
                 defaultCltvExpiryDelta: UInt32(truncating: defaultCltvExpiryDelta!),
                 onchainWalletSyncIntervalSecs: UInt64(truncating: onchainWalletSyncIntervalSecs!),

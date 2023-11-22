@@ -177,44 +177,44 @@ class LdkNodeRnModule(reactContext: ReactApplicationContext) :
     /** Node methods starts */
     @ReactMethod
     fun start(nodeId: String, result: Promise) {
-        try {
-            Thread {
+        Thread {
+            try {
                 _nodes[nodeId]!!.start()
                 runOnUiThread {
                     result.resolve(true)
                 }
-            }.start()
-        } catch (error: Throwable) {
-            result.reject("Node start error", error.localizedMessage, error)
-        }
+            } catch (error: Throwable) {
+                result.reject("Node start error", error.localizedMessage, error)
+            }
+        }.start()
     }
 
     @ReactMethod
     fun stop(nodeId: String, result: Promise) {
-        try {
-            Thread {
+        Thread {
+            try {
                 _nodes[nodeId]!!.stop()
                 runOnUiThread {
                     result.resolve(true)
                 }
-            }.start()
-        } catch (error: Throwable) {
-            result.reject("Node stop error", error.localizedMessage, error)
-        }
+            } catch (error: Throwable) {
+                result.reject("Node stop error", error.localizedMessage, error)
+            }
+        }.start()
     }
 
     @ReactMethod
     fun syncWallets(nodeId: String, result: Promise) {
-        try {
-            Thread {
+        Thread {
+            try {
                 _nodes[nodeId]!!.syncWallets()
                 runOnUiThread {
                     result.resolve(true)
                 }
-            }.start()
-        } catch (error: Throwable) {
-            result.reject("Node syncWallets error", error.localizedMessage, error)
-        }
+            } catch (error: Throwable) {
+                result.reject("Node syncWallets error", error.localizedMessage, error)
+            }
+        }.start()
     }
 
     @ReactMethod
@@ -238,21 +238,21 @@ class LdkNodeRnModule(reactContext: ReactApplicationContext) :
 
     @ReactMethod
     fun newOnchainAddress(nodeId: String, result: Promise) {
-        try {
-            Thread {
+        Thread {
+            try {
                 runOnUiThread {
                     result.resolve(_nodes[nodeId]!!.newOnchainAddress())
                 }
-            }.start()
-        } catch (error: Throwable) {
-            result.reject("Node newFundingAddress error", error.localizedMessage, error)
-        }
+            } catch (error: Throwable) {
+                result.reject("Node newFundingAddress error", error.localizedMessage, error)
+            }
+        }.start()
     }
 
     @ReactMethod
     fun sendToOnchainAddress(nodeId: String, address: String, amountMsat: Int, result: Promise) {
-        try {
-            Thread {
+        Thread {
+            try {
                 runOnUiThread {
                     result.resolve(
                         _nodes[nodeId]!!.sendToOnchainAddress(
@@ -261,80 +261,84 @@ class LdkNodeRnModule(reactContext: ReactApplicationContext) :
                         )
                     )
                 }
-            }.start()
-        } catch (error: Throwable) {
-            result.reject("Node sendToOnchainAddress error", error.localizedMessage, error)
-        }
+            } catch (error: Throwable) {
+                result.reject("Node sendToOnchainAddress error", error.localizedMessage, error)
+            }
+        }.start()
     }
 
     @ReactMethod
     fun sendAllToOnchainAddress(nodeId: String, address: String, result: Promise) {
-        try {
-            Thread {
+        Thread {
+            try {
                 runOnUiThread {
                     result.resolve(_nodes[nodeId]!!.sendAllToOnchainAddress(address))
                 }
-            }.start()
 
-        } catch (error: Throwable) {
-            result.reject("Node sendAllToOnchainAddress error", error.localizedMessage, error)
-        }
+            } catch (error: Throwable) {
+                result.reject("Node sendAllToOnchainAddress error", error.localizedMessage, error)
+            }
+        }.start()
     }
 
     @ReactMethod
     fun spendableOnchainBalanceSats(nodeId: String, result: Promise) {
-        try {
-            Thread {
+        Thread {
+            try {
                 runOnUiThread {
                     result.resolve(_nodes[nodeId]!!.spendableOnchainBalanceSats().toFloat())
                 }
-            }.start()
-        } catch (error: Throwable) {
-            result.reject("Node spendableOnchainBalanceSats error", error.localizedMessage, error)
-        }
+            } catch (error: Throwable) {
+                result.reject(
+                    "Node spendableOnchainBalanceSats error",
+                    error.localizedMessage,
+                    error
+                )
+            }
+        }.start()
     }
 
     @ReactMethod
     fun totalOnchainBalanceSats(nodeId: String, result: Promise) {
-        try {
-            Thread {
+        Thread {
+            try {
                 runOnUiThread {
                     result.resolve(_nodes[nodeId]!!.totalOnchainBalanceSats().toFloat())
                 }
-            }.start()
-        } catch (error: Throwable) {
-            result.reject("Node totalOnchainBalanceSats error", error.localizedMessage, error)
-        }
+            } catch (error: Throwable) {
+                result.reject("Node totalOnchainBalanceSats error", error.localizedMessage, error)
+            }
+        }.start()
     }
 
     @ReactMethod
     fun connect(
         nodeId: String, pubKey: String, address: String, persist: Boolean, result: Promise
     ) {
-        try {
-            Thread {
+        Thread {
+            try {
                 _nodes[nodeId]!!.connect(pubKey, address, persist)
                 runOnUiThread {
                     result.resolve(true)
                 }
-            }.start()
-        } catch (error: Throwable) {
-            result.reject("Node connect error", error.localizedMessage, error)
-        }
+            } catch (error: Throwable) {
+                result.reject("Node connect error", error.localizedMessage, error)
+            }
+        }.start()
     }
 
     @ReactMethod
     fun disconnect(nodeId: String, pubKey: String, result: Promise) {
-        try {
-            Thread {
+        Thread {
+            try {
                 _nodes[nodeId]!!.disconnect(pubKey)
                 runOnUiThread {
                     result.resolve(true)
                 }
-            }.start()
-        } catch (error: Throwable) {
-            result.reject("Node disconnect error", error.localizedMessage, error)
-        }
+            } catch (error: Throwable) {
+                result.reject("Node disconnect error", error.localizedMessage, error)
+            }
+        }.start()
     }
 
     @ReactMethod
@@ -348,8 +352,8 @@ class LdkNodeRnModule(reactContext: ReactApplicationContext) :
         announceChannel: Boolean,
         result: Promise
     ) {
-        try {
-            Thread {
+        Thread {
+            try {
                 var config: ChannelConfig? = null
                 if (channelConfig != null) config = createChannelConfig(channelConfig)
                 _nodes[nodeId]!!.connectOpenChannel(
@@ -363,95 +367,99 @@ class LdkNodeRnModule(reactContext: ReactApplicationContext) :
                 runOnUiThread {
                     result.resolve(true)
                 }
-            }.start()
-        } catch (error: Throwable) {
-            result.reject("Node open channel error", error.localizedMessage, error)
-        }
+            } catch (error: Throwable) {
+                result.reject("Node open channel error", error.localizedMessage, error)
+            }
+        }.start()
     }
 
     @ReactMethod
     fun sendPayment(nodeId: String, invoice: String, result: Promise) {
-        try {
-            Thread {
+        Thread {
+            try {
                 runOnUiThread {
                     result.resolve(_nodes[nodeId]!!.sendPayment(invoice))
                 }
-            }.start()
-        } catch (error: Throwable) {
-            result.reject("Send payment invoice error", error.localizedMessage, error)
-        }
+            } catch (error: Throwable) {
+                result.reject("Send payment invoice error", error.localizedMessage, error)
+            }
+        }.start()
     }
 
     @ReactMethod
     fun sendPaymentUsingAmount(
         nodeId: String, invoice: String, amountMsat: Int, result: Promise
     ) {
-        try {
-            Thread {
+        Thread {
+            try {
                 var paymenthash =
                     _nodes[nodeId]!!.sendPaymentUsingAmount(invoice, amountMsat.toULong())
                 runOnUiThread {
                     result.resolve(paymenthash)
                 }
-            }.start()
-        } catch (error: Throwable) {
-            result.reject("Send payment using amount invoice error", error.localizedMessage, error)
-        }
+            } catch (error: Throwable) {
+                result.reject(
+                    "Send payment using amount invoice error",
+                    error.localizedMessage,
+                    error
+                )
+            }
+        }.start()
     }
 
     @ReactMethod
     fun sendSpontaneousPayment(
         nodeId: String, amountMsat: Int, pubKey: String, result: Promise
     ) {
-        try {
-            Thread {
+        Thread {
+            try {
                 var paymenthash =
                     _nodes[nodeId]!!.sendSpontaneousPayment(amountMsat.toULong(), pubKey)
                 runOnUiThread {
                     result.resolve(paymenthash)
                 }
-            }.start()
-        } catch (error: Throwable) {
-            result.reject("Send spontaneous payment error", error.localizedMessage, error)
-        }
+            } catch (error: Throwable) {
+                result.reject("Send spontaneous payment error", error.localizedMessage, error)
+            }
+        }.start()
     }
 
     @ReactMethod
     fun receivePayment(
         nodeId: String, amountMsat: Int, description: String, expirySecs: Int, result: Promise
     ) {
-        try {
-            Thread {
+        Thread {
+            try {
                 val invoice = _nodes[nodeId]!!.receivePayment(
                     amountMsat.toULong(), description, expirySecs.toUInt()
                 )
                 runOnUiThread {
                     result.resolve(invoice)
                 }
-            }.start()
-        } catch (error: Throwable) {
-            result.reject("Receive payment invoice error", error.localizedMessage, error)
-        }
+            } catch (error: Throwable) {
+                result.reject("Receive payment invoice error", error.localizedMessage, error)
+            }
+        }.start()
     }
 
     @ReactMethod
     fun receiveVariableAmountPayment(
         nodeId: String, description: String, expirySecs: Int, result: Promise
     ) {
-        try {
-            Thread {
+        Thread {
+            try {
                 val invoice = _nodes[nodeId]!!.receiveVariableAmountPayment(
                     description, expirySecs.toUInt()
                 )
                 runOnUiThread {
                     result.resolve(invoice)
                 }
-            }.start()
-        } catch (error: Throwable) {
-            result.reject(
-                "Receive variable amount payment invoice error", error.localizedMessage, error
-            )
-        }
+            } catch (error: Throwable) {
+                result.reject(
+                    "Receive variable amount payment invoice error", error.localizedMessage, error
+                )
+            }
+        }.start()
     }
 
     @ReactMethod
@@ -510,28 +518,28 @@ class LdkNodeRnModule(reactContext: ReactApplicationContext) :
 
     @ReactMethod
     fun removePayment(nodeId: String, paymentHash: String, result: Promise) {
-        try {
-            Thread {
+        Thread {
+            try {
                 runOnUiThread {
                     result.resolve(_nodes[nodeId]!!.removePayment(paymentHash))
                 }
-            }.start()
-        } catch (error: Throwable) {
-            result.reject("Remove payment error", error.localizedMessage, error)
-        }
+            } catch (error: Throwable) {
+                result.reject("Remove payment error", error.localizedMessage, error)
+            }
+        }.start()
     }
 
     @ReactMethod
     fun signMessage(nodeId: String, msg: ReadableArray, result: Promise) {
-        try {
-            Thread {
+        Thread {
+            try {
                 runOnUiThread {
                     result.resolve(_nodes[nodeId]!!.signMessage(getNatieBytes(msg)))
                 }
-            }.start()
-        } catch (error: Throwable) {
-            result.reject("Sign message error", error.localizedMessage, error)
-        }
+            } catch (error: Throwable) {
+                result.reject("Sign message error", error.localizedMessage, error)
+            }
+        }.start()
     }
 
     @ReactMethod
@@ -553,18 +561,18 @@ class LdkNodeRnModule(reactContext: ReactApplicationContext) :
         channelConfig: ReadableMap,
         result: Promise
     ) {
-        try {
-            Thread {
+        Thread {
+            try {
                 _nodes[nodeId]!!.updateChannelConfig(
                     channelId, counterpartyNodeId, createChannelConfig(channelConfig)
                 )
                 runOnUiThread {
                     result.resolve(true)
                 }
-            }.start()
-        } catch (error: Throwable) {
-            result.reject("Update channel config error", error.localizedMessage, error)
-        }
+            } catch (error: Throwable) {
+                result.reject("Update channel config error", error.localizedMessage, error)
+            }
+        }.start()
     }
     /** Node methods ends */
 
