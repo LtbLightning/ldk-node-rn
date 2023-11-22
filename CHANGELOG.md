@@ -1,6 +1,7 @@
 ## [0.1.1]
 
 Fixed Android app crash on startup.
+Renamed package to `ldk_node_rn`.
 
 ## [0.1.0]
 
