@@ -39,13 +39,13 @@ Please note: This release is considered experimental, and should not be run in p
 Using npm:
 
 ```bash
-npm i --save ldk-node
+npm i --save ldk-node-rn
 ```
 
 Using yarn:
 
 ```bash
-yarn add ldk-node
+yarn add ldk-node-rn
 ```
 
 [IOS Only] Install pods:
@@ -61,8 +61,8 @@ cd ios && pod install
 ### Build, Start & Sync the local node
 
 ```js
-import {Builder, Config, Node} from 'ldk-node';
-import {NetAddress} from 'ldk-node/lib/classes/Bindings';
+import { Builder, Config, Node } from 'ldk-node-rn';
+import { NetAddress } from 'ldk-node-rn/lib/classes/Bindings';
 
 // ....
 
