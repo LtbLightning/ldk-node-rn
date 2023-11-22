@@ -2,7 +2,7 @@
 
 <p>
   <a href="https://github.com/LtbLightning/ldk-node-rn/blob/HEAD/LICENSE">
-    <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="BDK RN is released under the MIT license." />
+    <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="LDK-Node RN is released under the MIT license." />
   </a>
   <a href="https://github.com/LtbLightning/ldk-node-rn/blob/master/README.md">
     <img src="https://img.shields.io/badge/docs-red.svg" alt="Docs" />
