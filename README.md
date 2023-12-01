@@ -1,4 +1,4 @@
-## LDK-Node
+## LDK-Node-RN
 
 <p>
   <a href="https://github.com/LtbLightning/ldk-node-rn/blob/HEAD/LICENSE">
