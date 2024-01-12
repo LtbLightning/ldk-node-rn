@@ -1,4 +1,4 @@
-import { ChannelConfig, ChannelDetails, PaymentDetails, PeerDetails } from './Bindings';
+import { ChannelDetails, PaymentDetails, PeerDetails } from './Bindings';
 export interface NativeLdkNodeRn {
     createConfig(storageDirPath: string, logDirPath: string, network: string, listeningAddress: Array<string> | null, defaultCltvExpiryDelta: number, onchainWalletSyncIntervalSecs: number, walletSyncIntervalSecs: number, feeRateCacheUpdateIntervalSecs: number, trustedPeers0conf: Array<string>, probingLiquidityLimitMultiplier: number, logLevel: string): string;
     fromConfig(configId: string): string;
@@ -38,8 +38,21 @@ export interface NativeLdkNodeRn {
     removePayment(nodeId: string, paymentHash: string): boolean;
     signMessage(nodeId: string, msg: Array<number>): string;
     verifySignature(nodeId: string, msg: Array<number>, sig: string, pkey: string): boolean;
-    updateChannelConfig(nodeId: string, channelId: string, counterpartyNodeId: string, channelConfig: ChannelConfig): boolean;
+    updateChannelConfig(nodeId: string, channelId: string, counterpartyNodeId: string, channelConfigId: string): boolean;
     createEntropyMnemonic(): string;
+    createChannelConfig(): string;
+    acceptUnderpayingHtlcs(channelConfigId: string): boolean;
+    cltvExpiryDelta(channelConfigId: string): number;
+    forceCloseAvoidanceMaxFeeSatoshis(channelConfigId: string): number;
+    forwardingFeeBaseMsat(channelConfigId: string): number;
+    forwardingFeeProportionalMillionths(channelConfigId: string): number;
+    setAcceptUnderpayingHtlcs(channelConfigId: string, value: boolean): boolean;
+    setCltvExpiryDelta(channelConfigId: string, value: number): boolean;
+    setForceCloseAvoidanceMaxFeeSatoshis(channelConfigId: string, valueSat: number): boolean;
+    setForwardingFeeBaseMsat(channelConfigId: string, feeMsat: number): boolean;
+    setForwardingFeeProportionalMillionths(channelConfigId: string, value: number): boolean;
+    setMaxDustHtlcExposureFromFeeRateMultiplier(channelConfigId: string, multiplier: number): boolean;
+    setMaxDustHtlcExposureFromFixedLimit(channelConfigId: string, limitMsat: number): boolean;
 }
 export declare class NativeLoader {
     _ldk: NativeLdkNodeRn;

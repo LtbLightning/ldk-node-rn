@@ -1,5 +1,6 @@
-import { Address, ChannelConfig, ChannelDetails, ChannelId, NetAddress, PaymentDetails, PaymentHash, PeerDetails, PublicKey, Txid } from './Bindings';
+import { Address, ChannelDetails, ChannelId, NetAddress, PaymentDetails, PaymentHash, PeerDetails, PublicKey, Txid } from './Bindings';
 import { NativeLoader } from './NativeLoader';
+import { ChannelConfig } from './ChannelConfig';
 export declare class Node extends NativeLoader {
     id: string;
     /**

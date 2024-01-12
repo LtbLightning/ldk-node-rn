@@ -6,6 +6,7 @@ class LdkNodeRnModule: NSObject {
     var _configs: [String: Config] = [:]
     var _builders: [String: Builder] = [:]
     var _nodes: [String: LdkNode] = [:]
+    var _channelConfigs: [String: ChannelConfig] = [:]
 
     /** Config Methods starts */
     @objc
@@ -394,7 +395,7 @@ class LdkNodeRnModule: NSObject {
         address: String,
         channelAmountSats: NSNumber,
         pushToCounterpartyMsat: NSNumber,
-        channelConfig: Any? = nil,
+        channelConfigId: String? = nil,
         announceChannel: Bool,
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
@@ -402,8 +403,8 @@ class LdkNodeRnModule: NSObject {
         DispatchQueue.main.async { [self] in
             do {
                 var config: ChannelConfig? = nil
-                if channelConfig != nil {
-                    config = createChannelConfig(config: channelConfig as! NSDictionary)
+                if channelConfigId != nil {
+                    config = _channelConfigs[channelConfigId!]!
                 }
                 try _nodes[nodeId]!.connectOpenChannel(
                     nodeId: pubKey,
@@ -580,7 +581,11 @@ class LdkNodeRnModule: NSObject {
             let items: [ChannelDetails] = _nodes[nodeId]!.listChannels()
             var channels: [Any] = []
             for item in items {
-                channels.append(getChannelDetails(channel: item))
+                let id = randomId()
+                var newChannelDetails = getChannelDetails(channel: item)
+                newChannelDetails["config"] = id
+                _channelConfigs[id] = item.config
+                channels.append(newChannelDetails)
             }
             resolve(channels)
         }
@@ -653,7 +658,7 @@ class LdkNodeRnModule: NSObject {
         nodeId: String,
         channelId: String,
         counterpartyNodeId: String,
-        channelConfig: NSDictionary,
+        channelConfigId: String,
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
@@ -662,7 +667,7 @@ class LdkNodeRnModule: NSObject {
                 try _nodes[nodeId]!.updateChannelConfig(
                     channelId: channelId,
                     counterpartyNodeId: counterpartyNodeId,
-                    channelConfig: createChannelConfig(config: channelConfig)
+                    channelConfig: _channelConfigs[channelConfigId]!
                 )
                 resolve(true)
             } catch let error {
@@ -679,7 +684,170 @@ class LdkNodeRnModule: NSObject {
             resolve(generateEntropyMnemonic())
         }
     }
+    
+    /** ChannelConfig methods starts */
+    
+    
+    
+    /** ChannelConfig methods ends */
+    
+    @objc
+    func createChannelConfig(_
+        resolve: @escaping RCTPromiseResolveBlock,
+        reject: @escaping RCTPromiseRejectBlock
+    ) {
+        DispatchQueue.main.async { [self] in
+            let id = randomId()
+            _channelConfigs[id] = ChannelConfig()
+            resolve(id)
+        }
+    }
+    
+    @objc
+    func acceptUnderpayingHtlcs(_
+        channelConfigId: String,
+        resolve: @escaping RCTPromiseResolveBlock,
+        reject: @escaping RCTPromiseRejectBlock
+    ) {
+        DispatchQueue.main.async { [self] in
+            resolve(_channelConfigs[channelConfigId]!.acceptUnderpayingHtlcs())
+        }
+    }    
+    
+    @objc
+    func cltvExpiryDelta(_
+        channelConfigId: String,
+        resolve: @escaping RCTPromiseResolveBlock,
+        reject: @escaping RCTPromiseRejectBlock
+    ) {
+        DispatchQueue.main.async { [self] in
+            resolve(_channelConfigs[channelConfigId]!.cltvExpiryDelta())
+        }
+    }
+        
+    @objc
+    func forceCloseAvoidanceMaxFeeSatoshis(_
+        channelConfigId: String,
+        resolve: @escaping RCTPromiseResolveBlock,
+        reject: @escaping RCTPromiseRejectBlock
+    ) {
+        DispatchQueue.main.async { [self] in
+            resolve(_channelConfigs[channelConfigId]!.forceCloseAvoidanceMaxFeeSatoshis())
+        }
+    }        
+    
+    @objc
+    func forwardingFeeBaseMsat(_
+        channelConfigId: String,
+        resolve: @escaping RCTPromiseResolveBlock,
+        reject: @escaping RCTPromiseRejectBlock
+    ) {
+        DispatchQueue.main.async { [self] in
+            resolve(_channelConfigs[channelConfigId]!.forwardingFeeBaseMsat())
+        }
+    }    
+    
+    @objc
+    func forwardingFeeProportionalMillionths(_
+        channelConfigId: String,
+        resolve: @escaping RCTPromiseResolveBlock,
+        reject: @escaping RCTPromiseRejectBlock
+    ) {
+        DispatchQueue.main.async { [self] in
+            resolve(_channelConfigs[channelConfigId]!.forwardingFeeProportionalMillionths())
+        }
+    }
+    
+    @objc
+    func setAcceptUnderpayingHtlcs(_
+        channelConfigId: String,
+        value: Bool,
+        resolve: @escaping RCTPromiseResolveBlock,
+        reject: @escaping RCTPromiseRejectBlock
+    ) {
+        DispatchQueue.main.async { [self] in
+            _channelConfigs[channelConfigId]!.setAcceptUnderpayingHtlcs(value: value)
+            resolve(true)
+        }
+    }
 
+    
+    @objc
+    func setCltvExpiryDelta(_
+        channelConfigId: String,
+        value: NSNumber,
+        resolve: @escaping RCTPromiseResolveBlock,
+        reject: @escaping RCTPromiseRejectBlock
+    ) {
+        DispatchQueue.main.async { [self] in
+            _channelConfigs[channelConfigId]!.setCltvExpiryDelta(value: UInt16(truncating: value))
+            resolve(true)
+        }
+    }
+    
+    @objc
+    func setForceCloseAvoidanceMaxFeeSatoshis(_
+        channelConfigId: String,
+        valueSat: NSNumber,
+        resolve: @escaping RCTPromiseResolveBlock,
+        reject: @escaping RCTPromiseRejectBlock
+    ) {
+        DispatchQueue.main.async { [self] in
+            _channelConfigs[channelConfigId]!.setForceCloseAvoidanceMaxFeeSatoshis(valueSat: UInt64(truncating: valueSat))
+            resolve(true)
+        }
+    }    
+    
+    @objc
+    func setForwardingFeeBaseMsat(_
+        channelConfigId: String,
+        feeMsat: NSNumber,
+        resolve: @escaping RCTPromiseResolveBlock,
+        reject: @escaping RCTPromiseRejectBlock
+    ) {
+        DispatchQueue.main.async { [self] in
+            _channelConfigs[channelConfigId]!.setForwardingFeeBaseMsat(feeMsat: UInt32(truncating: feeMsat))
+            resolve(true)
+        }
+    }
+    
+    @objc
+    func setForwardingFeeProportionalMillionths(_
+        channelConfigId: String,
+        value: NSNumber,
+        resolve: @escaping RCTPromiseResolveBlock,
+        reject: @escaping RCTPromiseRejectBlock
+    ) {
+        DispatchQueue.main.async { [self] in
+            _channelConfigs[channelConfigId]!.setForwardingFeeProportionalMillionths(value: UInt32(truncating: value))
+            resolve(true)
+        }
+    }
 
+    @objc
+    func setMaxDustHtlcExposureFromFeeRateMultiplier(_
+        channelConfigId: String,
+        multiplier: NSNumber,
+        resolve: @escaping RCTPromiseResolveBlock,
+        reject: @escaping RCTPromiseRejectBlock
+    ) {
+        DispatchQueue.main.async { [self] in
+            _channelConfigs[channelConfigId]!.setMaxDustHtlcExposureFromFeeRateMultiplier(multiplier: UInt64(truncating: multiplier))
+            resolve(true)
+        }
+    }
+    
+    @objc
+    func setMaxDustHtlcExposureFromFixedLimit(_
+        channelConfigId: String,
+        limitMsat: NSNumber,
+        resolve: @escaping RCTPromiseResolveBlock,
+        reject: @escaping RCTPromiseRejectBlock
+    ) {
+        DispatchQueue.main.async { [self] in
+            _channelConfigs[channelConfigId]!.setMaxDustHtlcExposureFromFixedLimit(limitMsat: UInt64(truncating: limitMsat))
+            resolve(true)
+        }
+    }
 }
 

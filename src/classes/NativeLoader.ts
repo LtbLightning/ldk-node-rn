@@ -1,4 +1,5 @@
-import { ChannelConfig, ChannelDetails, PaymentDetails, PeerDetails } from './Bindings';
+import { ChannelConfig } from './ChannelConfig';
+import { ChannelDetails, PaymentDetails, PeerDetails } from './Bindings';
 
 import { NativeModules } from 'react-native';
 
@@ -66,14 +67,24 @@ export interface NativeLdkNodeRn {
 
   signMessage(nodeId: string, msg: Array<number>): string;
   verifySignature(nodeId: string, msg: Array<number>, sig: string, pkey: string): boolean;
-  updateChannelConfig(
-    nodeId: string,
-    channelId: string,
-    counterpartyNodeId: string,
-    channelConfig: ChannelConfig
-  ): boolean;
+  updateChannelConfig(nodeId: string, channelId: string, counterpartyNodeId: string, channelConfigId: string): boolean;
 
   createEntropyMnemonic(): string;
+
+  createChannelConfig(): string;
+  acceptUnderpayingHtlcs(channelConfigId: string): boolean;
+  cltvExpiryDelta(channelConfigId: string): number;
+  forceCloseAvoidanceMaxFeeSatoshis(channelConfigId: string): number;
+  forwardingFeeBaseMsat(channelConfigId: string): number;
+  forwardingFeeProportionalMillionths(channelConfigId: string): number;
+
+  setAcceptUnderpayingHtlcs(channelConfigId: string, value: boolean): boolean;
+  setCltvExpiryDelta(channelConfigId: string, value: number): boolean;
+  setForceCloseAvoidanceMaxFeeSatoshis(channelConfigId: string, valueSat: number): boolean;
+  setForwardingFeeBaseMsat(channelConfigId: string, feeMsat: number): boolean;
+  setForwardingFeeProportionalMillionths(channelConfigId: string, value: number): boolean;
+  setMaxDustHtlcExposureFromFeeRateMultiplier(channelConfigId: string, multiplier: number): boolean;
+  setMaxDustHtlcExposureFromFixedLimit(channelConfigId: string, limitMsat: number): boolean;
 }
 
 export class NativeLoader {

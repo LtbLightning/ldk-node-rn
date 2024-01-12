@@ -305,4 +305,90 @@ RCT_EXTERN_METHOD(
     reject:(RCTPromiseRejectBlock)reject
 )
 
+
+/** ChannelConfig */
+RCT_EXTERN_METHOD(
+    createChannelConfig: (RCTPromiseResolveBlock)resolve
+    reject:(RCTPromiseRejectBlock)reject
+)
+
+RCT_EXTERN_METHOD(
+    acceptUnderpayingHtlcs: (nonnull NSString*)channelConfigId
+    resolve: (RCTPromiseResolveBlock)resolve
+    reject:(RCTPromiseRejectBlock)reject
+)
+
+RCT_EXTERN_METHOD(
+    cltvExpiryDelta: (nonnull NSString*)channelConfigId
+    resolve: (RCTPromiseResolveBlock)resolve
+    reject:(RCTPromiseRejectBlock)reject
+)
+
+RCT_EXTERN_METHOD(
+    forceCloseAvoidanceMaxFeeSatoshis: (nonnull NSString*)channelConfigId
+    resolve: (RCTPromiseResolveBlock)resolve
+    reject:(RCTPromiseRejectBlock)reject
+)
+
+RCT_EXTERN_METHOD(
+    forwardingFeeBaseMsat: (nonnull NSString*)channelConfigId
+    resolve: (RCTPromiseResolveBlock)resolve
+    reject:(RCTPromiseRejectBlock)reject
+)
+
+RCT_EXTERN_METHOD(
+    forwardingFeeProportionalMillionths: (nonnull NSString*)channelConfigId
+    resolve: (RCTPromiseResolveBlock)resolve
+    reject:(RCTPromiseRejectBlock)reject
+)
+
+
+RCT_EXTERN_METHOD(
+    setAcceptUnderpayingHtlcs: (nonnull NSString*)channelConfigId
+    value: (nonnull BOOL*)value
+    resolve: (RCTPromiseResolveBlock)resolve
+    reject:(RCTPromiseRejectBlock)reject
+)
+
+RCT_EXTERN_METHOD(
+    setCltvExpiryDelta: (nonnull NSString*)channelConfigId
+    value: (nonnull NSNumber*)value
+    resolve: (RCTPromiseResolveBlock)resolve
+    reject:(RCTPromiseRejectBlock)reject
+)
+
+RCT_EXTERN_METHOD(
+    setForceCloseAvoidanceMaxFeeSatoshis: (nonnull NSString*)channelConfigId
+    valueSat: (nonnull NSNumber*)valueSat
+    resolve: (RCTPromiseResolveBlock)resolve
+    reject:(RCTPromiseRejectBlock)reject
+)
+
+RCT_EXTERN_METHOD(
+    setForwardingFeeBaseMsat: (nonnull NSString*)channelConfigId
+    feeMsat: (nonnull NSNumber*)feeMsat
+    resolve: (RCTPromiseResolveBlock)resolve
+    reject:(RCTPromiseRejectBlock)reject
+)
+
+RCT_EXTERN_METHOD(
+    setForwardingFeeProportionalMillionths: (nonnull NSString*)channelConfigId
+    value: (nonnull NSNumber*)value
+    resolve: (RCTPromiseResolveBlock)resolve
+    reject:(RCTPromiseRejectBlock)reject
+)
+
+RCT_EXTERN_METHOD(
+    setMaxDustHtlcExposureFromFeeRateMultiplier: (nonnull NSString*)channelConfigId
+    multiplier: (nonnull NSNumber*)multiplier
+    resolve: (RCTPromiseResolveBlock)resolve
+    reject:(RCTPromiseRejectBlock)reject
+)
+
+RCT_EXTERN_METHOD(
+    setMaxDustHtlcExposureFromFixedLimit: (nonnull NSString*)channelConfigId
+    limitMsat: (nonnull NSNumber*)limitMsat
+    resolve: (RCTPromiseResolveBlock)resolve
+    reject:(RCTPromiseRejectBlock)reject
+)
 @end

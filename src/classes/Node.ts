@@ -1,6 +1,5 @@
 import {
   Address,
-  ChannelConfig,
   ChannelDetails,
   ChannelId,
   NetAddress,
@@ -19,6 +18,7 @@ import {
 } from '../utils';
 
 import { NativeLoader } from './NativeLoader';
+import { ChannelConfig } from './ChannelConfig';
 
 export class Node extends NativeLoader {
   id: string = '';
@@ -337,7 +337,7 @@ export class Node extends NativeLoader {
       this.id,
       channelId.channelIdHex,
       counterpartyNodeId.keyHex,
-      channelConfig
+      channelConfig.id
     );
   }
 }

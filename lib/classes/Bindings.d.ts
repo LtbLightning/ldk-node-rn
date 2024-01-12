@@ -1,3 +1,4 @@
+import { ChannelConfig } from "./ChannelConfig";
 export declare class Address {
     addressHex: string;
     constructor(hex: string);
@@ -47,7 +48,19 @@ export declare class ChannelDetails {
     isUsable: boolean;
     isPublic: boolean;
     cltvExpiryDelta?: number;
-    constructor(channelId: ChannelId, counterpartyNodeId: PublicKey, fundingTxo: OutPoint, channelValueSats: number, unspendablePunishmentReserve: number, userChannelId: UserChannelId, balanceMsat: number, outboundCapacityMsat: number, inboundCapacityMsat: number, confirmationsRequired: number, confirmations: number, isOutbound: boolean, isChannelReady: boolean, isUsable: boolean, isPublic: boolean, cltvExpiryDelta: number);
+    counterpartyUnspendablePunishmentReserve: number;
+    counterpartyOutboundHtlcMinimumMsat?: number;
+    counterpartyOutboundHtlcMaximumMsat?: number;
+    counterpartyForwardingInfoFeeBaseMsat?: number;
+    counterpartyForwardingInfoFeeProportionalMillionths?: number;
+    counterpartyForwardingInfoCltvExpiryDelta?: number;
+    nextOutboundHtlcLimitMsat: number;
+    nextOutboundHtlcMinimumMsat: number;
+    forceCloseSpendDelay?: number;
+    inboundHtlcMinimumMsat?: number;
+    inboundHtlcMaximumMsat?: number;
+    config: ChannelConfig;
+    constructor(channelId: ChannelId, counterpartyNodeId: PublicKey, fundingTxo: OutPoint, channelValueSats: number, unspendablePunishmentReserve: number, userChannelId: UserChannelId, balanceMsat: number, outboundCapacityMsat: number, inboundCapacityMsat: number, confirmationsRequired: number, confirmations: number, isOutbound: boolean, isChannelReady: boolean, isUsable: boolean, isPublic: boolean, cltvExpiryDelta: number, counterpartyUnspendablePunishmentReserve: number, counterpartyOutboundHtlcMinimumMsat: number, counterpartyOutboundHtlcMaximumMsat: number, counterpartyForwardingInfoFeeBaseMsat: number, counterpartyForwardingInfoFeeProportionalMillionths: number, counterpartyForwardingInfoCltvExpiryDelta: number, nextOutboundHtlcLimitMsat: number, nextOutboundHtlcMinimumMsat: number, forceCloseSpendDelay: number, inboundHtlcMinimumMsat: number, inboundHtlcMaximumMsat: number, config: string);
 }
 /**A bitcoin transaction hash/transaction ID. */
 export declare class Txid {
@@ -89,14 +102,6 @@ export declare class PaymentDetails {
     direction: PaymentDirection;
     status: PaymentStatus;
     constructor(hash: PaymentHash, preimage: PaymentPreimage, secret: PaymentSecret, amountMsat: number, direction: PaymentDirection, status: PaymentStatus);
-}
-export declare class ChannelConfig {
-    forwardingFeeProportionalMillionths: number;
-    forwardingFeeBaseMsat: number;
-    cltvExpiryDelta: number;
-    maxDustHtlcExposureMsat: number;
-    forceCloseAvoidanceMaxFeeSatoshis: number;
-    constructor(forwardingFeeProportionalMillionths: number, forwardingFeeBaseMsat: number, cltvExpiryDelta: number, maxDustHtlcExposureMsat: number, forceCloseAvoidanceMaxFeeSatoshis: number);
 }
 /** An enum representing the available verbosity levels of the logger. */
 export declare enum LogLevel {
