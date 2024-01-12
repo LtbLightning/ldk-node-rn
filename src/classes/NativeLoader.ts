@@ -60,7 +60,7 @@ export interface NativeLdkNodeRn {
   sendPaymentUsingAmount(nodeId: string, invoice: string, amountMsat: number): string;
   sendSpontaneousPayment(nodeId: string, amountMsat: number, pubKey: string): string;
 
-  sendPaymentProbes(nodeId: string, invoice: string): string;
+  sendPaymentProbes(nodeId: string, invoice: string): boolean;
   sendPaymentProbesUsingAmount(nodeId: string, invoice: string, amountMsat: number): boolean;
   sendSpontaneousPaymentProbes(nodeId: string, amountMsat: number, pubKey: string): boolean;
 

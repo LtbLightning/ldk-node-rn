@@ -8,20 +8,20 @@ import {
   PeerDetails,
   PublicKey,
   Txid,
-} from "./Bindings";
+} from './Bindings';
 import {
   addressToString,
   createChannelDetailsObject,
   createPaymentDetails,
   createPeerDetailsObject,
   stringToAddress,
-} from "../utils";
+} from '../utils';
 
-import { NativeLoader } from "./NativeLoader";
-import { ChannelConfig } from "./ChannelConfig";
+import { NativeLoader } from './NativeLoader';
+import { ChannelConfig } from './ChannelConfig';
 
 export class Node extends NativeLoader {
-  id: string = "";
+  id: string = '';
 
   /**
    * Create node id
@@ -75,9 +75,7 @@ export class Node extends NativeLoader {
    */
   async listeningAddresses(): Promise<Array<NetAddress> | null> {
     let addresses = await this._ldk.listeningAddresses(this.id);
-    return addresses == undefined
-      ? null
-      : addresses.map((i) => stringToAddress(i));
+    return addresses == undefined ? null : addresses.map((i) => stringToAddress(i));
   }
 
   /**
@@ -95,15 +93,8 @@ export class Node extends NativeLoader {
    * @requires [amountMsat] amount in milli sats
    * @returns {Promise<TxId>}
    */
-  async sendToOnchainAddress(
-    address: Address,
-    amountMsat: number
-  ): Promise<Txid> {
-    let txid = await this._ldk.sendToOnchainAddress(
-      this.id,
-      address.addressHex,
-      amountMsat
-    );
+  async sendToOnchainAddress(address: Address, amountMsat: number): Promise<Txid> {
+    let txid = await this._ldk.sendToOnchainAddress(this.id, address.addressHex, amountMsat);
     return new Txid(txid);
   }
 
@@ -113,10 +104,7 @@ export class Node extends NativeLoader {
    * @returns {Promise<TxId>}
    */
   async sendAllToOnchainAddress(address: Address): Promise<Txid> {
-    let txid = await this._ldk.sendAllToOnchainAddress(
-      this.id,
-      address.addressHex
-    );
+    let txid = await this._ldk.sendAllToOnchainAddress(this.id, address.addressHex);
     return new Txid(txid);
   }
 
@@ -146,17 +134,8 @@ export class Node extends NativeLoader {
    * @requires [persist] open node permanently or not
    * @returns {Promise<boolean>}
    */
-  async connect(
-    nodeId: string,
-    address: NetAddress,
-    persist: boolean
-  ): Promise<boolean> {
-    return await this._ldk.connect(
-      this.id,
-      nodeId,
-      addressToString(address),
-      persist
-    );
+  async connect(nodeId: string, address: NetAddress, persist: boolean): Promise<boolean> {
+    return await this._ldk.connect(this.id, nodeId, addressToString(address), persist);
   }
 
   /**
@@ -205,15 +184,8 @@ export class Node extends NativeLoader {
    * @requires [counterpartyNodeId] publicKey of counterparty Node
    * @returns {Promise<boolean>}
    */
-  async closeChannel(
-    channelId: ChannelId,
-    counterpartyNodeId: PublicKey
-  ): Promise<boolean> {
-    return await this._ldk.closeChannel(
-      this.id,
-      channelId.channelIdHex,
-      counterpartyNodeId.keyHex
-    );
+  async closeChannel(channelId: ChannelId, counterpartyNodeId: PublicKey): Promise<boolean> {
+    return await this._ldk.closeChannel(this.id, channelId.channelIdHex, counterpartyNodeId.keyHex);
   }
 
   /**
@@ -237,15 +209,8 @@ export class Node extends NativeLoader {
    * @requires [amountMsat]
    * @returns {Promise<PaymentHash>}
    */
-  async sendPaymentUsingAmount(
-    invoice: string,
-    amountMsat: number
-  ): Promise<PaymentHash> {
-    let hash = await this._ldk.sendPaymentUsingAmount(
-      this.id,
-      invoice,
-      amountMsat
-    );
+  async sendPaymentUsingAmount(invoice: string, amountMsat: number): Promise<PaymentHash> {
+    let hash = await this._ldk.sendPaymentUsingAmount(this.id, invoice, amountMsat);
     return new PaymentHash(hash);
   }
 
@@ -255,15 +220,8 @@ export class Node extends NativeLoader {
    * @requires [amountMsat]
    * @returns {Promise<PaymentHash>}
    */
-  async sendSpontaneousPayment(
-    amountMsat: number,
-    nodeId: PublicKey
-  ): Promise<PaymentHash> {
-    let hash = await this._ldk.sendSpontaneousPayment(
-      this.id,
-      amountMsat,
-      nodeId.keyHex
-    );
+  async sendSpontaneousPayment(amountMsat: number, nodeId: PublicKey): Promise<PaymentHash> {
+    let hash = await this._ldk.sendSpontaneousPayment(this.id, amountMsat, nodeId.keyHex);
     return new PaymentHash(hash);
   }
 
@@ -274,17 +232,8 @@ export class Node extends NativeLoader {
    * @requires [expirySecs] number
    * @returns {Promise<boolean>}
    */
-  async receivePayment(
-    amountMsat: number,
-    description: string,
-    expirySecs: number
-  ): Promise<string> {
-    return await this._ldk.receivePayment(
-      this.id,
-      amountMsat,
-      description,
-      expirySecs
-    );
+  async receivePayment(amountMsat: number, description: string, expirySecs: number): Promise<string> {
+    return await this._ldk.receivePayment(this.id, amountMsat, description, expirySecs);
   }
 
   /**
@@ -293,15 +242,8 @@ export class Node extends NativeLoader {
    * @requires [expirySecs] number
    * @returns {Promise<boolean>}
    */
-  async receiveVariableAmountPayment(
-    description: string,
-    expirySecs: number
-  ): Promise<string> {
-    return await this._ldk.receiveVariableAmountPayment(
-      this.id,
-      description,
-      expirySecs
-    );
+  async receiveVariableAmountPayment(description: string, expirySecs: number): Promise<string> {
+    return await this._ldk.receiveVariableAmountPayment(this.id, description, expirySecs);
   }
 
   /**
@@ -339,9 +281,7 @@ export class Node extends NativeLoader {
    * @returns {Promise<PaymentDetails>}
    */
   async payment(paymetHash: PaymentHash): Promise<PaymentDetails> {
-    return createPaymentDetails(
-      await this._ldk.payment(this.id, paymetHash.field0)
-    );
+    return createPaymentDetails(await this._ldk.payment(this.id, paymetHash.field0));
   }
 
   /**
@@ -376,11 +316,7 @@ export class Node extends NativeLoader {
    * @requires [pkey] public key of node
    * @returns {Promise<string>}
    */
-  async verifySignature(
-    msg: Array<number>,
-    sig: string,
-    pkey: PublicKey
-  ): Promise<boolean> {
+  async verifySignature(msg: Array<number>, sig: string, pkey: PublicKey): Promise<boolean> {
     return await this._ldk.verifySignature(this.id, msg, sig, pkey.keyHex);
   }
 
@@ -431,11 +367,10 @@ export class Node extends NativeLoader {
    * pre-flight probes.
    *
    * @requires [invoice]
-   * @returns {Promise<PaymentHash>}
+   * @returns {Promise<boolean>}
    */
-  async sendPaymentProbes(invoice: string): Promise<PaymentHash> {
-    let hash = await this._ldk.sendPaymentProbes(this.id, invoice);
-    return new PaymentHash(hash);
+  async sendPaymentProbes(invoice: string): Promise<boolean> {
+    return await this._ldk.sendPaymentProbes(this.id, invoice);
   }
 
   /**
@@ -449,15 +384,8 @@ export class Node extends NativeLoader {
    * @requires [amountMsat]
    * @returns {Promise<boolean>}
    */
-  async sendPaymentProbesUsingAmount(
-    invoice: string,
-    amountMsat: number
-  ): Promise<boolean> {
-    return await this._ldk.sendPaymentProbesUsingAmount(
-      this.id,
-      invoice,
-      amountMsat
-    );
+  async sendPaymentProbesUsingAmount(invoice: string, amountMsat: number): Promise<boolean> {
+    return await this._ldk.sendPaymentProbesUsingAmount(this.id, invoice, amountMsat);
   }
 
   /**
@@ -466,14 +394,7 @@ export class Node extends NativeLoader {
    * @requires [amountMsat]
    * @returns {Promise<boolean>}
    */
-  async sendSpontaneousPaymentProbes(
-    amountMsat: number,
-    nodeId: PublicKey
-  ): Promise<boolean> {
-    return await this._ldk.sendSpontaneousPaymentProbes(
-      this.id,
-      amountMsat,
-      nodeId.keyHex
-    );
+  async sendSpontaneousPaymentProbes(amountMsat: number, nodeId: PublicKey): Promise<boolean> {
+    return await this._ldk.sendSpontaneousPaymentProbes(this.id, amountMsat, nodeId.keyHex);
   }
 }

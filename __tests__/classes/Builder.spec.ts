@@ -3,7 +3,7 @@ import { Builder, Config, Node } from '../../src';
 import {
   esploraServerUrl,
   gossipRgsUrl,
-  mockAddress,
+  mockAddresses,
   mockConfig,
   mockUUID,
   networkName,
@@ -79,8 +79,8 @@ describe('Builder', () => {
   });
 
   it('should set listening address', async () => {
-    mockLdkNodeModule.setListeningAddress.mockResolvedValue(true);
-    let res = await builder.setListeningAddress(mockAddress);
+    mockLdkNodeModule.setListeningAddresses.mockResolvedValue(true);
+    let res = await builder.setListeningAddresses(mockAddresses);
     expect(res).toBe(true);
   });
 
