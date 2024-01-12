@@ -11,29 +11,34 @@ class LdkNodeRnModule: NSObject {
     @objc
     func createConfig(_
         storageDirPath: String,
+        logDirPath: String?,
         network: String,
-        listeningAddress: String? = nil,
+        listeningAddresses: NSArray,
         defaultCltvExpiryDelta: NSNumber? = 144,
         onchainWalletSyncIntervalSecs: NSNumber? = 80,
         walletSyncIntervalSecs: NSNumber? = 30,
         feeRateCacheUpdateIntervalSecs: NSNumber? = 600,
-        logLevel: String,
         trustedPeers0conf: NSArray,
+        probingLiquidityLimitMultiplier: NSNumber? = 3,
+        logLevel: String,
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
+        let addresses = listeningAddresses as! [SocketAddress]
         DispatchQueue.main.async { [self] in
             let id = randomId()
             _configs[id] = Config(
                 storageDirPath: storageDirPath,
+                logDirPath: logDirPath,
                 network: getNetworkEnum(networkStr: network),
-                listeningAddress: listeningAddress,
+                listeningAddresses: addresses,
                 defaultCltvExpiryDelta: UInt32(truncating: defaultCltvExpiryDelta!),
                 onchainWalletSyncIntervalSecs: UInt64(truncating: onchainWalletSyncIntervalSecs!),
                 walletSyncIntervalSecs: UInt64(truncating: walletSyncIntervalSecs!),
                 feeRateCacheUpdateIntervalSecs: UInt64(truncating: feeRateCacheUpdateIntervalSecs!),
-                logLevel: getLogLevelEnum(logLevel: logLevel),
-                trustedPeers0conf: trustedPeers0conf as! [PublicKey]
+                trustedPeers0conf: trustedPeers0conf as! [PublicKey],
+                probingLiquidityLimitMultiplier: UInt64(truncating: probingLiquidityLimitMultiplier!),
+                logLevel: getLogLevelEnum(logLevel: logLevel)
             )
             resolve(id)
         }
@@ -163,14 +168,14 @@ class LdkNodeRnModule: NSObject {
     }
 
     @objc
-    func setListeningAddress(_
+    func setListeningAddresses(_
         builderId: String,
-        listeningAddress: String,
+        listeningAddresses: NSArray,
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
         DispatchQueue.main.async { [self] in
-            _builders[builderId]!.setListeningAddress(listeningAddress: listeningAddress)
+            try! _builders[builderId]!.setListeningAddresses(listeningAddresses: listeningAddresses as! [SocketAddress])
             resolve(true)
         }
     }
@@ -256,13 +261,13 @@ class LdkNodeRnModule: NSObject {
     }
     
     @objc
-    func listeningAddress(_
+    func listeningAddresses(_
         nodeId: String,
         resolve: @escaping RCTPromiseResolveBlock,
         reject: @escaping RCTPromiseRejectBlock
     ) {
         DispatchQueue.main.async { [self] in
-            resolve(_nodes[nodeId]!.listeningAddress())
+            resolve(_nodes[nodeId]!.listeningAddresses())
         }
     }
 

@@ -70,12 +70,12 @@ export class Node extends NativeLoader {
   }
 
   /**
-   * Returns listening Address
-   * @returns {Promise<NetAddress>}
+   * Returns listening Addresses
+   * @returns {Promise<Array<NetAddress>>}
    */
-  async listeningAddress(): Promise<NetAddress | null> {
-    let addr = await this._ldk.listeningAddress(this.id);
-    return addr == undefined ? null : stringToAddress(addr);
+  async listeningAddresses(): Promise<Array<NetAddress> | null> {
+    let addresses = await this._ldk.listeningAddresses(this.id);
+    return addresses == undefined ? null : addresses.map((i) => stringToAddress(i));
   }
 
   /**

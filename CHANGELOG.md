@@ -1,8 +1,17 @@
-## [0.1.1]
+## [0.2.0]
 
-- Fixed Android app crash on startup.
-- Renamed package to `ldk_node_rn`.
-- Added ignore list for npm publish
+### Feature and API updates
+
+`BugFix` - Fixed `logger failed` error on startup node everytime.
+
+#### APIs Changed
+
+- `Builder` class `setListeningAddress()` to `setListeningAddresses()` to set multuple listening addresses.
+- `Node` class `listeningAddress()` to `listeningAddresses()` to get all listening addresses.
+- `Config` class `create` method changes:
+    - Added `logDirPath` param to make the location of the `logs` directory customizable .
+    - Changed `listeningAddress` param to `listendingAddresses` to allow multiple addresses.
+    - Added `probingLiquidityLimitMultiplier` param.
 
 ## [0.1.0]
 

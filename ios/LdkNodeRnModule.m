@@ -7,14 +7,16 @@
 /** Config methods */
 RCT_EXTERN_METHOD(
     createConfig: (nonnull NSString*)storageDirPath
+    logDirPath: (nullable NSString*)logDirPath
     network: (nonnull NSString*)network
-    listeningAddress: (nullable NSString*)listeningAddress
+    listeningAddresses: (nonnull NSArray*)listeningAddresses
     defaultCltvExpiryDelta: (nonnull NSNumber*)defaultCltvExpiryDelta
     onchainWalletSyncIntervalSecs: (nonnull NSNumber*)onchainWalletSyncIntervalSecs
     walletSyncIntervalSecs: (nonnull NSNumber*)walletSyncIntervalSecs
     feeRateCacheUpdateIntervalSecs: (nonnull NSNumber*)feeRateCacheUpdateIntervalSecs
-    logLevel: (nonnull NSString*)logLevel
     trustedPeers0conf: (nonnull NSArray*)trustedPeers0conf
+    probingLiquidityLimitMultiplier: (nonnull NSNumber*)probingLiquidityLimitMultiplier
+    logLevel: (nonnull NSString*)logLevel
     resolve: (RCTPromiseResolveBlock)resolve
     reject:(RCTPromiseRejectBlock)reject
 )
@@ -84,8 +86,8 @@ RCT_EXTERN_METHOD(
 )
 
 RCT_EXTERN_METHOD(
-    setListeningAddress: (nonnull NSString*)buildId
-    listeningAddress: (nonnull NSString*)listeningAddress
+    setListeningAddresses: (nonnull NSString*)buildId
+    listeningAddresses: (nonnull NSArray*)listeningAddresses
     resolve: (RCTPromiseResolveBlock)resolve
     reject:(RCTPromiseRejectBlock)reject
 )
@@ -105,7 +107,7 @@ RCT_EXTERN_METHOD(
 )
 
 RCT_EXTERN_METHOD(
-    listeningAddress: (nonnull NSString*)nodeId
+    listeningAddresses: (nonnull NSString*)nodeId
     resolve: (RCTPromiseResolveBlock)resolve
     reject:(RCTPromiseRejectBlock)reject
 )

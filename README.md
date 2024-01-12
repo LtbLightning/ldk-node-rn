@@ -61,8 +61,8 @@ cd ios && pod install
 ### Build, Start & Sync the local node
 
 ```js
-import { Builder, Config, Node } from 'ldk-node-rn';
-import { NetAddress } from 'ldk-node-rn/lib/classes/Bindings';
+import {Builder, Config, Node} from 'ldk-node-rn';
+import {NetAddress} from 'ldk-node-rn/lib/classes/Bindings';
 
 // ....
 
@@ -70,7 +70,7 @@ import { NetAddress } from 'ldk-node-rn/lib/classes/Bindings';
 const esploraUrl = https://blockstream.info/testnet/api;
 
 // configuration options for the node
-const config = await new Config().create('alice_node', 'regtest', new NetAddress('127.0.0.1', 5001));
+const config = await new Config().create('alice_node', 'regtest', [new NetAddress('127.0.0.1', 5001)]);
 
 const builder = await new Builder().fromConfig(config);
 await builder.setEsploraServer(esploraUrl);

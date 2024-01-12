@@ -89,13 +89,7 @@ func getNetworkEnum(networkStr: String?) -> Network {
 
 
 func createChannelConfig(config: NSDictionary) -> ChannelConfig {
-    return ChannelConfig(
-        forwardingFeeProportionalMillionths: (config["forwardingFeeProportionalMillionths"] as? UInt32)!,
-        forwardingFeeBaseMsat: (config["forwardingFeeBaseMsat"] as? UInt32)!,
-        cltvExpiryDelta: (config["cltvExpiryDelta"] as? UInt16)!,
-        maxDustHtlcExposureMsat: (config["maxDustHtlcExposureMsat"] as? UInt64)!,
-        forceCloseAvoidanceMaxFeeSatoshis: (config["forceCloseAvoidanceMaxFeeSatoshis"] as? UInt64)!
-    )
+    return ChannelConfig()
 }
 
 

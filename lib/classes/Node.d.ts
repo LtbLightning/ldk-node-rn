@@ -32,10 +32,10 @@ export declare class Node extends NativeLoader {
      */
     nodeId(): Promise<PublicKey>;
     /**
-     * Returns listening Address
-     * @returns {Promise<NetAddress>}
+     * Returns listening Addresses
+     * @returns {Promise<Array<NetAddress>>}
      */
-    listeningAddress(): Promise<NetAddress | null>;
+    listeningAddresses(): Promise<Array<NetAddress> | null>;
     /**
      * Retrieve a new on-chain/funding address.
      * @returns {Promise<Address>}

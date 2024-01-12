@@ -1,6 +1,6 @@
 import { ChannelConfig, ChannelDetails, PaymentDetails, PeerDetails } from './Bindings';
 export interface NativeLdkNodeRn {
-    createConfig(storageDirPath: string, network: string, listeningAddress: string | null, defaultCltvExpiryDelta: number, onchainWalletSyncIntervalSecs: number, walletSyncIntervalSecs: number, feeRateCacheUpdateIntervalSecs: number, logLevel: string, trustedPeers0conf: Array<string>): string;
+    createConfig(storageDirPath: string, logDirPath: string, network: string, listeningAddress: Array<string> | null, defaultCltvExpiryDelta: number, onchainWalletSyncIntervalSecs: number, walletSyncIntervalSecs: number, feeRateCacheUpdateIntervalSecs: number, trustedPeers0conf: Array<string>, probingLiquidityLimitMultiplier: number, logLevel: string): string;
     fromConfig(configId: string): string;
     setEntropySeedPath(buildId: string, seedPath: string): boolean;
     setEntropySeedBytes(buildId: string, seedBytes: Array<number>): boolean;
@@ -10,13 +10,13 @@ export interface NativeLdkNodeRn {
     setGossipSourceRgs(buildId: string, rgsServerUrl: string): boolean;
     setStorageDirPath(buildId: string, storageDirPath: string): boolean;
     setNetwork(buildId: string, network: string): boolean;
-    setListeningAddress(buildId: string, listeningAddress: string): boolean;
+    setListeningAddresses(buildId: string, listeningAddresses: Array<string>): boolean;
     build(buildId: string): string;
     start(nodeId: string): boolean;
     stop(nodeId: string): boolean;
     syncWallets(nodeId: string): boolean;
     nodeId(nodeId: string): string;
-    listeningAddress(nodeId: string): string;
+    listeningAddresses(nodeId: string): Array<string> | null;
     newOnchainAddress(nodeId: string): string;
     sendToOnchainAddress(nodeId: string, address: string, amountMsat: number): string;
     sendAllToOnchainAddress(nodeId: string, address: string): string;

@@ -21,25 +21,29 @@ export class Config extends NativeLoader {
    */
   async create(
     storageDirPath: string,
+    logDirPath: string = 'tmp/ldk_node',
     network: string,
-    listeningAddress: NetAddress | null,
+    listeningAddress: [NetAddress] | null,
     defaultCltvExpiryDelta: number = 144,
     onchainWalletSyncIntervalSecs: number = 80,
     walletSyncIntervalSecs: number = 30,
     feeRateCacheUpdateIntervalSecs: number = 600,
-    logLevel: LogLevel = LogLevel.debug,
-    trustedPeers0conf: Array<string> = []
+    trustedPeers0conf: Array<string> = [],
+    probingLiquidityLimitMultiplier: number = 3,
+    logLevel: LogLevel = LogLevel.debug
   ): Promise<Config> {
     this.id = await this._ldk.createConfig(
       storageDirPath,
+      logDirPath,
       network,
-      listeningAddress == null ? null : addressToString(listeningAddress),
+      listeningAddress == null ? null : listeningAddress.map((addr) => addressToString(addr)),
       defaultCltvExpiryDelta,
       onchainWalletSyncIntervalSecs,
       walletSyncIntervalSecs,
       feeRateCacheUpdateIntervalSecs,
-      logLevel,
-      trustedPeers0conf
+      trustedPeers0conf,
+      probingLiquidityLimitMultiplier,
+      logLevel
     );
     return this;
   }
