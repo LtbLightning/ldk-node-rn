@@ -185,7 +185,7 @@ RCT_EXTERN_METHOD(
     address: (nonnull NSString*)address
     channelAmountSats: (nonnull NSNumber*)channelAmountSats
     pushToCounterpartyMsat: (nonnull NSNumber*)pushToCounterpartyMsat
-    channelConfig: (nullable NSDictionary*)channelConfig
+    channelConfigId: (nullable NSDictionary*)channelConfigId
     announceChannel: (nonnull BOOL*)announceChannel
     resolve: (RCTPromiseResolveBlock)resolve
     reject:(RCTPromiseRejectBlock)reject
