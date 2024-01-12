@@ -150,7 +150,7 @@ export class ChannelDetails {
     this.forceCloseSpendDelay = forceCloseSpendDelay;
     this.inboundHtlcMinimumMsat = inboundHtlcMinimumMsat;
     this.inboundHtlcMaximumMsat = inboundHtlcMaximumMsat;
-    this.config = new ChannelConfig(config);
+    this.config = new ChannelConfig().fromId(config);
   }
 }
 

@@ -675,6 +675,73 @@ class LdkNodeRnModule: NSObject {
             }
         }
     }
+    
+    
+    @objc
+    func isRunning(_
+        nodeId: String,
+        resolve: @escaping RCTPromiseResolveBlock,
+        reject: @escaping RCTPromiseRejectBlock
+    ) {
+        DispatchQueue.main.async { [self] in
+            resolve(_nodes[nodeId]!.isRunning())
+        }
+    }
+    
+    
+    
+    @objc
+    func sendPaymentProbes(_
+        nodeId: String,
+        invoice: String,
+        resolve: @escaping RCTPromiseResolveBlock,
+        reject: @escaping RCTPromiseRejectBlock
+    ) {
+        DispatchQueue.main.async { [self] in
+            do {
+                try _nodes[nodeId]!.sendPaymentProbes(invoice: invoice)
+                resolve(true)
+            } catch let error {
+                reject("Send payment probes error", "\(error)", error)
+            }
+        }
+    }
+
+    @objc
+    func sendPaymentProbesUsingAmount(_
+        nodeId: String,
+        invoice: String,
+        amountMsat: NSNumber,
+        resolve: @escaping RCTPromiseResolveBlock,
+        reject: @escaping RCTPromiseRejectBlock
+    ) {
+        DispatchQueue.main.async { [self] in
+            do {
+                try _nodes[nodeId]!.sendPaymentProbesUsingAmount(invoice: invoice, amountMsat: UInt64(truncating: amountMsat))
+                resolve(true)
+            } catch let error {
+                reject("Send payment probes using amount invoice error", "\(error)", error)
+            }
+        }
+    }
+
+    @objc
+    func sendSpontaneousPaymentProbes(_
+        nodeId: String,
+        amountMsat: NSNumber,
+        pubKey: String,
+        resolve: @escaping RCTPromiseResolveBlock,
+        reject: @escaping RCTPromiseRejectBlock
+    ) {
+        DispatchQueue.main.async { [self] in
+            do {
+                try _nodes[nodeId]!.sendSpontaneousPaymentProbes(amountMsat: UInt64(truncating: amountMsat), nodeId: pubKey)
+                resolve(true)
+            } catch let error {
+                reject("Send spontaneous payment probes error", "\(error)", error)
+            }
+        }
+    }
     /** Node methods ends */
 
     /** Utilities methods start */

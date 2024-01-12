@@ -9,9 +9,35 @@
 - `Builder` class `setListeningAddress()` to `setListeningAddresses()` to set multuple listening addresses.
 - `Node` class `listeningAddress()` to `listeningAddresses()` to get all listening addresses.
 - `Config` class `create` method changes:
-    - Added `logDirPath` param to make the location of the `logs` directory customizable .
-    - Changed `listeningAddress` param to `listendingAddresses` to allow multiple addresses.
-    - Added `probingLiquidityLimitMultiplier` param.
+
+  - Added `logDirPath` param to make the location of the `logs` directory customizable .
+  - Changed `listeningAddress` param to `listendingAddresses` to allow multiple addresses.
+  - Added `probingLiquidityLimitMultiplier` param.
+
+#### APIs Added
+
+- Exposed `ChannelConfig` class and following are its methods:
+
+  - `create` - Constructs a new `ChannelConfig`.
+  - `acceptUnderpayingHtlcs` - Returns the set `acceptUnderpayingHtlcs`.
+  - `cltvExpiryDelta` - Returns the set `cltvExpiryDelta`.
+  - `forceCloseAvoidanceMaxFeeSatoshis` - Returns the set `forceCloseAvoidanceMaxFeeSatoshis`.
+  - `forwardingFeeBaseMsat` - Returns the set `forwardingFeeBaseMsat`.
+  - `forwardingFeeProportionalMillionths` - Returns the set `forwardingFeeProportionalMillionths`.
+  - `setAcceptUnderpayingHtlcs` - Sets the `setAcceptUnderpayingHtlcs`.
+  - `setCltvExpiryDelta` - Sets the `setCltvExpiryDelta`.
+  - `setForceCloseAvoidanceMaxFeeSatoshis` - Sets the `setForceCloseAvoidanceMaxFeeSatoshis`.
+  - `setForwardingFeeBaseMsat` - Sets the `setForwardingFeeBaseMsat`.
+  - `setForwardingFeeProportionalMillionths` - Sets the `setForwardingFeeProportionalMillionths`.
+  - `setMaxDustHtlcExposureFromFeeRateMultiplier` - Sets the `setMaxDustHtlcExposureFromFeeRateMultiplier`.
+  - `setMaxDustHtlcExposureFromFixedLimit` - Sets the `setMaxDustHtlcExposureFromFixedLimit`.
+
+- Exposed following new methods for `Node`
+
+  - `isrunning` - Returns whether the [`Node`] is running.
+  - `sendPaymentProbes` - Sends payment probes over all paths of a route that would be used to pay the given invoice.
+  - `sendPaymentProbesUsingAmount` - Sends payment probes over all paths of a route that would be used to pay the given zero-value invoice using the given amount.
+  - `sendSpontaneousPaymentProbes` - Sends payment probes over all paths of a route that would be used to pay the given amount to the given `node_id`.
 
 ## [0.1.0]
 

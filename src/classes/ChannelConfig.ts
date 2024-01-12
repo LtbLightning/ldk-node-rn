@@ -3,9 +3,9 @@ import { NativeLoader } from './NativeLoader';
 export class ChannelConfig extends NativeLoader {
   id: string = '';
 
-  constructor(id: string) {
-    super();
+  fromId(id: string): this {
     this.id = id;
+    return this;
   }
 
   async create(): Promise<this> {

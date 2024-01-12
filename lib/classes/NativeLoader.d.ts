@@ -16,6 +16,7 @@ export interface NativeLdkNodeRn {
     stop(nodeId: string): boolean;
     syncWallets(nodeId: string): boolean;
     nodeId(nodeId: string): string;
+    isRunning(nodeId: string): boolean;
     listeningAddresses(nodeId: string): Array<string> | null;
     newOnchainAddress(nodeId: string): string;
     sendToOnchainAddress(nodeId: string, address: string, amountMsat: number): string;
@@ -31,6 +32,9 @@ export interface NativeLdkNodeRn {
     sendPayment(nodeId: string, invoice: string): string;
     sendPaymentUsingAmount(nodeId: string, invoice: string, amountMsat: number): string;
     sendSpontaneousPayment(nodeId: string, amountMsat: number, pubKey: string): string;
+    sendPaymentProbes(nodeId: string, invoice: string): string;
+    sendPaymentProbesUsingAmount(nodeId: string, invoice: string, amountMsat: number): boolean;
+    sendSpontaneousPaymentProbes(nodeId: string, amountMsat: number, pubKey: string): boolean;
     listPayments(nodeId: string): Array<PaymentDetails>;
     listPeers(nodeId: string): Array<PeerDetails>;
     listChannels(nodeId: string): Array<ChannelDetails>;

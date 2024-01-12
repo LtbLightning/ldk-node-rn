@@ -1,4 +1,4 @@
-import { ChannelConfig } from "./ChannelConfig";
+import { ChannelConfig } from './ChannelConfig';
 export declare class Address {
     addressHex: string;
     constructor(hex: string);

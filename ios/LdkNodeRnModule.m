@@ -299,6 +299,35 @@ RCT_EXTERN_METHOD(
     reject:(RCTPromiseRejectBlock)reject
 )
 
+RCT_EXTERN_METHOD(
+    isRunning: (nonnull NSString*)nodeId
+    resolve: (RCTPromiseResolveBlock)resolve
+    reject:(RCTPromiseRejectBlock)reject
+)
+
+RCT_EXTERN_METHOD(
+    sendPaymentProbes: (nonnull NSString*)nodeId
+    invoice: (nonnull NSString*)invoice
+    resolve: (RCTPromiseResolveBlock)resolve
+    reject:(RCTPromiseRejectBlock)reject
+)
+
+RCT_EXTERN_METHOD(
+    sendPaymentProbesUsingAmount: (nonnull NSString*)nodeId
+    invoice: (nonnull NSString*)invoice
+    amountMsat: (nonnull NSNumber*)amountMsat
+    resolve: (RCTPromiseResolveBlock)resolve
+    reject:(RCTPromiseRejectBlock)reject
+)
+
+RCT_EXTERN_METHOD(
+    sendSpontaneousPaymentProbes: (nonnull NSString*)nodeId
+    amountMsat: (nonnull NSNumber*)amountMsat
+    pubKey: (nonnull NSString*)pubKey
+    resolve: (RCTPromiseResolveBlock)resolve
+    reject:(RCTPromiseRejectBlock)reject
+)
+
 /** Utilities */
 RCT_EXTERN_METHOD(
     createEntropyMnemonic: (RCTPromiseResolveBlock)resolve

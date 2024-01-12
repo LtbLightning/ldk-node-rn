@@ -1,7 +1,7 @@
-import { NativeLoader } from "./NativeLoader";
+import { NativeLoader } from './NativeLoader';
 export declare class ChannelConfig extends NativeLoader {
     id: string;
-    constructor(id: string);
+    fromId(id: string): this;
     create(): Promise<this>;
     acceptUnderpayingHtlcs(): Promise<boolean>;
     cltvExpiryDelta(): Promise<number>;
