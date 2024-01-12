@@ -23,7 +23,7 @@ export class Config extends NativeLoader {
     storageDirPath: string,
     logDirPath: string = 'tmp/ldk_node',
     network: string,
-    listeningAddress: [NetAddress] | null,
+    listeningAddress: Array<NetAddress> | null,
     defaultCltvExpiryDelta: number = 144,
     onchainWalletSyncIntervalSecs: number = 80,
     walletSyncIntervalSecs: number = 30,

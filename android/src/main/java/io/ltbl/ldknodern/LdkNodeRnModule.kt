@@ -1,5 +1,6 @@
 package io.ltbl.ldknodern
 
+import androidx.annotation.RequiresPermission.Read
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
@@ -22,33 +23,38 @@ class LdkNodeRnModule(reactContext: ReactApplicationContext) :
     private var _configs = mutableMapOf<String, Config>()
     private var _builders = mutableMapOf<String, Builder>()
     private var _nodes = mutableMapOf<String, LdkNode>()
+    private var _channelConfigs = mutableMapOf<String, ChannelConfig>()
 
     /** Config Methods starts */
     @ReactMethod
     fun createConfig(
         storageDirPath: String,
+        logDirPath: String?,
         network: String,
-        listeningAddress: String? = null,
+        listeningAddresses: ReadableArray,
         defaultCltvExpiryDelta: Int? = 144,
         onchainWalletSyncIntervalSecs: Int? = 80,
         walletSyncIntervalSecs: Int? = 30,
         feeRateCacheUpdateIntervalSecs: Int? = 600,
-        logLevel: String,
         trustedPeers0conf: ReadableArray,
+        probingLiquidityLimitMultiplier: Int? = 3,
+        logLevel: String,
         result: Promise
     ) {
         Thread {
             val id = randomId()
             _configs[id] = Config(
                 storageDirPath,
+                logDirPath,
                 getNetworkEnum(network),
-                listeningAddress,
+                getNativeSocketAddressList(listeningAddresses),
                 defaultCltvExpiryDelta!!.toUInt(),
                 onchainWalletSyncIntervalSecs!!.toULong(),
                 walletSyncIntervalSecs!!.toULong(),
                 feeRateCacheUpdateIntervalSecs!!.toULong(),
-                getLogLevelEnum(logLevel),
-                getNatieTrustedPeers0conf(trustedPeers0conf)
+                getNativeTrustedPeers0conf(trustedPeers0conf),
+                probingLiquidityLimitMultiplier!!.toULong(),
+                getLogLevelEnum(logLevel)
             )
             runOnUiThread {
                 result.resolve(id)
@@ -153,9 +159,13 @@ class LdkNodeRnModule(reactContext: ReactApplicationContext) :
     }
 
     @ReactMethod
-    fun setListeningAddress(builderId: String, listeningAddress: String, result: Promise) {
+    fun setListeningAddress(builderId: String, listeningAddresses: ReadableArray, result: Promise) {
         Thread {
-            _builders[builderId]!!.setListeningAddress(listeningAddress)
+            _builders[builderId]!!.setListeningAddresses(
+                getNativeSocketAddressList(
+                    listeningAddresses
+                )
+            )
             runOnUiThread {
                 result.resolve(true)
             }
@@ -227,10 +237,10 @@ class LdkNodeRnModule(reactContext: ReactApplicationContext) :
     }
 
     @ReactMethod
-    fun listeningAddress(nodeId: String, result: Promise) {
+    fun listeningAddresses(nodeId: String, result: Promise) {
         Thread {
             runOnUiThread {
-                result.resolve(_nodes[nodeId]!!.listeningAddress())
+                result.resolve(Arguments.makeNativeArray(_nodes[nodeId]!!.listeningAddresses()))
             }
         }.start()
     }
@@ -348,14 +358,14 @@ class LdkNodeRnModule(reactContext: ReactApplicationContext) :
         address: String,
         channelAmountSats: Int,
         pushToCounterpartyMsat: Int,
-        channelConfig: ReadableMap? = null,
+        channelConfigId: String? = null,
         announceChannel: Boolean,
         result: Promise
     ) {
         Thread {
             try {
                 var config: ChannelConfig? = null
-                if (channelConfig != null) config = createChannelConfig(channelConfig)
+                if (channelConfigId != null) config = _channelConfigs[channelConfigId]
                 _nodes[nodeId]!!.connectOpenChannel(
                     pubKey,
                     address,
@@ -558,13 +568,13 @@ class LdkNodeRnModule(reactContext: ReactApplicationContext) :
         nodeId: String,
         channelId: String,
         counterpartyNodeId: String,
-        channelConfig: ReadableMap,
+        channelConfigId: String,
         result: Promise
     ) {
         Thread {
             try {
                 _nodes[nodeId]!!.updateChannelConfig(
-                    channelId, counterpartyNodeId, createChannelConfig(channelConfig)
+                    channelId, counterpartyNodeId, _channelConfigs[channelConfigId]!!
                 )
                 runOnUiThread {
                     result.resolve(true)
@@ -574,6 +584,72 @@ class LdkNodeRnModule(reactContext: ReactApplicationContext) :
             }
         }.start()
     }
+
+
+    @ReactMethod
+    fun isRunning(nodeId: String, result: Promise) {
+        Thread {
+            result.resolve(_nodes[nodeId]!!.isRunning())
+        }.start()
+    }
+
+
+    @ReactMethod
+    fun sendPaymentProbes(nodeId: String, invoice: String, result: Promise) {
+        Thread {
+            try {
+                runOnUiThread {
+                    result.resolve(_nodes[nodeId]!!.sendPaymentProbes(invoice))
+                }
+            } catch (error: Throwable) {
+                result.reject("Send payment probes error", error.localizedMessage, error)
+            }
+        }.start()
+    }
+
+
+    @ReactMethod
+    fun sendPaymentProbesUsingAmount(
+        nodeId: String, invoice: String, amountMsat: Int, result: Promise
+    ) {
+        Thread {
+            try {
+                var paymenthash =
+                    _nodes[nodeId]!!.sendPaymentProbesUsingAmount(invoice, amountMsat.toULong())
+                runOnUiThread {
+                    result.resolve(paymenthash)
+                }
+            } catch (error: Throwable) {
+                result.reject(
+                    "Send payment probes using amount invoice error",
+                    error.localizedMessage,
+                    error
+                )
+            }
+        }.start()
+    }
+
+    @ReactMethod
+    fun sendSpontaneousPaymentProbes(
+        nodeId: String, amountMsat: Int, pubKey: String, result: Promise
+    ) {
+        Thread {
+            try {
+                var paymenthash =
+                    _nodes[nodeId]!!.sendSpontaneousPaymentProbes(amountMsat.toULong(), pubKey)
+                runOnUiThread {
+                    result.resolve(paymenthash)
+                }
+            } catch (error: Throwable) {
+                result.reject(
+                    "Send spontaneous payment probes error",
+                    error.localizedMessage,
+                    error
+                )
+            }
+        }.start()
+    }
+
     /** Node methods ends */
 
 
@@ -586,5 +662,153 @@ class LdkNodeRnModule(reactContext: ReactApplicationContext) :
             }
         }.start()
     }
+
+    /** ChannelConfig methods ends */
+
+    @ReactMethod
+    fun createChannelConfig(result: Promise) {
+        Thread {
+            runOnUiThread {
+                val id = randomId()
+                _channelConfigs[id] = ChannelConfig()
+                result.resolve(id)
+            }
+        }.start()
+    }
+
+    @ReactMethod
+    fun acceptUnderpayingHtlcs(channelConfigId: String, result: Promise) {
+        Thread {
+            runOnUiThread {
+                result.resolve(_channelConfigs[channelConfigId]!!.acceptUnderpayingHtlcs())
+            }
+        }.start()
+    }
+
+    @ReactMethod
+    fun cltvExpiryDelta(channelConfigId: String, result: Promise) {
+        Thread {
+            runOnUiThread {
+                result.resolve(_channelConfigs[channelConfigId]!!.cltvExpiryDelta().toFloat())
+            }
+        }.start()
+    }
+
+    @ReactMethod
+    fun forceCloseAvoidanceMaxFeeSatoshis(channelConfigId: String, result: Promise) {
+        Thread {
+            runOnUiThread {
+                result.resolve(_channelConfigs[channelConfigId]!!.forceCloseAvoidanceMaxFeeSatoshis().toFloat())
+            }
+        }.start()
+    }
+
+    @ReactMethod
+    fun forwardingFeeBaseMsat(channelConfigId: String, result: Promise) {
+        Thread {
+            runOnUiThread {
+                result.resolve(_channelConfigs[channelConfigId]!!.forwardingFeeBaseMsat().toInt())
+            }
+        }.start()
+    }
+
+    @ReactMethod
+    fun forwardingFeeProportionalMillionths(channelConfigId: String, result: Promise) {
+        Thread {
+            runOnUiThread {
+                result.resolve(_channelConfigs[channelConfigId]!!.forwardingFeeProportionalMillionths().toInt())
+            }
+        }.start()
+    }
+
+    @ReactMethod
+    fun setAcceptUnderpayingHtlcs(channelConfigId: String, value: Boolean, result: Promise) {
+        Thread {
+            runOnUiThread {
+                _channelConfigs[channelConfigId]!!.setAcceptUnderpayingHtlcs(value)
+                result.resolve(true)
+            }
+        }.start()
+    }
+
+
+    @ReactMethod
+    fun setCltvExpiryDelta(channelConfigId: String, value: Int, result: Promise) {
+        Thread {
+            runOnUiThread {
+                _channelConfigs[channelConfigId]!!.setCltvExpiryDelta(value.toUShort())
+                result.resolve(true)
+            }
+        }.start()
+    }
+
+    @ReactMethod
+    fun setForceCloseAvoidanceMaxFeeSatoshis(
+        channelConfigId: String,
+        valueSat: Int,
+        result: Promise
+    ) {
+        Thread {
+            runOnUiThread {
+                _channelConfigs[channelConfigId]!!.setForceCloseAvoidanceMaxFeeSatoshis(valueSat.toULong())
+                result.resolve(true)
+            }
+        }.start()
+    }
+
+    @ReactMethod
+    fun setForwardingFeeBaseMsat(channelConfigId: String, feeMsat: Int, result: Promise) {
+        Thread {
+            runOnUiThread {
+                _channelConfigs[channelConfigId]!!.setForwardingFeeBaseMsat(feeMsat.toUInt())
+                result.resolve(true)
+            }
+        }.start()
+    }
+
+    @ReactMethod
+    fun setForwardingFeeProportionalMillionths(
+        channelConfigId: String,
+        value: Int,
+        result: Promise
+    ) {
+        Thread {
+            runOnUiThread {
+                _channelConfigs[channelConfigId]!!.setForwardingFeeProportionalMillionths(value.toUInt())
+                result.resolve(true)
+            }
+        }.start()
+    }
+
+    @ReactMethod
+    fun setMaxDustHtlcExposureFromFeeRateMultiplier(
+        channelConfigId: String,
+        multiplier: Int,
+        result: Promise
+    ) {
+        Thread {
+            runOnUiThread {
+                _channelConfigs[channelConfigId]!!.setMaxDustHtlcExposureFromFeeRateMultiplier(
+                    multiplier.toULong()
+                )
+                result.resolve(true)
+            }
+        }.start()
+    }
+
+    @ReactMethod
+    fun setMaxDustHtlcExposureFromFixedLimit(
+        channelConfigId: String,
+        limitMsat: Int,
+        result: Promise
+    ) {
+        Thread {
+            runOnUiThread {
+                _channelConfigs[channelConfigId]!!.setMaxDustHtlcExposureFromFixedLimit(limitMsat.toULong())
+                result.resolve(true)
+            }
+        }.start()
+    }
+
 }
 

@@ -83,16 +83,6 @@ fun getNetworkEnum(networkStr: String? = "testnet"): Network {
     }
 }
 
-fun createChannelConfig(options: ReadableMap): ChannelConfig {
-    return ChannelConfig(
-        options.getInt("forwardingFeeProportionalMillionths").toUInt(),
-        options.getInt("forwardingFeeBaseMsat").toUInt(),
-        options.getInt("cltvExpiryDelta").toUShort(),
-        options.getInt("maxDustHtlcExposureMsat").toULong(),
-        options.getInt("forceCloseAvoidanceMaxFeeSatoshis").toULong()
-    )
-}
-
 fun getLogLevelEnum(logLevel: String): LogLevel {
     return when (logLevel) {
         "gossip" -> LogLevel.GOSSIP
@@ -106,8 +96,16 @@ fun getLogLevelEnum(logLevel: String): LogLevel {
 }
 
 
-fun getNatieTrustedPeers0conf(list: ReadableArray): List<PublicKey> {
+fun getNativeTrustedPeers0conf(list: ReadableArray): List<PublicKey> {
     val array = ArrayList<PublicKey>()
+    for (i in 0 until list.size()) {
+        array.add(list.getString(i))
+    }
+    return array
+}
+
+fun getNativeSocketAddressList(list: ReadableArray): List<SocketAddress> {
+    val array = ArrayList<SocketAddress>()
     for (i in 0 until list.size()) {
         array.add(list.getString(i))
     }
