@@ -64,11 +64,11 @@ export declare class Builder extends NativeLoader {
      */
     setNetwork(network: string): Promise<boolean>;
     /**
-     * Sets the IP address and TCP port on which [Node] will listen for incoming network connections.
-     * @requires listeningAddress
+     * Sets the IP addresses and TCP port on which [Node] will listen for incoming network connections.
+     * @requires listeningAddresses
      * @returns {Promise<boolean>}
      */
-    setListeningAddress(listeningAddress: NetAddress): Promise<boolean>;
+    setListeningAddresses(listeningAddresses: Array<NetAddress>): Promise<boolean>;
     /**
      * Create node
      * @returns {Promise<Node>}

@@ -1,12 +1,13 @@
-import { Config } from '../src';
-import { ChannelConfig, ChannelId, LogLevel, NetAddress, PublicKey } from '../src/classes/Bindings';
+import { ChannelConfig, Config } from '../src';
+import { ChannelId, LogLevel, NetAddress, PublicKey } from '../src/classes/Bindings';
 
 const host = '127.0.0.1';
 export const esploraServerUrl = `http://${host}:50000`;
 export const gossipRgsUrl = `http://${host}:9735`;
 export const seedPhrase = 'mom mom mom mom mom mom mom mom mom mom mom mom';
 export const nodeStoragePath = 'alice_node';
-export const mockAddress = new NetAddress(host, 5000);
+export const nodeLogDirPath = `${nodeStoragePath}/logs`;
+export const mockAddresses = [new NetAddress(host, 5000)];
 export const networkName = 'regtest';
 export const mockUUID = 'A4CCF9FD-FCA0-4171-94FD-4726F025FAC9';
 export const mockNodeID = '02f42d9e57048ba366249c873ce7440cfaad783c249cbd4265b4eac62184d02eae';
@@ -18,9 +19,21 @@ export const paymentHash = '1e8c7af36cc709f8d6d0cb7e6141949861cb01cdacbbcc07446d
 export const balanceMsats = 19980000;
 
 export const mockConfig = async () =>
-  await new Config().create(nodeStoragePath, networkName, mockAddress, 144, 80, 30, 600, LogLevel.debug, []);
+  await new Config().create(
+    nodeStoragePath,
+    nodeLogDirPath,
+    networkName,
+    mockAddresses,
+    144,
+    80,
+    30,
+    600,
+    [],
+    12,
+    LogLevel.debug
+  );
 
-export const mockChannelConfig = new ChannelConfig(12, 12, 12, 12, 12);
+export const mockChannelConfig = new ChannelConfig();
 export const mockChannelId = new ChannelId('4d40f965ef3cb52fc5a7391b2afd938fb6a46b8f03c0afd69b2733b7a58230f5');
 const counterartyNodeId = '02da84df8c601a14d55be9fc38dba62eb7e7bad6737aea4aa20d5004c4cbcdb22a';
 export const mockPublickKey = new PublicKey(counterartyNodeId);

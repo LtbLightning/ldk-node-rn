@@ -95,12 +95,15 @@ export class Builder extends NativeLoader {
   }
 
   /**
-   * Sets the IP address and TCP port on which [Node] will listen for incoming network connections.
-   * @requires listeningAddress
+   * Sets the IP addresses and TCP port on which [Node] will listen for incoming network connections.
+   * @requires listeningAddresses
    * @returns {Promise<boolean>}
    */
-  async setListeningAddress(listeningAddress: NetAddress): Promise<boolean> {
-    return await this._ldk.setListeningAddress(this.id, addressToString(listeningAddress));
+  async setListeningAddresses(listeningAddresses: Array<NetAddress>): Promise<boolean> {
+    return await this._ldk.setListeningAddresses(
+      this.id,
+      listeningAddresses.map((listeningAddress) => addressToString(listeningAddress))
+    );
   }
 
   /**

@@ -4,7 +4,7 @@ import {
   balanceMsats,
   fundingAddress,
   invoice,
-  mockAddress,
+  mockAddresses,
   mockChannelConfig,
   mockChannelId,
   mockConfig,
@@ -75,12 +75,14 @@ describe('Node', () => {
     expect(res).toBeInstanceOf(PublicKey);
   });
 
-  it('should return node listening address', async () => {
-    mockLdkNodeModule.listeningAddress.mockResolvedValue(addressToString(mockAddress));
-    const res = await node.listeningAddress();
-    expect(res?.ip).toBe(mockAddress.ip);
-    expect(res?.port).toBe(mockAddress.port);
-    expect(res).toBeInstanceOf(NetAddress);
+  it('should return node listening addresses', async () => {
+    mockLdkNodeModule.listeningAddresses.mockResolvedValue(mockAddresses.map((i) => addressToString(i)));
+    const response = await node.listeningAddresses();
+    let firstAddress: any = {};
+    if (response) firstAddress = response[0];
+    expect(firstAddress?.ip).toBe(mockAddresses[0].ip);
+    expect(firstAddress?.port).toBe(mockAddresses[0].port);
+    expect(firstAddress).toBeInstanceOf(NetAddress);
   });
 
   it('should return newOnchainAddress', async () => {
@@ -116,7 +118,7 @@ describe('Node', () => {
 
   it('should connect peer', async () => {
     mockLdkNodeModule.connect.mockResolvedValue(true);
-    expect(await node.connect(mockNodeID, mockAddress, true)).toBe(true);
+    expect(await node.connect(mockNodeID, mockAddresses[0], true)).toBe(true);
   });
 
   it('should disconnect peer', async () => {
@@ -126,7 +128,7 @@ describe('Node', () => {
 
   it('should connect and open channel', async () => {
     mockLdkNodeModule.connectOpenChannel.mockResolvedValue(true);
-    const res = await node.connectOpenChannel(mockNodeID, mockAddress, 12000, 12000, mockChannelConfig, true);
+    const res = await node.connectOpenChannel(mockNodeID, mockAddresses[0], 12000, 12000, mockChannelConfig, true);
     expect(res).toBe(true);
   });
 
@@ -214,5 +216,29 @@ describe('Node', () => {
   it('should updateChannelConfig', async () => {
     mockLdkNodeModule.updateChannelConfig.mockResolvedValue(true);
     expect(await node.updateChannelConfig(mockChannelId, mockPublickKey, mockChannelConfig)).toBe(true);
+  });
+
+  it('should check if its running', async () => {
+    mockLdkNodeModule.isRunning.mockResolvedValue(true);
+    const res = await node.isRunning();
+    expect(res).toBe(true);
+  });
+
+  it('should sendPaymentProbes', async () => {
+    mockLdkNodeModule.sendPaymentProbes.mockResolvedValue(true);
+    const res = await node.sendPaymentProbes(invoice);
+    expect(res).toBe(true);
+  });
+
+  it('should sendPaymentProbesUsingAmount', async () => {
+    mockLdkNodeModule.sendPaymentProbesUsingAmount.mockResolvedValue(true);
+    const res = await node.sendPaymentProbesUsingAmount(invoice, 1200);
+    expect(res).toBe(true);
+  });
+
+  it('should sendSpontaneousPaymentProbes', async () => {
+    mockLdkNodeModule.sendSpontaneousPaymentProbes.mockResolvedValue(true);
+    const res = await node.sendSpontaneousPaymentProbes(1200, mockPublickKey);
+    expect(res).toBe(true);
   });
 });

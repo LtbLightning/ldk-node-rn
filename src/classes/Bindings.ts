@@ -1,3 +1,5 @@
+import { ChannelConfig } from './ChannelConfig';
+
 export class Address {
   addressHex: string;
 
@@ -78,6 +80,18 @@ export class ChannelDetails {
   isUsable: boolean;
   isPublic: boolean;
   cltvExpiryDelta?: number;
+  counterpartyUnspendablePunishmentReserve: number;
+  counterpartyOutboundHtlcMinimumMsat?: number;
+  counterpartyOutboundHtlcMaximumMsat?: number;
+  counterpartyForwardingInfoFeeBaseMsat?: number;
+  counterpartyForwardingInfoFeeProportionalMillionths?: number;
+  counterpartyForwardingInfoCltvExpiryDelta?: number;
+  nextOutboundHtlcLimitMsat: number;
+  nextOutboundHtlcMinimumMsat: number;
+  forceCloseSpendDelay?: number;
+  inboundHtlcMinimumMsat?: number;
+  inboundHtlcMaximumMsat?: number;
+  config: ChannelConfig;
 
   constructor(
     channelId: ChannelId,
@@ -95,7 +109,19 @@ export class ChannelDetails {
     isChannelReady: boolean,
     isUsable: boolean,
     isPublic: boolean,
-    cltvExpiryDelta: number
+    cltvExpiryDelta: number,
+    counterpartyUnspendablePunishmentReserve: number,
+    counterpartyOutboundHtlcMinimumMsat: number,
+    counterpartyOutboundHtlcMaximumMsat: number,
+    counterpartyForwardingInfoFeeBaseMsat: number,
+    counterpartyForwardingInfoFeeProportionalMillionths: number,
+    counterpartyForwardingInfoCltvExpiryDelta: number,
+    nextOutboundHtlcLimitMsat: number,
+    nextOutboundHtlcMinimumMsat: number,
+    forceCloseSpendDelay: number,
+    inboundHtlcMinimumMsat: number,
+    inboundHtlcMaximumMsat: number,
+    config: string
   ) {
     this.channelId = channelId;
     this.counterpartyNodeId = counterpartyNodeId;
@@ -113,6 +139,18 @@ export class ChannelDetails {
     this.isUsable = isUsable;
     this.isPublic = isPublic;
     this.cltvExpiryDelta = cltvExpiryDelta;
+    this.counterpartyUnspendablePunishmentReserve = counterpartyUnspendablePunishmentReserve;
+    this.counterpartyOutboundHtlcMinimumMsat = counterpartyOutboundHtlcMinimumMsat;
+    this.counterpartyOutboundHtlcMaximumMsat = counterpartyOutboundHtlcMaximumMsat;
+    this.counterpartyForwardingInfoFeeBaseMsat = counterpartyForwardingInfoFeeBaseMsat;
+    this.counterpartyForwardingInfoFeeProportionalMillionths = counterpartyForwardingInfoFeeProportionalMillionths;
+    this.counterpartyForwardingInfoCltvExpiryDelta = counterpartyForwardingInfoCltvExpiryDelta;
+    this.nextOutboundHtlcLimitMsat = nextOutboundHtlcLimitMsat;
+    this.nextOutboundHtlcMinimumMsat = nextOutboundHtlcMinimumMsat;
+    this.forceCloseSpendDelay = forceCloseSpendDelay;
+    this.inboundHtlcMinimumMsat = inboundHtlcMinimumMsat;
+    this.inboundHtlcMaximumMsat = inboundHtlcMaximumMsat;
+    this.config = new ChannelConfig().fromId(config);
   }
 }
 
@@ -207,62 +245,6 @@ export class PaymentDetails {
     this.amountMsat = amountMsat;
     this.direction = direction;
     this.status = status;
-  }
-}
-
-//Options which apply on a per-channel basis and may change at runtime or based on negotiation with our counterparty.
-export class ChannelConfig {
-  //Amount (in millionths of a satoshi) charged per satoshi for payments forwarded outbound over the channel. This may be allowed to change at runtime in a later update, however doing so must result in update messages sent to notify all nodes of our updated relay fee.
-  //
-  //Default value: 0.
-  forwardingFeeProportionalMillionths: number;
-
-  // Amount (in milli-satoshi) charged for payments forwarded outbound over the channel, in excess of forwardingFeeProportionalMillionths. This may be allowed to change at runtime in a later update, however doing so must result in update messages sent to notify all nodes of our updated relay fee.
-  //
-  // The default value of a single satoshi roughly matches the market rate on many routing nodes as of July 2021. Adjusting it upwards or downwards may change whether nodes route through this node.
-  //
-  //Default value: 1000.
-  forwardingFeeBaseMsat: number;
-
-  //The difference in the CLTV value between incoming HTLCs and an outbound HTLC forwarded over the channel this config applies to.
-  //
-  // Thus, for HTLC-encumbered balances to be enforced on-chain when a channel is force-closed, we (or one of our watchtowers) MUST be online to check for broadcast of the current commitment transaction at least once per this many blocks (minus some margin to allow us enough time to broadcast and confirm a transaction, possibly with time in between to RBF the spending transaction).
-  //
-  // Default value: 72 (12 hours at an average of 6 blocks/hour). Minimum value: MIN_CLTV_EXPIRY_DELTA, any values less than this will be treated as MIN_CLTV_EXPIRY_DELTA instead.
-  cltvExpiryDelta: number;
-
-  //Limit our total exposure to in-flight HTLCs which are burned to fees as they are too small to claim on-chain.
-  //
-  // When an HTLC present in one of our channels is below a “dust” threshold, the HTLC will not be claimable on-chain, instead being turned into additional miner fees if either party force-closes the channel. Because the threshold is per-HTLC, our total exposure to such payments may be sustantial if there are many dust HTLCs present when the channel is force-closed.
-  //
-  // The dust threshold for each HTLC is based on the dustLimitSatoshis for each party in a channel negotiated throughout the channel open process, along with the fees required to have a broadcastable HTLC spending transaction. When a channel supports anchor outputs (specifically the zero fee HTLC transaction variant), this threshold no longer takes into account the HTLC transaction fee as it is zero.
-  //
-  // This limit is applied for sent, forwarded, and received HTLCs and limits the total exposure across all three types per-channel. Setting this too low may prevent the sending or receipt of low-value HTLCs on high-traffic nodes, and this limit is very important to prevent stealing of dust HTLCs by miners.
-  maxDustHtlcExposureMsat: number;
-
-  //The additional fee we’re willing to pay to avoid waiting for the counterparty’s toSelfDelay to reclaim funds.
-  //
-  // When we close a channel cooperatively with our counterparty, we negotiate a fee for the closing transaction which both sides find acceptable, ultimately paid by the channel funder/initiator.
-  //
-  // When we are the funder, because we have to pay the channel closing fee, we bound the acceptable fee by our Background and Normal fees, with the upper bound increased by this value. Because the on-chain fee we’d pay to force-close the channel is kept near our Normal feerate during normal operation, this value represents the additional fee we’re willing to pay in order to avoid waiting for our counterparty’s toSelfDelay to reclaim our funds.
-  //
-  // When we are not the funder, we require the closing transaction fee pay at least our Background fee estimate, but allow our counterparty to pay as much fee as they like. Thus, this value is ignored when we are not the funder.
-  //
-  // Default value: 1000 satoshis.
-  forceCloseAvoidanceMaxFeeSatoshis: number;
-
-  constructor(
-    forwardingFeeProportionalMillionths: number,
-    forwardingFeeBaseMsat: number,
-    cltvExpiryDelta: number,
-    maxDustHtlcExposureMsat: number,
-    forceCloseAvoidanceMaxFeeSatoshis: number
-  ) {
-    this.forwardingFeeProportionalMillionths = forwardingFeeProportionalMillionths;
-    this.forwardingFeeBaseMsat = forwardingFeeBaseMsat;
-    this.cltvExpiryDelta = cltvExpiryDelta;
-    this.maxDustHtlcExposureMsat = maxDustHtlcExposureMsat;
-    this.forceCloseAvoidanceMaxFeeSatoshis = forceCloseAvoidanceMaxFeeSatoshis;
   }
 }
 

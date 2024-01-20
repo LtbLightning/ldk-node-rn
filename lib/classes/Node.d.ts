@@ -1,5 +1,6 @@
-import { Address, ChannelConfig, ChannelDetails, ChannelId, NetAddress, PaymentDetails, PaymentHash, PeerDetails, PublicKey, Txid } from './Bindings';
-import { NativeLoader } from './NativeLoader';
+import { Address, ChannelDetails, ChannelId, NetAddress, PaymentDetails, PaymentHash, PeerDetails, PublicKey, Txid } from "./Bindings";
+import { NativeLoader } from "./NativeLoader";
+import { ChannelConfig } from "./ChannelConfig";
 export declare class Node extends NativeLoader {
     id: string;
     /**
@@ -32,10 +33,10 @@ export declare class Node extends NativeLoader {
      */
     nodeId(): Promise<PublicKey>;
     /**
-     * Returns listening Address
-     * @returns {Promise<NetAddress>}
+     * Returns listening Addresses
+     * @returns {Promise<Array<NetAddress>>}
      */
-    listeningAddress(): Promise<NetAddress | null>;
+    listeningAddresses(): Promise<Array<NetAddress> | null>;
     /**
      * Retrieve a new on-chain/funding address.
      * @returns {Promise<Address>}
@@ -200,4 +201,49 @@ export declare class Node extends NativeLoader {
      * @returns {Promise<string>}
      */
     updateChannelConfig(channelId: ChannelId, counterpartyNodeId: PublicKey, channelConfig: ChannelConfig): Promise<boolean>;
+    /**
+     * Returns whether the [`Node`] is running.
+     *
+     * @returns {Promise<boolean>}
+     */
+    isRunning(): Promise<boolean>;
+    /**
+     * Sends payment probes over all paths of a route that would be used to pay the given invoice.
+     *
+     * This may be used to send "pre-flight" probes, i.e., to train our scorer before conducting
+     * the actual payment. Note this is only useful if there likely is sufficient time for the
+     * probe to settle before sending out the actual payment, e.g., when waiting for user
+     * confirmation in a wallet UI.
+     *
+     *
+     * Otherwise, there is a chance the probe could take up some liquidity needed to complete the
+     * actual payment. Users should therefore be cautious and might avoid sending probes if
+     * liquidity is scarce and/or they don't expect the probe to return before they send the
+     * payment. To mitigate this issue, channels with available liquidity less than the required
+     * amount times [`Config::probing_liquidity_limit_multiplier`] won't be used to send
+     * pre-flight probes.
+     *
+     * @requires [invoice]
+     * @returns {Promise<PaymentHash>}
+     */
+    sendPaymentProbes(invoice: string): Promise<PaymentHash>;
+    /**
+     * Sends payment probes over all paths of a route that would be used to pay the given
+     * zero-value invoice using the given amount.
+     *
+     * This can be used to send pre-flight probes for a so-called "zero-amount" invoice, i.e., an
+     * invoice that leaves the amount paid to be determined by the user.
+     *
+     * @requires [invoice]
+     * @requires [amountMsat]
+     * @returns {Promise<boolean>}
+     */
+    sendPaymentProbesUsingAmount(invoice: string, amountMsat: number): Promise<boolean>;
+    /**
+     * Sends payment probes over all paths of a route that would be used to pay the given amount to the given `node_id`.
+     * @requires [invoice]
+     * @requires [amountMsat]
+     * @returns {Promise<boolean>}
+     */
+    sendSpontaneousPaymentProbes(amountMsat: number, nodeId: PublicKey): Promise<boolean>;
 }

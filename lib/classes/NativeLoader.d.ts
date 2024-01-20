@@ -1,6 +1,6 @@
-import { ChannelConfig, ChannelDetails, PaymentDetails, PeerDetails } from './Bindings';
+import { ChannelDetails, PaymentDetails, PeerDetails } from './Bindings';
 export interface NativeLdkNodeRn {
-    createConfig(storageDirPath: string, network: string, listeningAddress: string | null, defaultCltvExpiryDelta: number, onchainWalletSyncIntervalSecs: number, walletSyncIntervalSecs: number, feeRateCacheUpdateIntervalSecs: number, logLevel: string, trustedPeers0conf: Array<string>): string;
+    createConfig(storageDirPath: string, logDirPath: string, network: string, listeningAddress: Array<string> | null, defaultCltvExpiryDelta: number, onchainWalletSyncIntervalSecs: number, walletSyncIntervalSecs: number, feeRateCacheUpdateIntervalSecs: number, trustedPeers0conf: Array<string>, probingLiquidityLimitMultiplier: number, logLevel: string): string;
     fromConfig(configId: string): string;
     setEntropySeedPath(buildId: string, seedPath: string): boolean;
     setEntropySeedBytes(buildId: string, seedBytes: Array<number>): boolean;
@@ -10,13 +10,14 @@ export interface NativeLdkNodeRn {
     setGossipSourceRgs(buildId: string, rgsServerUrl: string): boolean;
     setStorageDirPath(buildId: string, storageDirPath: string): boolean;
     setNetwork(buildId: string, network: string): boolean;
-    setListeningAddress(buildId: string, listeningAddress: string): boolean;
+    setListeningAddresses(buildId: string, listeningAddresses: Array<string>): boolean;
     build(buildId: string): string;
     start(nodeId: string): boolean;
     stop(nodeId: string): boolean;
     syncWallets(nodeId: string): boolean;
     nodeId(nodeId: string): string;
-    listeningAddress(nodeId: string): string;
+    isRunning(nodeId: string): boolean;
+    listeningAddresses(nodeId: string): Array<string> | null;
     newOnchainAddress(nodeId: string): string;
     sendToOnchainAddress(nodeId: string, address: string, amountMsat: number): string;
     sendAllToOnchainAddress(nodeId: string, address: string): string;
@@ -31,6 +32,9 @@ export interface NativeLdkNodeRn {
     sendPayment(nodeId: string, invoice: string): string;
     sendPaymentUsingAmount(nodeId: string, invoice: string, amountMsat: number): string;
     sendSpontaneousPayment(nodeId: string, amountMsat: number, pubKey: string): string;
+    sendPaymentProbes(nodeId: string, invoice: string): string;
+    sendPaymentProbesUsingAmount(nodeId: string, invoice: string, amountMsat: number): boolean;
+    sendSpontaneousPaymentProbes(nodeId: string, amountMsat: number, pubKey: string): boolean;
     listPayments(nodeId: string): Array<PaymentDetails>;
     listPeers(nodeId: string): Array<PeerDetails>;
     listChannels(nodeId: string): Array<ChannelDetails>;
@@ -38,8 +42,21 @@ export interface NativeLdkNodeRn {
     removePayment(nodeId: string, paymentHash: string): boolean;
     signMessage(nodeId: string, msg: Array<number>): string;
     verifySignature(nodeId: string, msg: Array<number>, sig: string, pkey: string): boolean;
-    updateChannelConfig(nodeId: string, channelId: string, counterpartyNodeId: string, channelConfig: ChannelConfig): boolean;
+    updateChannelConfig(nodeId: string, channelId: string, counterpartyNodeId: string, channelConfigId: string): boolean;
     createEntropyMnemonic(): string;
+    createChannelConfig(): string;
+    acceptUnderpayingHtlcs(channelConfigId: string): boolean;
+    cltvExpiryDelta(channelConfigId: string): number;
+    forceCloseAvoidanceMaxFeeSatoshis(channelConfigId: string): number;
+    forwardingFeeBaseMsat(channelConfigId: string): number;
+    forwardingFeeProportionalMillionths(channelConfigId: string): number;
+    setAcceptUnderpayingHtlcs(channelConfigId: string, value: boolean): boolean;
+    setCltvExpiryDelta(channelConfigId: string, value: number): boolean;
+    setForceCloseAvoidanceMaxFeeSatoshis(channelConfigId: string, valueSat: number): boolean;
+    setForwardingFeeBaseMsat(channelConfigId: string, feeMsat: number): boolean;
+    setForwardingFeeProportionalMillionths(channelConfigId: string, value: number): boolean;
+    setMaxDustHtlcExposureFromFeeRateMultiplier(channelConfigId: string, multiplier: number): boolean;
+    setMaxDustHtlcExposureFromFixedLimit(channelConfigId: string, limitMsat: number): boolean;
 }
 export declare class NativeLoader {
     _ldk: NativeLdkNodeRn;

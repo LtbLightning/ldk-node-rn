@@ -12,14 +12,18 @@ import {
   PeerDetails,
   PublicKey,
   UserChannelId,
-} from './classes/Bindings';
+} from "./classes/Bindings";
 
-import { NativeLoader } from './classes/NativeLoader';
+import { NativeLoader } from "./classes/NativeLoader";
 
 /** Create PeerDetails object */
 export const createPeerDetailsObject = (item: any): PeerDetails => {
-  let address = item.address.split(':');
-  return new PeerDetails(new PublicKey(item.nodeId), new NetAddress(address[0], address[1]), item.isConnected);
+  let address = item.address.split(":");
+  return new PeerDetails(
+    new PublicKey(item.nodeId),
+    new NetAddress(address[0], address[1]),
+    item.isConnected
+  );
 };
 
 /** Create ChannelDetails object */
@@ -40,22 +44,36 @@ export const createChannelDetailsObject = (item: any): ChannelDetails => {
     item.isChannelReady,
     item.isUsable,
     item.isPublic,
-    item.cltvExpiryDelta
+    item.cltvExpiryDelta,
+    item.counterpartyUnspendablePunishmentReserve,
+    item.counterpartyOutboundHtlcMinimumMsat,
+    item.counterpartyOutboundHtlcMaximumMsat,
+    item.counterpartyForwardingInfoFeeBaseMsat,
+    item.counterpartyForwardingInfoFeeProportionalMillionths,
+    item.counterpartyForwardingInfoCltvExpiryDelta,
+    item.nextOutboundHtlcLimitMsat,
+    item.nextOutboundHtlcMinimumMsat,
+    item.forceCloseSpendDelay,
+    item.inboundHtlcMinimumMsat,
+    item.inboundHtlcMaximumMsatm,
+    item.config
   );
 };
 
 /** Get payment direction enum */
 export const getPaymentDirection = (direction: string): PaymentDirection =>
-  direction === 'inbound' ? PaymentDirection.inbound : PaymentDirection.outbound;
+  direction === "inbound"
+    ? PaymentDirection.inbound
+    : PaymentDirection.outbound;
 
 /** Get payment status enum */
 export const getPaymentStatus = (status: string): PaymentStatus => {
   let statusEnum = PaymentStatus.pending;
   switch (status) {
-    case 'succeeded':
+    case "succeeded":
       statusEnum = PaymentStatus.succeeded;
       break;
-    case 'failed':
+    case "failed":
       statusEnum = PaymentStatus.failed;
       break;
   }
@@ -67,12 +85,13 @@ export const addressToString = (addr: NetAddress) => `${addr.ip}:${addr.port}`;
 
 /** Convert string to NetAddress */
 export const stringToAddress = (addr: string) => {
-  let splittedAddress = addr.split(':');
+  let splittedAddress = addr.split(":");
   return new NetAddress(splittedAddress[0], parseInt(splittedAddress[1]));
 };
 
 /**  Generate Entropy Mnemonic */
-export const generateEntropyMnemonic = async () => new NativeLoader()._ldk.createEntropyMnemonic();
+export const generateEntropyMnemonic = async () =>
+  new NativeLoader()._ldk.createEntropyMnemonic();
 
 /** Create payment details object */
 export const createPaymentDetails = (paymentDetails: any) =>

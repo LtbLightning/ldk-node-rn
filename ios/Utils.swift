@@ -13,7 +13,6 @@ func getPeerDetails(peer: PeerDetails) -> [String: Any] {
 
 }
 
-
 func getChannelDetails(channel: ChannelDetails) -> [String: Any] {
     return [
         "channelId": channel.channelId,
@@ -34,7 +33,18 @@ func getChannelDetails(channel: ChannelDetails) -> [String: Any] {
         "isChannelReady": channel.isChannelReady,
         "isUsable": channel.isUsable,
         "isPublic": channel.isPublic,
-        "cltvExpiryDelta": channel.cltvExpiryDelta as Any
+        "cltvExpiryDelta": channel.cltvExpiryDelta as Any,
+        "counterpartyUnspendablePunishmentReserve": channel.counterpartyUnspendablePunishmentReserve,
+        "counterpartyOutboundHtlcMinimumMsat": channel.counterpartyOutboundHtlcMinimumMsat as Any,
+        "counterpartyOutboundHtlcMaximumMsat": channel.counterpartyOutboundHtlcMaximumMsat as Any,
+        "counterpartyForwardingInfoFeeBaseMsat": channel.counterpartyForwardingInfoFeeBaseMsat as Any,
+        "counterpartyForwardingInfoFeeProportionalMillionths": channel.counterpartyForwardingInfoFeeProportionalMillionths as Any,
+        "counterpartyForwardingInfoCltvExpiryDelta": channel.counterpartyForwardingInfoCltvExpiryDelta as Any,
+        "nextOutboundHtlcLimitMsat": channel.nextOutboundHtlcLimitMsat,
+        "nextOutboundHtlcMinimumMsat": channel.nextOutboundHtlcMinimumMsat,
+        "forceCloseSpendDelay": channel.forceCloseSpendDelay as Any,
+        "inboundHtlcMinimumMsat": channel.inboundHtlcMinimumMsat,
+        "inboundHtlcMaximumMsat": channel.inboundHtlcMaximumMsat as Any
 
     ] as [String: Any]
 }
@@ -86,19 +96,6 @@ func getNetworkEnum(networkStr: String?) -> Network {
     default: return Network.testnet
     }
 }
-
-
-func createChannelConfig(config: NSDictionary) -> ChannelConfig {
-    return ChannelConfig(
-        forwardingFeeProportionalMillionths: (config["forwardingFeeProportionalMillionths"] as? UInt32)!,
-        forwardingFeeBaseMsat: (config["forwardingFeeBaseMsat"] as? UInt32)!,
-        cltvExpiryDelta: (config["cltvExpiryDelta"] as? UInt16)!,
-        maxDustHtlcExposureMsat: (config["maxDustHtlcExposureMsat"] as? UInt64)!,
-        forceCloseAvoidanceMaxFeeSatoshis: (config["forceCloseAvoidanceMaxFeeSatoshis"] as? UInt64)!
-    )
-}
-
-
 
 func getLogLevelEnum(logLevel: String) -> LogLevel {
     switch (logLevel) {

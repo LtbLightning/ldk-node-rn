@@ -10,14 +10,14 @@ export const mockLdkNodeModule = {
   setGossipSourceRgs: jest.fn(),
   setStorageDirPath: jest.fn(),
   setNetwork: jest.fn(),
-  setListeningAddress: jest.fn(),
+  setListeningAddresses: jest.fn(),
   build: jest.fn(),
 
   start: jest.fn(),
   stop: jest.fn(),
   syncWallets: jest.fn(),
   nodeId: jest.fn(),
-  listeningAddress: jest.fn(),
+  listeningAddresses: jest.fn(),
   newOnchainAddress: jest.fn(),
   sendToOnchainAddress: jest.fn(),
   sendAllToOnchainAddress: jest.fn(),
@@ -40,8 +40,26 @@ export const mockLdkNodeModule = {
   signMessage: jest.fn(),
   verifySignature: jest.fn(),
   updateChannelConfig: jest.fn(),
+  isRunning: jest.fn(),
+  sendPaymentProbes: jest.fn(),
+  sendPaymentProbesUsingAmount: jest.fn(),
+  sendSpontaneousPaymentProbes: jest.fn(),
 
   createEntropyMnemonic: jest.fn(),
+
+  createChannelConfig: jest.fn(),
+  acceptUnderpayingHtlcs: jest.fn(),
+  cltvExpiryDelta: jest.fn(),
+  forceCloseAvoidanceMaxFeeSatoshis: jest.fn(),
+  forwardingFeeBaseMsat: jest.fn(),
+  forwardingFeeProportionalMillionths: jest.fn(),
+  setAcceptUnderpayingHtlcs: jest.fn(),
+  setCltvExpiryDelta: jest.fn(),
+  setForceCloseAvoidanceMaxFeeSatoshis: jest.fn(),
+  setForwardingFeeBaseMsat: jest.fn(),
+  setForwardingFeeProportionalMillionths: jest.fn(),
+  setMaxDustHtlcExposureFromFeeRateMultiplier: jest.fn(),
+  setMaxDustHtlcExposureFromFixedLimit: jest.fn(),
 };
 
 jest.mock('react-native', () => ({
