@@ -1,6 +1,6 @@
-import { Address, ChannelDetails, ChannelId, NetAddress, PaymentDetails, PaymentHash, PeerDetails, PublicKey, Txid } from './Bindings';
-import { NativeLoader } from './NativeLoader';
-import { ChannelConfig } from './ChannelConfig';
+import { Address, ChannelDetails, ChannelId, NetAddress, PaymentDetails, PaymentHash, PeerDetails, PublicKey, Txid } from "./Bindings";
+import { NativeLoader } from "./NativeLoader";
+import { ChannelConfig } from "./ChannelConfig";
 export declare class Node extends NativeLoader {
     id: string;
     /**
@@ -224,9 +224,9 @@ export declare class Node extends NativeLoader {
      * pre-flight probes.
      *
      * @requires [invoice]
-     * @returns {Promise<boolean>}
+     * @returns {Promise<PaymentHash>}
      */
-    sendPaymentProbes(invoice: string): Promise<boolean>;
+    sendPaymentProbes(invoice: string): Promise<PaymentHash>;
     /**
      * Sends payment probes over all paths of a route that would be used to pay the given
      * zero-value invoice using the given amount.
