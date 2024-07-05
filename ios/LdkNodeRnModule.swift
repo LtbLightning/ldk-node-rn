@@ -39,8 +39,7 @@ class LdkNodeRnModule: NSObject {
                 feeRateCacheUpdateIntervalSecs: UInt64(truncating: feeRateCacheUpdateIntervalSecs!),
                 trustedPeers0conf: trustedPeers0conf as! [PublicKey],
                 probingLiquidityLimitMultiplier: UInt64(truncating: probingLiquidityLimitMultiplier!),
-                logLevel: getLogLevelEnum(logLevel: logLevel),
-                anchorChannelsConfig: getAnchorChannelsConfig()
+                logLevel: getLogLevelEnum(logLevel: logLevel)
             )
             resolve(id)
         }
@@ -281,8 +280,7 @@ class LdkNodeRnModule: NSObject {
     ) {
         DispatchQueue.main.async { [self] in
             do {
-//                resolve(try _nodes[nodeId]!.newOnchainAddress())
-                resolve(try _nodes[nodeId]!.networkGraph())
+                resolve(try _nodes[nodeId]!.onchainPayment().newAddress())
             } catch let error {
                 reject("Node newOnchainAddress error", "\(error)", error)
             }
@@ -349,7 +347,6 @@ class LdkNodeRnModule: NSObject {
     ) {
         DispatchQueue.main.async { [self] in
             do {
-//                resolve(try _nodes[nodeId]!.totalOnchainBalanceSats())
                 resolve(try _nodes[nodeId]!.listBalances().totalOnchainBalanceSats)
             } catch let error {
                 reject("Node totalOnchainBalanceSats error", "\(error)", error)

@@ -2564,7 +2564,7 @@ public struct Config {
         trustedPeers0conf: [PublicKey], 
         probingLiquidityLimitMultiplier: UInt64, 
         logLevel: LogLevel, 
-        anchorChannelsConfig: AnchorChannelsConfig?) {
+        anchorChannelsConfig: AnchorChannelsConfig? = nil) {
         self.storageDirPath = storageDirPath
         self.logDirPath = logDirPath
         self.network = network
