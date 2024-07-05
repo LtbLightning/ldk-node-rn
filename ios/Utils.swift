@@ -24,7 +24,6 @@ func getChannelDetails(channel: ChannelDetails) -> [String: Any] {
         "channelValueSats": channel.channelValueSats,
         "unspendablePunishmentReserve": channel.unspendablePunishmentReserve!,
         "userChannelId": channel.userChannelId,
-        "balanceMsat": channel.balanceMsat,
         "outboundCapacityMsat": channel.outboundCapacityMsat,
         "inboundCapacityMsat": channel.inboundCapacityMsat,
         "confirmationsRequired": channel.confirmationsRequired as Any,
@@ -52,8 +51,7 @@ func getChannelDetails(channel: ChannelDetails) -> [String: Any] {
 func getPaymentDetails(payment: PaymentDetails) -> [String: Any] {
     return [
         "hash": payment.hash,
-        "preimage": payment.preimage as Any,
-        "secret": payment.secret as Any,
+
         "amountMsat": payment.amountMsat as Any,
         "direction": getPaymentDirection(direction: payment.direction),
         "status": getPaymentStatus(status: payment.status)
@@ -107,4 +105,15 @@ func getLogLevelEnum(logLevel: String) -> LogLevel {
     case "error": return LogLevel.error
     default: return LogLevel.debug
     }
+}
+
+func getAnchorChannelsConfig() -> AnchorChannelsConfig {
+    // Generate random UUIDs for PublicKey instances
+    let publicKey1 = PublicKey(UUID().uuidString)
+    let publicKey2 = PublicKey(UUID().uuidString)
+    
+    let trustedPeers = [publicKey1, publicKey2]
+    let perChannelReserveSats: UInt64 = 100000 // Example value, adjust as needed
+
+    return AnchorChannelsConfig(trustedPeersNoReserve: trustedPeers, perChannelReserveSats: perChannelReserveSats)
 }
