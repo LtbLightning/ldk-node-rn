@@ -22,7 +22,7 @@ class LdkNodeRnModule(reactContext: ReactApplicationContext) :
     /***================ LDK code ===============*/
     private var _configs = mutableMapOf<String, Config>()
     private var _builders = mutableMapOf<String, Builder>()
-    private var _nodes = mutableMapOf<String, LdkNode>()
+    private var _nodes = mutableMapOf<String, Node>()
     private var _channelConfigs = mutableMapOf<String, ChannelConfig>()
 
     /** Config Methods starts */
@@ -54,7 +54,8 @@ class LdkNodeRnModule(reactContext: ReactApplicationContext) :
                 feeRateCacheUpdateIntervalSecs!!.toULong(),
                 getNativeTrustedPeers0conf(trustedPeers0conf),
                 probingLiquidityLimitMultiplier!!.toULong(),
-                getLogLevelEnum(logLevel)
+                getLogLevelEnum(logLevel),
+                    anchorChannelsConfig = null
             )
             runOnUiThread {
                 result.resolve(id)
@@ -251,7 +252,7 @@ class LdkNodeRnModule(reactContext: ReactApplicationContext) :
         Thread {
             try {
                 runOnUiThread {
-                    result.resolve(_nodes[nodeId]!!.newOnchainAddress())
+                    result.resolve(_nodes[nodeId]!!.onchainPayment().newAddress())
                 }
             } catch (error: Throwable) {
                 result.reject("Node newFundingAddress error", error.localizedMessage, error)
@@ -265,7 +266,7 @@ class LdkNodeRnModule(reactContext: ReactApplicationContext) :
             try {
                 runOnUiThread {
                     result.resolve(
-                        _nodes[nodeId]!!.sendToOnchainAddress(
+                        _nodes[nodeId]!!.onchainPayment().sendToAddress(
                             address,
                             amountMsat.toULong()
                         )
@@ -282,7 +283,7 @@ class LdkNodeRnModule(reactContext: ReactApplicationContext) :
         Thread {
             try {
                 runOnUiThread {
-                    result.resolve(_nodes[nodeId]!!.sendAllToOnchainAddress(address))
+                    result.resolve(_nodes[nodeId]!!.onchainPayment().sendAllToAddress(address))
                 }
 
             } catch (error: Throwable) {
@@ -296,7 +297,7 @@ class LdkNodeRnModule(reactContext: ReactApplicationContext) :
         Thread {
             try {
                 runOnUiThread {
-                    result.resolve(_nodes[nodeId]!!.spendableOnchainBalanceSats().toFloat())
+                    result.resolve(_nodes[nodeId]!!.listBalances().spendableOnchainBalanceSats.toFloat())
                 }
             } catch (error: Throwable) {
                 result.reject(
@@ -313,7 +314,7 @@ class LdkNodeRnModule(reactContext: ReactApplicationContext) :
         Thread {
             try {
                 runOnUiThread {
-                    result.resolve(_nodes[nodeId]!!.totalOnchainBalanceSats().toFloat())
+                    result.resolve(_nodes[nodeId]!!.listBalances().totalOnchainBalanceSats.toFloat())
                 }
             } catch (error: Throwable) {
                 result.reject("Node totalOnchainBalanceSats error", error.localizedMessage, error)
@@ -388,7 +389,7 @@ class LdkNodeRnModule(reactContext: ReactApplicationContext) :
         Thread {
             try {
                 runOnUiThread {
-                    result.resolve(_nodes[nodeId]!!.sendPayment(invoice))
+                    result.resolve(_nodes[nodeId]!!.bolt11Payment().send(invoice))
                 }
             } catch (error: Throwable) {
                 result.reject("Send payment invoice error", error.localizedMessage, error)
@@ -403,7 +404,7 @@ class LdkNodeRnModule(reactContext: ReactApplicationContext) :
         Thread {
             try {
                 var paymenthash =
-                    _nodes[nodeId]!!.sendPaymentUsingAmount(invoice, amountMsat.toULong())
+                    _nodes[nodeId]!!.bolt11Payment().sendUsingAmount(invoice, amountMsat.toULong())
                 runOnUiThread {
                     result.resolve(paymenthash)
                 }
@@ -424,7 +425,7 @@ class LdkNodeRnModule(reactContext: ReactApplicationContext) :
         Thread {
             try {
                 var paymenthash =
-                    _nodes[nodeId]!!.sendSpontaneousPayment(amountMsat.toULong(), pubKey)
+                    _nodes[nodeId]!!.spontaneousPayment().send(amountMsat.toULong(), pubKey)
                 runOnUiThread {
                     result.resolve(paymenthash)
                 }
@@ -440,7 +441,7 @@ class LdkNodeRnModule(reactContext: ReactApplicationContext) :
     ) {
         Thread {
             try {
-                val invoice = _nodes[nodeId]!!.receivePayment(
+                val invoice = _nodes[nodeId]!!.bolt11Payment().receive(
                     amountMsat.toULong(), description, expirySecs.toUInt()
                 )
                 runOnUiThread {
@@ -458,7 +459,7 @@ class LdkNodeRnModule(reactContext: ReactApplicationContext) :
     ) {
         Thread {
             try {
-                val invoice = _nodes[nodeId]!!.receiveVariableAmountPayment(
+                val invoice = _nodes[nodeId]!!.bolt11Payment().receiveVariableAmount(
                     description, expirySecs.toUInt()
                 )
                 runOnUiThread {
@@ -589,7 +590,7 @@ class LdkNodeRnModule(reactContext: ReactApplicationContext) :
     @ReactMethod
     fun isRunning(nodeId: String, result: Promise) {
         Thread {
-            result.resolve(_nodes[nodeId]!!.isRunning())
+            result.resolve(_nodes[nodeId]!!.status().isRunning)
         }.start()
     }
 
@@ -599,7 +600,7 @@ class LdkNodeRnModule(reactContext: ReactApplicationContext) :
         Thread {
             try {
                 runOnUiThread {
-                    result.resolve(_nodes[nodeId]!!.sendPaymentProbes(invoice))
+                    result.resolve(_nodes[nodeId]!!.bolt11Payment().sendProbes(invoice))
                 }
             } catch (error: Throwable) {
                 result.reject("Send payment probes error", error.localizedMessage, error)
@@ -615,7 +616,7 @@ class LdkNodeRnModule(reactContext: ReactApplicationContext) :
         Thread {
             try {
                 var paymenthash =
-                    _nodes[nodeId]!!.sendPaymentProbesUsingAmount(invoice, amountMsat.toULong())
+                    _nodes[nodeId]!!.bolt11Payment().sendProbesUsingAmount(invoice, amountMsat.toULong())
                 runOnUiThread {
                     result.resolve(paymenthash)
                 }
@@ -636,7 +637,7 @@ class LdkNodeRnModule(reactContext: ReactApplicationContext) :
         Thread {
             try {
                 var paymenthash =
-                    _nodes[nodeId]!!.sendSpontaneousPaymentProbes(amountMsat.toULong(), pubKey)
+                    _nodes[nodeId]!!.spontaneousPayment().sendProbes(amountMsat.toULong(), pubKey)
                 runOnUiThread {
                     result.resolve(paymenthash)
                 }
