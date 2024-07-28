@@ -20,6 +20,12 @@ export declare class NetAddress {
     port: number;
     constructor(ip: string, port: number);
 }
+
+export declare class Bolt11Payment {
+    nodeId: PublicKey;
+    constructor(nodeId: PublicKey);
+}
+
 export declare class PeerDetails {
     nodeId: PublicKey;
     address: NetAddress;
