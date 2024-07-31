@@ -1,6 +1,6 @@
 {
   "name": "ldk-node-rn",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "ldk-node-rn",
   "homepage": "https://github.com/LtbLightning",
   "main": "src/index.ts",

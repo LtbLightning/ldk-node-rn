@@ -4,7 +4,7 @@ var AdmZip = require('adm-zip');
 
 var binaryName = "LDKNodeFFI.xcframework.zip"
 
-var fileUrl = `https://github.com/lightningdevkit/ldk-node/releases/download/v0.2.1/${binaryName}`;
+var fileUrl = `https://github.com/lightningdevkit/ldk-node/releases/download/v0.3.0/${binaryName}`;
 
 const src = `ios/${binaryName}`;
 const target = 'ios/';

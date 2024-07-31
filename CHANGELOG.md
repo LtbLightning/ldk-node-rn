@@ -1,3 +1,12 @@
+## [0.2.2]
+
+This is a bugfix release that reestablishes compatibility of Swift packages with Xcode 15.3 and later.
+
+## [0.2.1]
+
+This is a bugfix release bumping the used LDK and BDK dependencies to the
+latest stable versions.
+
 ## [0.2.0]
 
 ### Feature and API updates
