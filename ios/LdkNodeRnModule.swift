@@ -180,6 +180,21 @@ class LdkNodeRnModule: NSObject {
             resolve(true)
         }
     }
+    
+    @objc
+    func setLiquiditySourceLsps2(_
+        address: String,
+        nodeId: String,
+        token: String,
+        buildId: String,
+        resolve: @escaping RCTPromiseResolveBlock,
+        reject: @escaping RCTPromiseRejectBlock
+    ) {
+        DispatchQueue.main.async { [self] in
+            _builders[buildId]!.setLiquiditySourceLsps2(address: address, nodeId: nodeId, token: token)
+            resolve(true)
+        }
+    }
 
     @objc
     func build(_
@@ -271,6 +286,24 @@ class LdkNodeRnModule: NSObject {
             resolve(_nodes[nodeId]!.listeningAddresses())
         }
     }
+    
+    
+     @objc
+     func bolt11Payment(
+         _ nodeId: String,
+         resolve: @escaping RCTPromiseResolveBlock,
+         reject: @escaping RCTPromiseRejectBlock
+     ) {
+         DispatchQueue.main.async { [self] in
+             if let node = _nodes[nodeId] {
+                 resolve(node.bolt11Payment())
+             } else {
+                 let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Node not found"])
+                 reject("Bolt11 Payment error", "Node not found", error)
+             }
+         }
+     }
+
 
     @objc
     func newOnchainAddress(_
@@ -297,7 +330,6 @@ class LdkNodeRnModule: NSObject {
     ) {
         DispatchQueue.main.async { [self] in
             do {
-//                resolve(try _nodes[nodeId]!.sendToOnchainAddress(address: address, amountMsat: UInt64(truncating: amountMsat)))
                 resolve(try _nodes[nodeId]!.onchainPayment().sendToAddress(address: address, amountMsat: UInt64(truncating: amountMsat)))
             } catch let error {
                 reject("Node sendToOnchainAddress error", "\(error)", error)
@@ -314,7 +346,6 @@ class LdkNodeRnModule: NSObject {
     ) {
         DispatchQueue.main.async { [self] in
             do {
-//                resolve(try _nodes[nodeId]!.sendAllToOnchainAddress(address: address))
                 resolve(try _nodes[nodeId]!.onchainPayment().sendAllToAddress(address: address))
             } catch let error {
                 reject("Node sendAllToOnchainAddress error", "\(error)", error)
@@ -331,7 +362,6 @@ class LdkNodeRnModule: NSObject {
     ) {
         DispatchQueue.main.async { [self] in
             do {
-//                resolve(try _nodes[nodeId]!.spendableOnchainBalanceSats())
                 resolve(try _nodes[nodeId]!.listBalances().spendableOnchainBalanceSats)
             } catch let error {
                 reject("Node spendableOnchainBalanceSats error", "\(error)", error)
@@ -452,7 +482,6 @@ class LdkNodeRnModule: NSObject {
     ) {
         DispatchQueue.main.async { [self] in
             do {
-//                let invoice = try _nodes[nodeId]!.sendPayment(invoice: invoice)
                 let invoice = try _nodes[nodeId]!.bolt11Payment().send(invoice: invoice)
                 resolve(invoice)
             } catch let error {
@@ -471,7 +500,6 @@ class LdkNodeRnModule: NSObject {
     ) {
         DispatchQueue.main.async { [self] in
             do {
-//                let invoice = try _nodes[nodeId]!.sendPaymentUsingAmount(invoice: invoice, amountMsat: UInt64(truncating: amountMsat))
                 let invoice = try _nodes[nodeId]!.bolt11Payment().sendUsingAmount(invoice: invoice, amountMsat: UInt64(truncating: amountMsat))
                 resolve(invoice)
             } catch let error {
@@ -490,7 +518,6 @@ class LdkNodeRnModule: NSObject {
     ) {
         DispatchQueue.main.async { [self] in
             do {
-//                let invoice = try _nodes[nodeId]!.sendSpontaneousPayment(amountMsat: UInt64(truncating: amountMsat), nodeId: pubKey)
                 let invoice = try _nodes[nodeId]!.spontaneousPayment().send(amountMsat: UInt64(truncating: amountMsat), nodeId: pubKey)
                 resolve(invoice)
             } catch let error {
@@ -498,6 +525,32 @@ class LdkNodeRnModule: NSObject {
             }
         }
     }
+    
+     @objc
+     func receiveViaJitChannel(_
+         nodeId: String,
+         amountMsat: NSNumber,
+         description: String,
+         expirySecs: NSNumber,
+         resolve: @escaping RCTPromiseResolveBlock,
+         reject: @escaping RCTPromiseRejectBlock
+     ) {
+         DispatchQueue.main.async { [self] in
+             do {
+                 let maxFeeLimitMsat: UInt64 = 20002000
+                 let invoice = try _nodes[nodeId]!.bolt11Payment().receiveViaJitChannel(
+                     amountMsat: UInt64(truncating: amountMsat),
+                     description: description,
+                     expirySecs: UInt32(truncating: expirySecs),
+                     maxLspFeeLimitMsat: maxFeeLimitMsat
+                 )
+                 resolve(invoice)
+             } catch let error {
+                 reject("Receive payment invoice error", "\(error)", error)
+             }
+         }
+     }
+
 
 
     @objc
@@ -511,11 +564,6 @@ class LdkNodeRnModule: NSObject {
     ) {
         DispatchQueue.main.async { [self] in
             do {
-//                let invoice = try _nodes[nodeId]!.receivePayment(
-//                    amountMsat: UInt64(truncating: amountMsat),
-//                    description: description,
-//                    expirySecs: UInt32(truncating: expirySecs)
-//                )
                 let invoice = try _nodes[nodeId]!.bolt11Payment().receive(
                     amountMsat: UInt64(truncating: amountMsat),
                     description: description,
@@ -538,10 +586,6 @@ class LdkNodeRnModule: NSObject {
     ) {
         DispatchQueue.main.async { [self] in
             do {
-//                let invoice = try _nodes[nodeId]!.receiveVariableAmountPayment(
-//                    description: description,
-//                    expirySecs: UInt32(truncating: expirySecs)
-//                )
                 let invoice = try _nodes[nodeId]!.bolt11Payment().receiveVariableAmount(
                     description: description,
                     expirySecs: UInt32(truncating: expirySecs)
@@ -699,7 +743,6 @@ class LdkNodeRnModule: NSObject {
         reject: @escaping RCTPromiseRejectBlock
     ) {
         DispatchQueue.main.async { [self] in
-//            resolve(_nodes[nodeId]!.isRunning())
             resolve(_nodes[nodeId]!.status().isRunning)
         }
     }
@@ -715,7 +758,6 @@ class LdkNodeRnModule: NSObject {
     ) {
         DispatchQueue.main.async { [self] in
             do {
-//                try _nodes[nodeId]!.sendPaymentProbes(invoice: invoice)
                 try _nodes[nodeId]!.bolt11Payment().sendProbes(invoice: invoice)
                 resolve(true)
             } catch let error {
@@ -734,7 +776,6 @@ class LdkNodeRnModule: NSObject {
     ) {
         DispatchQueue.main.async { [self] in
             do {
-//                try _nodes[nodeId]!.sendPaymentProbesUsingAmount(invoice: invoice, amountMsat: UInt64(truncating: amountMsat))
                 try _nodes[nodeId]!.bolt11Payment().sendProbesUsingAmount(invoice: invoice, amountMsat: UInt64(truncating: amountMsat))
                 resolve(true)
             } catch let error {
@@ -753,7 +794,6 @@ class LdkNodeRnModule: NSObject {
     ) {
         DispatchQueue.main.async { [self] in
             do {
-//                try _nodes[nodeId]!.sendSpontaneousPaymentProbes(amountMsat: UInt64(truncating: amountMsat), nodeId: pubKey)
                 try _nodes[nodeId]!.spontaneousPayment().sendProbes(amountMsat: UInt64(truncating: amountMsat), nodeId: pubKey)
                 resolve(true)
             } catch let error {

@@ -26,7 +26,6 @@ fun getChannelDetails(channel: ChannelDetails): MutableMap<String, Any> {
         "channelValueSats" to channel.channelValueSats.toFloat(),
         "unspendablePunishmentReserve" to channel.unspendablePunishmentReserve!!.toFloat(),
         "userChannelId" to channel.userChannelId,
-        "balanceMsat" to channel.balanceMsat.toFloat(),
         "outboundCapacityMsat" to channel.outboundCapacityMsat.toFloat(),
         "inboundCapacityMsat" to channel.inboundCapacityMsat.toFloat(),
         "confirmationsRequired" to channel.confirmationsRequired!!.toInt(),
@@ -41,9 +40,6 @@ fun getChannelDetails(channel: ChannelDetails): MutableMap<String, Any> {
 
 fun getPaymentDetails(payment: PaymentDetails): MutableMap<String, Any> {
     return mutableMapOf(
-        "hash" to payment.hash,
-        "preimage" to payment.preimage.toString(),
-        "secret" to payment.secret.toString(),
         "amountMsat" to payment.amountMsat!!.toFloat(),
         "direction" to getPaymentDirection(payment.direction),
         "status" to getPaymentStatus(payment.status)
