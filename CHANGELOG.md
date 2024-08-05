@@ -1,7 +1,3 @@
-## [0.3.0]
-
-This is the new release of `ldk-node-rn` v0.3.0 .
-
 ## [0.2.2]
 
 This is a bugfix release that reestablishes compatibility of Swift packages with Xcode 15.3 and later.

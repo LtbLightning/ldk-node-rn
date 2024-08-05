@@ -1,4 +1,4 @@
-import { Address, ChannelDetails, ChannelId, NetAddress, PaymentDetails, PaymentHash, PeerDetails, PublicKey, Txid, Bolt11Payment } from './Bindings';
+import { Address, ChannelDetails, ChannelId, NetAddress, PaymentDetails, PaymentHash, PeerDetails, PublicKey, Txid } from './Bindings';
 import { NativeLoader } from './NativeLoader';
 import { ChannelConfig } from './ChannelConfig';
 export declare class Node extends NativeLoader {
@@ -35,11 +35,6 @@ export declare class Node extends NativeLoader {
     /**
      * Returns listening Addresses
      * @returns {Promise<Array<NetAddress>>}
-     */
-    bolt11Payment(): Promise<any>;
-    /**
-     * Returns bolt11 Payment
-     * @returns {Promise<Bolt11Payment>}
      */
     listeningAddresses(): Promise<Array<NetAddress> | null>;
     /**
@@ -113,8 +108,6 @@ export declare class Node extends NativeLoader {
      * @returns {Promise<PaymentHash>}
      */
     sendPayment(invoice: string): Promise<PaymentHash>;
-
-    bolt11Payment(): Promise<any>;
     /**
      * Send a payment given an invoice and an amount in millisatoshi.
      * This will fail if the amount given is less than the value required by the given invoice.
@@ -136,14 +129,6 @@ export declare class Node extends NativeLoader {
     sendSpontaneousPayment(amountMsat: number, nodeId: PublicKey): Promise<PaymentHash>;
     /**
      * Returns a payable invoice that can be used to request and receive a payment of the amount given.
-     * @requires [amountMsat] amount in sats
-     * @requires [description]
-     * @requires [expirySecs] number
-     * @returns {Promise<boolean>}
-     */
-     receiveViaJitChannel(amountMsat: number, description: string, expirySecs: number): Promise<string>;
-    /**
-     * Returns a payable invoice that can be used to request and receive a payment for which the amount is to be determined by the user, also known as a "zero-amount" invoice.
      * @requires [amountMsat] amount in sats
      * @requires [description]
      * @requires [expirySecs] number
