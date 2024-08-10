@@ -246,6 +246,10 @@ export class Node extends NativeLoader {
     return await this._ldk.receiveVariableAmountPayment(this.id, description, expirySecs);
   }
 
+  async receiveViaJitChannel(amountMsat: number, description: string, expirySecs: number): Promise<string>{
+    return await this._ldk.receiveViaJitChannel(this.id, amountMsat, description, expirySecs);
+  }
+
   /**
    * Get list of payments
    * @returns {Promise<Array<PaymentDetails>>}
@@ -371,6 +375,10 @@ export class Node extends NativeLoader {
    */
   async sendPaymentProbes(invoice: string): Promise<boolean> {
     return await this._ldk.sendPaymentProbes(this.id, invoice);
+  }
+
+  async bolt11Payment(): Promise<any> {
+    return await this._ldk.bolt11Payment(this.id);
   }
 
   /**
