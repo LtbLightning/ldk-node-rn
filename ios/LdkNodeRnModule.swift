@@ -180,21 +180,6 @@ class LdkNodeRnModule: NSObject {
             resolve(true)
         }
     }
-    
-    @objc
-    func setLiquiditySourceLsps2(_
-        address: String,
-        nodeId: String,
-        token: String,
-        buildId: String,
-        resolve: @escaping RCTPromiseResolveBlock,
-        reject: @escaping RCTPromiseRejectBlock
-    ) {
-        DispatchQueue.main.async { [self] in
-            _builders[buildId]!.setLiquiditySourceLsps2(address: address, nodeId: nodeId, token: token)
-            resolve(true)
-        }
-    }
 
     @objc
     func build(_
@@ -286,24 +271,6 @@ class LdkNodeRnModule: NSObject {
             resolve(_nodes[nodeId]!.listeningAddresses())
         }
     }
-    
-    
-     @objc
-     func bolt11Payment(
-         _ nodeId: String,
-         resolve: @escaping RCTPromiseResolveBlock,
-         reject: @escaping RCTPromiseRejectBlock
-     ) {
-         DispatchQueue.main.async { [self] in
-             if let node = _nodes[nodeId] {
-                 resolve(node.bolt11Payment())
-             } else {
-                 let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Node not found"])
-                 reject("Bolt11 Payment error", "Node not found", error)
-             }
-         }
-     }
-
 
     @objc
     func newOnchainAddress(_
@@ -525,32 +492,6 @@ class LdkNodeRnModule: NSObject {
             }
         }
     }
-    
-     @objc
-     func receiveViaJitChannel(_
-         nodeId: String,
-         amountMsat: NSNumber,
-         description: String,
-         expirySecs: NSNumber,
-         resolve: @escaping RCTPromiseResolveBlock,
-         reject: @escaping RCTPromiseRejectBlock
-     ) {
-         DispatchQueue.main.async { [self] in
-             do {
-                 let maxFeeLimitMsat: UInt64 = 20002000
-                 let invoice = try _nodes[nodeId]!.bolt11Payment().receiveViaJitChannel(
-                     amountMsat: UInt64(truncating: amountMsat),
-                     description: description,
-                     expirySecs: UInt32(truncating: expirySecs),
-                     maxLspFeeLimitMsat: maxFeeLimitMsat
-                 )
-                 resolve(invoice)
-             } catch let error {
-                 reject("Receive payment invoice error", "\(error)", error)
-             }
-         }
-     }
-
 
 
     @objc

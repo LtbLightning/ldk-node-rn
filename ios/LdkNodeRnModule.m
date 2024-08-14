@@ -72,15 +72,6 @@ RCT_EXTERN_METHOD(
 )
 
 RCT_EXTERN_METHOD(
-    setLiquiditySourceLsps2: (nonnull NSString*)address
-    nodeId: (nonnull NSString*)publicKey
-    token: (nonnull NSString*)token
-    buildId: (nonnull NSString*)buildId
-    resolve: (RCTPromiseResolveBlock)resolve
-    reject:(RCTPromiseRejectBlock)reject
-)
-
-RCT_EXTERN_METHOD(
     setStorageDirPath: (nonnull NSString*)buildId
     storageDirPath: (nonnull NSString*)storageDirPath
     resolve: (RCTPromiseResolveBlock)resolve
@@ -111,21 +102,6 @@ RCT_EXTERN_METHOD(
 /** Node methods */
 RCT_EXTERN_METHOD(
     start: (nonnull NSString*)nodeId
-    resolve: (RCTPromiseResolveBlock)resolve
-    reject:(RCTPromiseRejectBlock)reject
-)
-
-RCT_EXTERN_METHOD(
-    bolt11Payment: (nonnull NSString*)nodeId
-    resolve: (RCTPromiseResolveBlock)resolve
-    reject:(RCTPromiseRejectBlock)reject
-)
-
-RCT_EXTERN_METHOD(
-    receiveViaJitChannel: (nonnull NSString*)nodeId
-    amountMsat: (nonnull NSNumber*)amountMsat
-    description: (nonnull NSString*)description
-    expirySecs: (nonnull NSNumber*)expirySecs
     resolve: (RCTPromiseResolveBlock)resolve
     reject:(RCTPromiseRejectBlock)reject
 )
