@@ -2,6 +2,15 @@
 
 This is the new release of `ldk-node-rn` v0.3.0 .
 
+#### APIs added
+
+- Exposed `setLiquiditySourceLsps2` method to `Builder` to configure the `Node` instance to source the inbound liquidity.
+- Support for sourcing inbound liquidity via LSPS2 just-in-time (JIT) channels has been added.
+
+#### API changed
+
+- All available balances outside of channel balances are now exposed via a unified `listBalances` interface method.
+
 ## [0.2.2]
 
 This is a bugfix release that reestablishes compatibility of Swift packages with Xcode 15.3 and later.

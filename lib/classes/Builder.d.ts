@@ -44,9 +44,6 @@ export declare class Builder extends NativeLoader {
      * Configures the [Node] instance to source its gossip data from the Lightning peer-to-peer network.
      * @returns {Promise<boolean>}
      */
-
-    setLiquiditySourceLsps2(address: string, publicKey:string, token:String): Promise<boolean>;
-
     setGossipSourceP2p(): Promise<boolean>;
     /**
      * Configures the [Node] instance to source its gossip data from the given RapidGossipSync server.

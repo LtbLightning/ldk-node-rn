@@ -1,5 +1,5 @@
 import { ChannelConfig } from './ChannelConfig';
-import { ChannelDetails, NetAddress, PaymentDetails, PeerDetails, PublicKey } from './Bindings';
+import { ChannelDetails, PaymentDetails, PeerDetails } from './Bindings';
 
 import { NativeModules } from 'react-native';
 
@@ -29,10 +29,6 @@ export interface NativeLdkNodeRn {
   setNetwork(buildId: string, network: string): boolean;
   setListeningAddresses(buildId: string, listeningAddresses: Array<string>): boolean;
   build(buildId: string): string;
-
-  setLiquiditySourceLsps2(address: string, publicKey: string, token: String, buildId: string): any;
-  bolt11Payment(nodeId: string): any;
-  receiveViaJitChannel(nodeId: string, amountMsat: number, description: string, expirySecs: number): any;
 
   start(nodeId: string): boolean;
   stop(nodeId: string): boolean;

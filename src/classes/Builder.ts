@@ -1,19 +1,10 @@
 import { Config } from './Config';
 import { NativeLoader } from './NativeLoader';
-import { NetAddress, PublicKey } from './Bindings';
+import { NetAddress } from './Bindings';
 import { Node } from './Node';
 import { addressToString } from '../utils';
 
-const DefaultServicesMutinynet = {
-esploraServerUrl : 'https://mutinynet.ltbl.io/api',
-rgsServerUrl : 'https://mutinynet.ltbl.io/snapshot',
-lsps2SourceAddress : '44.219.111.31',
-lsps2SourcePort : '39735',
-lsps2SourcePublicKey :'0371d6fd7d75de2d0372d03ea00e8bacdacb50c27d0eaea0a76a0622eff1f5ef2b',
-lsps2SourceToken : 'JZWN9YLW'
-};
 export class Builder extends NativeLoader {
-  
   id: string = '';
 
   /**
@@ -25,12 +16,6 @@ export class Builder extends NativeLoader {
     this.id = await this._ldk.fromConfig(config.id);
     return this;
   }
-
-  //  async fromConfig(config: Config): Promise<Builder> {
-  //   const builder = new Builder();
-  //   builder.id = await builder._ldk.fromConfig(config.id);
-  //   return builder;
-  // }
 
   /**
    * Configures the [Node] instance to source its wallet entropy from a seed file on disk.
@@ -120,26 +105,6 @@ export class Builder extends NativeLoader {
       listeningAddresses.map((listeningAddress) => addressToString(listeningAddress))
     );
   }
-
-  async setLiquiditySourceLsps2(address: string, publicKey:string, token:String): Promise<boolean> {
-    return await this._ldk.setLiquiditySourceLsps2(address, publicKey, token, this.id);
-  }
-
-//   async createMutinynetBuilder(config?: Config): Promise<Builder> {
-//   const builder = config ? await Builder.fromConfig(config) : new Builder();
-
-//   await builder.setNetwork('signet');
-//   await builder.setEsploraServer(DefaultServicesMutinynet.esploraServerUrl);
-//   await builder.setGossipSourceRgs(DefaultServicesMutinynet.rgsServerUrl);
-//   await builder.setMutinityNetwork({
-//     address: DefaultServicesMutinynet.lsps2SourceAddress,
-//     port: DefaultServicesMutinynet.lsps2SourcePort,
-//     publicKey: DefaultServicesMutinynet.lsps2SourcePublicKey,
-//     token: DefaultServicesMutinynet.lsps2SourceToken,
-//   });
-
-//   return builder;
-// }
 
   /**
    * Create node
