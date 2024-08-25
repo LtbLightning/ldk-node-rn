@@ -4,8 +4,16 @@ This is the new release of `ldk-node-rn` v0.3.0 .
 
 #### APIs added
 
+- `buildWithFsStore` method is added in the `Builder` class allowing to use the filesystem storage backend.
 - Exposed `setLiquiditySourceLsps2` method to `Builder` to configure the `Node` instance to source the inbound liquidity.
+- `nextEventAsync` method is added to `Node` class that allows polling the event queue asynchronously.
+- `status` method has been added to `Node` allowing to retrieve information about the Node's status.
+- `config` method added to get the config with which the `Node` was initialized.
+- The payment APIs have been restructured to use per-type (bolt11, onchain, bolt12) payment handlers which can be accessed via `node.{type}Payment`.
 - Support for sourcing inbound liquidity via LSPS2 just-in-time (JIT) channels has been added.
+- Support for creating and paying BOLT12 offers and refunds has been added.
+- Added `networkGraph` handler method allowing to query the network graph.
+- Added `forceCloseChannel` to `Node` class.
 
 #### API changed
 
