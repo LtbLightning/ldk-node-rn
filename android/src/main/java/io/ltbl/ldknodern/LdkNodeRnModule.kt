@@ -120,6 +120,25 @@ class LdkNodeRnModule(reactContext: ReactApplicationContext) :
     }
 
     @ReactMethod
+    fun setLiquiditySourceLsps2 (address: String,
+                                 nodeId: String,
+                                 token: String,
+                                 builderId: String,
+                                 result: Promise
+    ){
+        Thread {
+            try {
+                _builders[builderId]!!.setLiquiditySourceLsps2(address, nodeId, token)
+                runOnUiThread {
+                    result.resolve(true)
+                }
+            } catch (error: Throwable) {
+                result.reject("Node setLiquiditySourceLsps2 error", error.localizedMessage, error)
+            }
+        }.start()
+    }
+
+    @ReactMethod
     fun setGossipSourceP2p(builderId: String, result: Promise) {
         Thread {
             _builders[builderId]!!.setGossipSourceP2p()
