@@ -158,6 +158,13 @@ export declare class Node extends NativeLoader {
      */
     receiveVariableAmountPayment(description: string, expirySecs: number): Promise<string>;
     /**
+     * Returns a payable invoice that can be used to request and receive a payment for which the amount is to be determined by the user, also known as a "zero-amount" invoice.
+     * @requires [description]
+     * @requires [expirySecs] number
+     * @returns {Promise<boolean>}
+     */
+    receiveViaJitChannel(amountMsat: number, description: string, expirySecs: number): Promise<string>;
+    /**
      * Get list of payments
      * @returns {Promise<Array<PaymentDetails>>}
      */

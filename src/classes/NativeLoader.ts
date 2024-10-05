@@ -1,5 +1,5 @@
 import { ChannelConfig } from './ChannelConfig';
-import { ChannelDetails, NetAddress, PaymentDetails, PeerDetails, PublicKey } from './Bindings';
+import { ChannelDetails, PaymentDetails, PeerDetails } from './Bindings';
 
 import { NativeModules } from 'react-native';
 
@@ -31,9 +31,6 @@ export interface NativeLdkNodeRn {
   build(buildId: string): string;
 
   setLiquiditySourceLsps2(address: string, publicKey: string, token: String, buildId: string): any;
-  bolt11Payment(nodeId: string): any;
-  receiveViaJitChannel(nodeId: string, amountMsat: number, description: string, expirySecs: number): any;
-
   start(nodeId: string): boolean;
   stop(nodeId: string): boolean;
   syncWallets(nodeId: string): boolean;
@@ -60,6 +57,7 @@ export interface NativeLdkNodeRn {
 
   receivePayment(nodeId: string, amountMsat: number, description: string, expirySecs: number): string;
   receiveVariableAmountPayment(nodeId: string, description: string, expirySecs: number): string;
+  receiveViaJitChannel(nodeId: string, amountMsat: number, description: string, expirySecs: number): any;
   sendPayment(nodeId: string, invoice: string): string;
   sendPaymentUsingAmount(nodeId: string, invoice: string, amountMsat: number): string;
   sendSpontaneousPayment(nodeId: string, amountMsat: number, pubKey: string): string;

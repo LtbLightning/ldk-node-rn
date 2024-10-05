@@ -120,6 +120,25 @@ class LdkNodeRnModule(reactContext: ReactApplicationContext) :
     }
 
     @ReactMethod
+    fun setLiquiditySourceLsps2 (address: String,
+                                 nodeId: String,
+                                 token: String,
+                                 builderId: String,
+                                 result: Promise
+    ){
+        Thread {
+            try {
+                _builders[builderId]!!.setLiquiditySourceLsps2(address, nodeId, token)
+                runOnUiThread {
+                    result.resolve(true)
+                }
+            } catch (error: Throwable) {
+                result.reject("Node setLiquiditySourceLsps2 error", error.localizedMessage, error)
+            }
+        }.start()
+    }
+
+    @ReactMethod
     fun setGossipSourceP2p(builderId: String, result: Promise) {
         Thread {
             _builders[builderId]!!.setGossipSourceP2p()
@@ -469,6 +488,33 @@ class LdkNodeRnModule(reactContext: ReactApplicationContext) :
                 result.reject(
                     "Receive variable amount payment invoice error", error.localizedMessage, error
                 )
+            }
+        }.start()
+    }
+
+        @ReactMethod
+    fun receiveViaJitChannel(
+        nodeId: String,
+        amountMsat: Int,
+        description: String,
+        expirySecs: Int,
+        result: Promise
+    ) {
+        Thread {
+            try {
+                val maxFeeLimitMsat: Int = 20002000
+                val node = _nodes[nodeId] ?: throw IllegalStateException("Node not found")
+                val invoice = node.bolt11Payment().receiveViaJitChannel(
+                    amountMsat.toULong(),
+                    description,
+                    expirySecs.toUInt(),
+                    maxFeeLimitMsat.toULong()
+                )
+                runOnUiThread {
+                    result.resolve(invoice)
+                }
+            } catch (error: Throwable) {
+                result.reject("Receive payment invoice error", error.message.orEmpty(), error)
             }
         }.start()
     }
