@@ -492,6 +492,33 @@ class LdkNodeRnModule(reactContext: ReactApplicationContext) :
         }.start()
     }
 
+        @ReactMethod
+    fun receiveViaJitChannel(
+        nodeId: String,
+        amountMsat: Int,
+        description: String,
+        expirySecs: Int,
+        result: Promise
+    ) {
+        Thread {
+            try {
+                val maxFeeLimitMsat: Int = 20002000
+                val node = _nodes[nodeId] ?: throw IllegalStateException("Node not found")
+                val invoice = node.bolt11Payment().receiveViaJitChannel(
+                    amountMsat.toULong(),
+                    description,
+                    expirySecs.toUInt(),
+                    maxFeeLimitMsat.toULong()
+                )
+                runOnUiThread {
+                    result.resolve(invoice)
+                }
+            } catch (error: Throwable) {
+                result.reject("Receive payment invoice error", error.message.orEmpty(), error)
+            }
+        }.start()
+    }
+
     @ReactMethod
     fun listPayments(nodeId: String, result: Promise) {
         Thread {

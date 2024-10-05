@@ -444,4 +444,13 @@ RCT_EXTERN_METHOD(
     resolve: (RCTPromiseResolveBlock)resolve
     reject:(RCTPromiseRejectBlock)reject
 )
+
+RCT_EXTERN_METHOD(
+    setLiquiditySourceLsps2: (nonnull NSString*)address
+    nodeId: (nonnull NSString*)publicKey
+    token: (nonnull NSString*)token
+    buildId: (nonnull NSString*)buildId
+    resolve: (RCTPromiseResolveBlock)resolve
+    reject:(RCTPromiseRejectBlock)reject
+)
 @end
