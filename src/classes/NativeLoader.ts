@@ -31,6 +31,7 @@ export interface NativeLdkNodeRn {
   build(buildId: string): string;
 
   setLiquiditySourceLsps2(address: string, publicKey: string, token: String, buildId: string): any;
+  bolt11Payment(nodeId: string): any;
   start(nodeId: string): boolean;
   stop(nodeId: string): boolean;
   syncWallets(nodeId: string): boolean;
