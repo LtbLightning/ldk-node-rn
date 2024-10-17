@@ -246,7 +246,13 @@ export class Node extends NativeLoader {
     return await this._ldk.receiveVariableAmountPayment(this.id, description, expirySecs);
   }
 
-  async receiveViaJitChannel(amountMsat: number, description: string, expirySecs: number): Promise<string>{
+  /**
+   * Returns a payable invoice that can be used to request and receive a payment for which the amount is to be determined by the user, also known as a "zero-amount" invoice.
+   * @requires [description]
+   * @requires [expirySecs] number
+   * @returns {Promise<boolean>}
+   */
+  async receiveViaJitChannel(amountMsat: number, description: string, expirySecs: number): Promise<string> {
     return await this._ldk.receiveViaJitChannel(this.id, amountMsat, description, expirySecs);
   }
 
