@@ -1,10 +1,6 @@
-## [0.3.1]
-
-Fixed LSP receive bug
-
 ## [0.3.0]
 
-This is the new release of `ldk-node-rn` v0.3.0
+This is the new release of `ldk-node-rn` v0.3.0 .
 
 #### APIs added
 

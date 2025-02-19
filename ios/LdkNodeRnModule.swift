@@ -117,23 +117,6 @@ class LdkNodeRnModule: NSObject {
         }
     }
 
-        @objc
-        func setLiquiditySourceLsps2(_
-            address: String,
-            nodeId: String,
-            token: String,
-            buildId: String,
-            resolve: @escaping RCTPromiseResolveBlock,
-            reject: @escaping RCTPromiseRejectBlock
-        ) {
-            DispatchQueue.main.async { [self] in
-                _builders[buildId]!.setLiquiditySourceLsps2(address: address, nodeId: nodeId, token: token)
-                resolve(true)
-            }
-        }
-
-
-
     @objc
     func setGossipSourceP2p(_
         builderId: String,
